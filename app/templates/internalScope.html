@@ -99,7 +99,7 @@
                     <p><b>Custom item:</b> {{ item.name }} <b>NON-DISCOUNTABLE</b></p>
 
                     {% set addi = item.additionalInfo | default('') | trim %}
-                    {% if addi %}
+                    {% if addi and addi != 'None' and addi != 'none' %}
                     {{ addi
                     | e
                     | replace('\r\n','\n')
@@ -177,7 +177,7 @@
                 <p><b>Custom item:</b> {{ item.name }} <b>NON-DISCOUNTABLE</b></p>
 
                 {% set addi = item.additionalInfo | default('') | trim %}
-                {% if addi %}
+                {% if addi and addi != 'None' and addi != 'none' %}
                 {{ addi
                 | e
                 | replace('\r\n','\n')
@@ -190,7 +190,7 @@
                 {% else %}
                 <p><b>ITEM {{ item.catelogId }}.</b> {{ item.name }}</p>
                 {% set addi = item.additionalInfo | default('') | trim %}
-                {% if addi %}
+                {% if addi and addi != 'None' and addi != 'none' %}
                 <p><b>ADDITIONAL NOTE:</b></p>
                 {{ addi
                 | e
@@ -201,7 +201,10 @@
                 }}
                 {% endif %}
 
-                {{ item.longDescription }}
+                {% set long_desc = item.longDescription | default('') | trim %}
+                {% if long_desc and long_desc != 'None' and long_desc != 'none' %}
+                {{ long_desc }}
+                {% endif %}
                 <a href="https://info.basementremodeling.com/guide_details/{{ item.permanentId }}">Click here for details</a>
                 {% endif %}
                 {{ internal_lines(item) }}
