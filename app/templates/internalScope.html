@@ -48,13 +48,27 @@
 {% if it.internalInstructions %}
 <p class="red">
     <b>INTERNAL INSTRUCTIONS:</b><br/>
-    {{ it.internalInstructions | default('', true) }}
+    {{ it.internalInstructions 
+    | default('', true)
+    | e
+    | replace('\r\n','\n')
+    | replace('\n','<br>')
+    | replace('<br>-','<br>- ')
+    | safe
+    }}
 </p>
 {% endif %}
 {% if it.internalNotes %}
 <p class="red">
     <b>INTERNAL NOTES:</b><br/>
-    {{ it.internalNotes | default('', true) }}
+    {{ it.internalNotes 
+    | default('', true)
+    | e
+    | replace('\r\n','\n')
+    | replace('\n','<br>')
+    | replace('<br>-','<br>- ')
+    | safe
+    }}
 </p>
 {% endif %}
 {% endif %}
