@@ -1,6 +1,7 @@
 # internal_scope.py
 import datetime
 import json
+import math
 import os
 import re
 import unicodedata
@@ -74,11 +75,23 @@ def make_internal_scope():
     env.filters["money"] = money
     template = env.get_template("internalScope.html")
 
-    # 2) Формат суммы по категориям (без $ — знак добавит фильтр)
+    # 2) Извлекаем squareFootage для вычисления формул (как в proposal.py)
+    sqFt = 0
+    if body.get("estimatesInfo") and len(body["estimatesInfo"]) > 0:
+        sqFt = body["estimatesInfo"][0].get("squareFootage", 0)
+
+    # 3) Формат суммы по категориям (без $ — знак добавит фильтр)
     for cat in body.get("categories", []):
         cat["totalFormatted"] = f"{cat.get('total', 0):,}"
 
-    # 3) Обработка EXP[...] внутри longDescription
+    # 4) Обработка EXP[...] внутри longDescription
+    # Подготавливаем контекст для eval() с доступом к sqFt и math
+    eval_globals = {
+        "sqFt": sqFt,
+        "math": math,
+        "__builtins__": __builtins__
+    }
+    
     for item in _walk_items(body.get("categories", [])):
         long_desc = (item.get("longDescription") or "")
         if "EXP[" in long_desc and "]EXP" in long_desc:
@@ -86,20 +99,20 @@ def make_internal_scope():
             tmp = long_desc.replace("EXP[", "").replace("]EXP", "")
             for expr in expressions:
                 try:
-                    result = eval(expr)  # как и раньше, источник контролируем
+                    result = eval(expr, eval_globals)  # передаем контекст с sqFt и math
                 except Exception:
                     result = expr
                 tmp = tmp.replace(expr, str(result))
             item["longDescription"] = tmp
 
-    # 4) Соберём все кастомные айтемы
+    # 5) Соберём все кастомные айтемы
     custom_items = [i for i in _walk_items(body.get("categories", []))
                     if i.get("catelogId") == "Custom"]
 
-    # 5) Рендер
+    # 6) Рендер
     rendered = template.render(data=body, custom_items=custom_items)
 
-    # 6) Генерация PDF
+    # 7) Генерация PDF
     os.makedirs(STATIC_DIR, exist_ok=True)
     ts = datetime.datetime.now().timestamp()
     out_path = os.path.join(STATIC_DIR, f"internal_scope_{ts}.pdf")

@@ -16,6 +16,10 @@
         /* глобальные правила как были */
         table, tr, td, th, tbody, thead, tfoot { page-break-inside: avoid !important; }
         .red { color: #FF0000; }
+        
+        /* Переопределение красного цвета в описании товара (между ITEM и ссылкой) */
+        .item-description, .item-description * { color: #000000 !important; }
+        .item-description .red, .item-description p.red { color: #000000 !important; }
 
         /* ✅ только для секции кастомов разрешаем нормальный поток */
         .custom-section table { page-break-inside: auto !important; break-inside: auto !important; }
@@ -189,6 +193,7 @@
 
                 {% else %}
                 <p><b>ITEM {{ item.catelogId }}.</b> {{ item.name }}</p>
+                <div class="item-description" style="color: #000000 !important;">
                 {% set addi = item.additionalInfo | default('') | trim %}
                 {% if addi and addi != 'None' and addi != 'none' %}
                 <p><b>ADDITIONAL NOTE:</b></p>
@@ -197,14 +202,28 @@
                 | replace('\r\n','\n')
                 | replace('\n','<br>')
                 | replace('<br>-','<br>- ')
+                | replace('color: #FF0000', 'color: #000000')
+                | replace('color:#FF0000', 'color:#000000')
+                | replace('color:red', 'color:#000000')
+                | replace('color:red;', 'color:#000000;')
+                | replace('class="red"', 'class="item-description"')
                 | safe
                 }}
                 {% endif %}
 
                 {% set long_desc = item.longDescription | default('') | trim %}
                 {% if long_desc and long_desc != 'None' and long_desc != 'none' %}
-                {{ long_desc }}
+                {{ long_desc 
+                | replace('color: #FF0000', 'color: #000000') 
+                | replace('color:#FF0000', 'color:#000000') 
+                | replace('color:red', 'color:#000000') 
+                | replace('color:red;', 'color:#000000;') 
+                | replace('class="red"', 'class="item-description"')
+                | replace('style="color: #FF0000', 'style="color: #000000')
+                | replace('style="color:#FF0000', 'style="color:#000000')
+                }}
                 {% endif %}
+                </div>
                 <a href="https://info.basementremodeling.com/guide_details/{{ item.permanentId }}">Click here for details</a>
                 {% endif %}
                 {{ internal_lines(item) }}
