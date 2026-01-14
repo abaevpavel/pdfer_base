@@ -84,7 +84,7 @@ def make_internal_scope():
     for cat in body.get("categories", []):
         cat["totalFormatted"] = f"{cat.get('total', 0):,}"
 
-    # 4) Обработка EXP[...] внутри longDescription
+    # 4) Обработка EXP[...] внутри longDescription, internalInstructions и internalNotes
     # Подготавливаем контекст для eval() с доступом к sqFt и math
     eval_globals = {
         "sqFt": sqFt,
@@ -92,18 +92,35 @@ def make_internal_scope():
         "__builtins__": __builtins__
     }
     
+    def process_expressions(text):
+        """Обрабатывает формулы EXP[...]EXP в тексте."""
+        if not text or "EXP[" not in text or "]EXP" not in text:
+            return text
+        expressions = re.findall(r"EXP\[(.*?)\]EXP", text)
+        tmp = text.replace("EXP[", "").replace("]EXP", "")
+        for expr in expressions:
+            try:
+                result = eval(expr, eval_globals)  # передаем контекст с sqFt и math
+            except Exception:
+                result = expr
+            tmp = tmp.replace(expr, str(result))
+        return tmp
+    
     for item in _walk_items(body.get("categories", [])):
+        # Обработка longDescription
         long_desc = (item.get("longDescription") or "")
-        if "EXP[" in long_desc and "]EXP" in long_desc:
-            expressions = re.findall(r"EXP\[(.*?)\]EXP", long_desc)
-            tmp = long_desc.replace("EXP[", "").replace("]EXP", "")
-            for expr in expressions:
-                try:
-                    result = eval(expr, eval_globals)  # передаем контекст с sqFt и math
-                except Exception:
-                    result = expr
-                tmp = tmp.replace(expr, str(result))
-            item["longDescription"] = tmp
+        if long_desc:
+            item["longDescription"] = process_expressions(long_desc)
+        
+        # Обработка internalInstructions
+        internal_instr = (item.get("internalInstructions") or "")
+        if internal_instr:
+            item["internalInstructions"] = process_expressions(internal_instr)
+        
+        # Обработка internalNotes
+        internal_notes = (item.get("internalNotes") or "")
+        if internal_notes:
+            item["internalNotes"] = process_expressions(internal_notes)
 
     # 5) Соберём все кастомные айтемы
     custom_items = [i for i in _walk_items(body.get("categories", []))
