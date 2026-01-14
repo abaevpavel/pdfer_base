@@ -106,21 +106,32 @@ def make_internal_scope():
             tmp = tmp.replace(expr, str(result))
         return tmp
     
+    def process_markdown(text):
+        """Обрабатывает Markdown синтаксис: **текст** -> <b>текст</b>"""
+        if not text:
+            return text
+        # Заменяем **текст** на <b>текст</b>
+        # Используем нежадный поиск, чтобы обработать несколько вхождений
+        text = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', text)
+        return text
+    
     for item in _walk_items(body.get("categories", [])):
         # Обработка longDescription
         long_desc = (item.get("longDescription") or "")
         if long_desc:
             item["longDescription"] = process_expressions(long_desc)
         
-        # Обработка internalInstructions
+        # Обработка internalInstructions (формулы + markdown)
         internal_instr = (item.get("internalInstructions") or "")
         if internal_instr:
-            item["internalInstructions"] = process_expressions(internal_instr)
+            internal_instr = process_expressions(internal_instr)
+            item["internalInstructions"] = process_markdown(internal_instr)
         
-        # Обработка internalNotes
+        # Обработка internalNotes (формулы + markdown)
         internal_notes = (item.get("internalNotes") or "")
         if internal_notes:
-            item["internalNotes"] = process_expressions(internal_notes)
+            internal_notes = process_expressions(internal_notes)
+            item["internalNotes"] = process_markdown(internal_notes)
 
     # 5) Соберём все кастомные айтемы
     custom_items = [i for i in _walk_items(body.get("categories", []))
