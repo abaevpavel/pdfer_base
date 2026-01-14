@@ -50,7 +50,6 @@
     <b>INTERNAL INSTRUCTIONS:</b><br/>
     {{ it.internalInstructions 
     | default('', true)
-    | e
     | replace('\r\n','\n')
     | replace('\n','<br>')
     | replace('<br>-','<br>- ')
@@ -63,7 +62,6 @@
     <b>INTERNAL NOTES:</b><br/>
     {{ it.internalNotes 
     | default('', true)
-    | e
     | replace('\r\n','\n')
     | replace('\n','<br>')
     | replace('<br>-','<br>- ')
