@@ -112,7 +112,7 @@
             <!-- Description -->
             <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F9F9F9">
                 <div class="paragraphs" style="padding-left:30px;">
-                    <p><b>Custom item:</b> {{ item.name }} <b>NON-DISCOUNTABLE</b></p>
+                    <p><b>Custom item:</b> {{ item.name }} </p>
 
                     {% set addi = item.additionalInfo | default('') | trim %}
                     {% if addi and addi != 'None' and addi != 'none' %}
@@ -190,7 +190,7 @@
         <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F1F1F1">
             <div class="paragraphs" style="padding-left:30px;">
                 {% if item.catelogId == 'Custom' %}
-                <p><b>Custom item:</b> {{ item.name }} <b>NON-DISCOUNTABLE</b></p>
+                <p><b>Custom item:</b> {{ item.name }}</p>
 
                 {% set addi = item.additionalInfo | default('') | trim %}
                 {% if addi and addi != 'None' and addi != 'none' %}
