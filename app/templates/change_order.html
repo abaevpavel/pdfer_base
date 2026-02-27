@@ -125,7 +125,11 @@
                                 | safe
                                 }}
                                 {% endif %}
-
+                                {# photos = URLs from JSON item.photos #}
+                                {% set photos = item.photos | default([]) %}
+                                {% for photo in photos %}
+                                <p><a href="{{ photo }}">Click here for image</a></p>
+                                {% endfor %}
 
                                 {% else %}
                                     <p><b>ITEM {{item.catelogId}}.</b> {{item.name}}</p>
