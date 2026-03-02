@@ -113,7 +113,8 @@
                         <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F1F1F1">
                             <div class="paragraphs" style="padding-left: 30px;">
                                 {% if item.catelogId == 'Custom' %}
-                                    <p><b>Custom item:</b> {{item.name}} </p>
+                                    {% set item_type = (item.customData | default({})).itemType | default('default') %}
+                                    <p><b>{% if item_type == 'credit' %}Custom Credit item:{% elif item_type == 'note' %}Custom Note item:{% else %}Custom item:{% endif %}</b> {{item.name}} </p>
 
                                 {% set addi = item.additionalInfo | default('') | trim %}
                                 {% if addi %}
