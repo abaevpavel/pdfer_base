@@ -134,7 +134,6 @@
                                 }}
                                 {% endif %}
 
-
                                 {% else %}
                                     <p><b>ITEM {{item.catelogId}}.</b> {{item.name}}</p>
                                 {% set addi = item.additionalInfo | default('') | trim %}
@@ -150,9 +149,9 @@
                                 {% endif %}
 
                                 {{item.longDescription}}
-                                    
-                                    <a href="https://info.basementremodeling.com/guide_details/{{item.permanentId}}">Click here for images</a>
+
                                 {% endif %}
+                                <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                             </div>
                         </td>
                         <!--Quantity column -->

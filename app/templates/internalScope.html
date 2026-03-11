@@ -124,8 +124,7 @@
                     | replace('<br>-','<br>- ')
                     | safe }}
                     {% endif %}
-
-
+                    <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                     {{ internal_lines(item) }}
                 </div>
             </td>
@@ -238,8 +237,8 @@
                 }}
                 {% endif %}
                 </div>
-                <a href="https://info.basementremodeling.com/guide_details/{{ item.permanentId }}">Click here for images</a>
                 {% endif %}
+                <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                 {{ internal_lines(item) }}
             </div>
         </td>
