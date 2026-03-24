@@ -126,6 +126,7 @@
                                 {% if addi %}
                                 {{ addi
                                 | e
+                                | linkify
                                 | replace('\r\n','\n')
                                 | replace('\n','<br>')
                                 | replace('<br>-','<br>- ')
@@ -141,6 +142,7 @@
                                 <p><b>ADDITIONAL NOTE:</b></p>
                                 {{ addi
                                 | e
+                                | linkify
                                 | replace('\r\n','\n')
                                 | replace('\n','<br>')
                                 | replace('<br>-','<br>- ')
@@ -148,7 +150,7 @@
                                 }}
                                 {% endif %}
 
-                                {{item.longDescription}}
+                                {{item.longDescription | linkify | safe}}
                                     
                                     <a href="https://info.basementremodeling.com/guide_details/{{item.permanentId}}">Click here for images</a>
                                 {% endif %}

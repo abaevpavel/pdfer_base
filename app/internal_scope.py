@@ -62,6 +62,26 @@ def money(val):
     return "" if val is None else str(val)
 
 
+def linkify_urls(text):
+    """Преобразует URL в кликабельные ссылки, сохраняя остальной текст."""
+    if text is None:
+        return ""
+
+    source = str(text)
+    # Не трогаем URL внутри атрибутов вида href="...".
+    pattern = re.compile(r'(?<!["\'=])(https?://[^\s<"]+)')
+
+    def _repl(match):
+        url = match.group(1)
+        trailing = ""
+        while url and url[-1] in ".,);:]!?":
+            trailing = url[-1] + trailing
+            url = url[:-1]
+        return f'<a href="{url}" style="color:#0000EE; text-decoration: underline;">{url}</a>{trailing}'
+
+    return pattern.sub(_repl, source)
+
+
 # ---------- Основной обработчик ----------
 
 def make_internal_scope():
@@ -73,6 +93,7 @@ def make_internal_scope():
         autoescape=False,  # у тебя HTML генерится вручную, как раньше
     )
     env.filters["money"] = money
+    env.filters["linkify"] = linkify_urls
     template = env.get_template("internalScope.html")
 
     # 2) Извлекаем squareFootage для вычисления формул (как в proposal.py)

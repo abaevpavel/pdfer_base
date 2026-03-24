@@ -50,6 +50,7 @@
     <b>INTERNAL INSTRUCTIONS:</b><br/>
     {{ it.internalInstructions 
     | default('', true)
+    | linkify
     | replace('\r\n','\n')
     | replace('\n','<br>')
     | replace('<br>-','<br>- ')
@@ -62,6 +63,7 @@
     <b>INTERNAL NOTES:</b><br/>
     {{ it.internalNotes 
     | default('', true)
+    | linkify
     | replace('\r\n','\n')
     | replace('\n','<br>')
     | replace('<br>-','<br>- ')
@@ -118,6 +120,7 @@
                     {% if addi and addi != 'None' and addi != 'none' %}
                     {{ addi
                     | e
+                    | linkify
                     | replace('\r\n','\n')
                     | replace('\n','<br>')
                     | replace('<br>-','<br>- ')
@@ -196,6 +199,7 @@
                 {% if addi and addi != 'None' and addi != 'none' %}
                 {{ addi
                 | e
+                | linkify
                 | replace('\r\n','\n')
                 | replace('\n','<br>')
                 | replace('<br>-','<br>- ')
@@ -211,6 +215,7 @@
                 <p><b>ADDITIONAL NOTE:</b></p>
                 {{ addi
                 | e
+                | linkify
                 | replace('\r\n','\n')
                 | replace('\n','<br>')
                 | replace('<br>-','<br>- ')
@@ -231,6 +236,7 @@
                 | replace('color:red', 'color:#000000') 
                 | replace('color:red;', 'color:#000000;') 
                 | replace('class="red"', 'class="item-description"')
+                | linkify
                 | replace('style="color: #FF0000', 'style="color: #000000')
                 | replace('style="color:#FF0000', 'style="color:#000000')
                 }}

@@ -8,10 +8,29 @@ import json
 import math
 ROOT_URL = os.environ.get("ROOT_URL", "http://localhost")
 
+
+def linkify_urls(text):
+    if text is None:
+        return ""
+
+    source = str(text)
+    pattern = re.compile(r'(?<!["\'=])(https?://[^\s<"]+)')
+
+    def _repl(match):
+        url = match.group(1)
+        trailing = ""
+        while url and url[-1] in ".,);:]!?":
+            trailing = url[-1] + trailing
+            url = url[:-1]
+        return f'<a href="{url}" style="color:#0000EE; text-decoration: underline;">{url}</a>{trailing}'
+
+    return pattern.sub(_repl, source)
+
 def make_proposal():
     body = request.json
     with open('./templates/proposal.html') as f:
         jinja_t = Template(f.read())
+    jinja_t.environment.filters["linkify"] = linkify_urls
 
     
     sqFt = body['estimatesInfo'][0]['squareFootage'] #used below in exp evaluation
