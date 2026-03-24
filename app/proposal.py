@@ -6,6 +6,7 @@ from flask import Flask, request
 import re
 import json
 import math
+from urllib.parse import urlsplit
 ROOT_URL = os.environ.get("ROOT_URL", "http://localhost")
 
 
@@ -22,7 +23,13 @@ def linkify_urls(text):
         while url and url[-1] in ".,);:]!?":
             trailing = url[-1] + trailing
             url = url[:-1]
-        return f'<a href="{url}" style="color:#0000EE; text-decoration: underline;">{url}</a>{trailing}'
+        domain = urlsplit(url).netloc.lower()
+        if domain.startswith("www."):
+            domain = domain[4:]
+        if not domain:
+            domain = "link"
+        link_text = domain if len(domain) <= 10 else f"{domain[:9]}."
+        return f'<a href="{url}" style="color:#0000EE; text-decoration: underline;">{link_text}</a>{trailing}'
 
     return pattern.sub(_repl, source)
 
