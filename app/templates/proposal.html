@@ -120,7 +120,8 @@
                         <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F1F1F1">
                             <div class="paragraphs" style="padding-left: 30px;">
                                 {% if item.catelogId == 'Custom' %}
-                                    <p><b>Custom item:</b> {{item.name}} </p>
+                                    {% set item_type = (item.customData | default({})).itemType | default('default') %}
+                                    <p><b>{% if item_type == 'credit' %}Custom Credit item:{% elif item_type == 'note' %}Custom Note item:{% else %}Custom item:{% endif %}</b> {{item.name}} </p>
 
                                 {% set addi = item.additionalInfo | default('') | trim %}
                                 {% if addi %}
@@ -133,7 +134,6 @@
                                 | safe
                                 }}
                                 {% endif %}
-
 
                                 {% else %}
                                     <p><b>ITEM {{item.catelogId}}.</b> {{item.name}}</p>
@@ -151,15 +151,14 @@
                                 {% endif %}
 
                                 {{item.longDescription | linkify | safe}}
-                                    
-                                    <a href="https://info.basementremodeling.com/guide_details/{{item.permanentId}}">Click here for images</a>
                                 {% endif %}
+                                <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                             </div>
                         </td>
                         <!--Quantity column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
                             {% if item.catelogId == 'Custom' %}
-                                <p class="flexBox textCenter">1</p>
+                                <p class="flexBox textCenter">{% if item.total == "N/A" %}N/A{% else %}1{% endif %}</p>
                             {% else %}
                                 <p class="flexBox textCenter">{{item.quantity}}</p>
                             {% endif %}
@@ -167,7 +166,7 @@
                         <!--Price column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
                             <p class="flexBox textCenter">
-                                {{item.price}}</p>
+                                {% if item.catelogId == 'Custom' and item.total == "N/A" %}N/A{% else %}{{item.price}}{% endif %}</p>
                         </td>
                         <!--Totals column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
