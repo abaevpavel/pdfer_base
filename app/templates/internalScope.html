@@ -74,6 +74,17 @@
 {% endif %}
 {%- endmacro %}
 
+{# OUR COST — только для таблицы кастом-айтемов; поля из customData #}
+{% macro custom_our_cost(it) -%}
+{% set cd = it.customData | default({}) %}
+<p class="red">
+    <b>OUR COST:</b><br/>
+    Subcontractor proposal amount: {{ cd.subcontractorProposalAmount | default(0) | money }}<br/>
+    In house team cost: {{ cd.inHouseTeamCost | default(0) | money }}<br/>
+    Recommended cost: {{ cd.recommendedCost | default(0) | money }}
+</p>
+{%- endmacro %}
+
 
 {# ---------- CUSTOM ITEMS — GROUPED BY CATEGORY/SUBCATEGORY ---------- #}
 <div class="custom-section">
@@ -129,6 +140,7 @@
                     {% endif %}
                     <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                     {{ internal_lines(item) }}
+                    {{ custom_our_cost(item) }}
                 </div>
             </td>
             <!-- Quantity -->
