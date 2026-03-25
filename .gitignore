@@ -1,8 +1,10 @@
-@'
 venv/
 app/static/*.pdf
 .env
 __pycache__/
 *.pyc
-'@ | Out-File -Encoding utf8 .gitignore
-git add .gitignore
+
+# Local debug / samples (do not commit)
+example.json
+debug-*.ps1
+ok.pdf
