@@ -145,7 +145,10 @@
 
                                 {{item.longDescription | linkify | safe}}
                                 {% endif %}
+                                {% set has_photos = item.photos is defined and item.photos and (item.photos | select | list | length > 0) %}
+                                {% if has_photos %}
                                 <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
+                                {% endif %}
                             </div>
                         </td>
                         <!--Quantity column -->
