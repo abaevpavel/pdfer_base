@@ -49,6 +49,13 @@ def make_proposal():
                 if item.get('priceHidden', False):
                     item['price'] = "N/A"
                     item['total'] = "N/A"
+                addi = item.get("additionalInfo") or ""
+                if addi and "EXP[" in addi and "]EXP" in addi:
+                    expressions = re.findall(r"EXP\[(.*?)\]EXP", addi)
+                    item["additionalInfo"] = addi.replace("EXP[", "").replace("]EXP", "")
+                    for expression in expressions:
+                        result = eval(expression)
+                        item["additionalInfo"] = item["additionalInfo"].replace(expression, str(result))
                 if "EXP[" in item['longDescription'] and "]EXP" in item['longDescription']:
                     expressions = re.findall(r'EXP\[(.*?)\]EXP', item['longDescription'])
                     item['longDescription'] = item['longDescription'].replace("EXP[", "").replace("]EXP","")

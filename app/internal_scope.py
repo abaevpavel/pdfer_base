@@ -144,6 +144,11 @@ def make_internal_scope():
         return text
     
     for item in _walk_items(body.get("categories", [])):
+        # ADDITIONAL NOTE в шаблоне берётся из additionalInfo — без этого EXP[...]EXP не вычисляются
+        addi = item.get("additionalInfo") or ""
+        if addi:
+            item["additionalInfo"] = process_expressions(addi)
+
         # Обработка longDescription
         long_desc = (item.get("longDescription") or "")
         if long_desc:
