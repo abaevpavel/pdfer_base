@@ -29,7 +29,7 @@ def linkify_urls(text):
             domain = domain[4:]
         if not domain:
             domain = "link"
-        link_text = domain if len(domain) <= 10 else f"{domain[:9]}."
+        link_text = f"{domain} - View Link"
         return f'<a href="{url}" style="color:#0000EE; text-decoration: underline;">{link_text}</a>{trailing}'
 
     return pattern.sub(_repl, source)

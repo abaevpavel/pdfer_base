@@ -1,4 +1,5 @@
 venv/
+.venv/
 app/static/*.pdf
 .env
 __pycache__/
