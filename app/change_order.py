@@ -11,6 +11,24 @@ from urllib.parse import urlsplit
 ROOT_URL = os.environ.get("ROOT_URL", "http://localhost")
 
 
+def _sum_change_order_grand_total(categories):
+    total = 0.0
+    for cat in categories or []:
+        for subcat in cat.get("subcategories") or []:
+            for item in subcat.get("items") or []:
+                if item.get("omitFromPDF"):
+                    continue
+                raw = item.get("total")
+                if raw is None or raw == "N/A":
+                    continue
+                s = str(raw).replace(",", "").replace("$", "").strip()
+                try:
+                    total += float(s)
+                except ValueError:
+                    continue
+    return total
+
+
 def linkify_urls(text):
     if text is None:
         return ""
@@ -62,6 +80,8 @@ def make_change_order():
                     for expression in expressions:
                         result = eval(expression)
                         item['longDescription'] = item['longDescription'].replace(expression, str(result))
+
+    body["grandTotalFormatted"] = f"${_sum_change_order_grand_total(body.get('categories')):,.2f}"
 
     rendered = jinja_t.render(data=body)
     ts = datetime.datetime.now().timestamp()
