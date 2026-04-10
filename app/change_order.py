@@ -11,21 +11,28 @@ from urllib.parse import urlsplit
 ROOT_URL = os.environ.get("ROOT_URL", "http://localhost")
 
 
-def _sum_change_order_grand_total(categories):
+def _parse_money_number(raw):
+    if raw is None:
+        return None
+    s = str(raw).replace(",", "").replace(" ", "").replace("$", "").strip()
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def _change_order_grand_total_value(body):
+    """Приоритет: estimatesInfo[0].totalCost из payload; иначе сумма category.total."""
+    infos = body.get("estimatesInfo") or []
+    if infos:
+        tc = _parse_money_number(infos[0].get("totalCost"))
+        if tc is not None:
+            return tc
     total = 0.0
-    for cat in categories or []:
-        for subcat in cat.get("subcategories") or []:
-            for item in subcat.get("items") or []:
-                if item.get("omitFromPDF"):
-                    continue
-                raw = item.get("total")
-                if raw is None or raw == "N/A":
-                    continue
-                s = str(raw).replace(",", "").replace("$", "").strip()
-                try:
-                    total += float(s)
-                except ValueError:
-                    continue
+    for cat in body.get("categories") or []:
+        v = _parse_money_number(cat.get("total"))
+        if v is not None:
+            total += v
     return total
 
 
@@ -81,7 +88,7 @@ def make_change_order():
                         result = eval(expression)
                         item['longDescription'] = item['longDescription'].replace(expression, str(result))
 
-    body["grandTotalFormatted"] = f"${_sum_change_order_grand_total(body.get('categories')):,.2f}"
+    body["grandTotalFormatted"] = f"${_change_order_grand_total_value(body):,.2f}"
 
     rendered = jinja_t.render(data=body)
     ts = datetime.datetime.now().timestamp()
