@@ -71,9 +71,6 @@ def make_change_order():
 
         for subcat in cat['subcategories']:
             for item in subcat['items']:
-                if item.get('priceHidden', False):
-                    item['price'] = "N/A"
-                    item['total'] = "N/A"
                 addi = item.get("additionalInfo") or ""
                 if addi and "EXP[" in addi and "]EXP" in addi:
                     expressions = re.findall(r"EXP\[(.*?)\]EXP", addi)

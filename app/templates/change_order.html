@@ -166,7 +166,14 @@
                         <!--Price column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
                             <p class="flexBox textCenter">
-                                {% if item.catelogId == 'Custom' and item.total == "N/A" %}N/A{% else %}{{item.price}}{% endif %}</p>
+                                {% if item.catelogId == 'Custom' and item.total == "N/A" %}
+                                    N/A
+                                {% elif item.catelogId == 'Custom' and (item.price | default('', true) | string | trim) == 'Custom' %}
+                                    {% if item.total != "N/A" %}${{item.total}}{% else %}N/A{% endif %}
+                                {% else %}
+                                    {{item.price}}
+                                {% endif %}
+                            </p>
                         </td>
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
                             <p class="flexBox textCenter">
