@@ -106,8 +106,8 @@
                 <p class="headerText font" style="color:white">{{ category.id }} <u class="font">{{ category.name }}</u></p>
             </td>
             <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Quantity</p></td>
-            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Price</p></td>
-            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Zone Adjusted Total</p></td>
+            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Catalogue price</p></td>
+            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
         </tr>
         {% set ns.any = true %}
         {% endif %}
@@ -118,8 +118,8 @@
                 <p class="headerText font" style="padding-left:30px;">{{ subcategory.name }}</p>
             </td>
             <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Quantity</p></td>
-            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Price</p></td>
-            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Zone Adjusted Total</p></td>
+            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Catalogue price</p></td>
+            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
         </tr>
 
         {# Строки кастом-айтемов #}
@@ -200,8 +200,8 @@
             <p class="headerText font" style="padding-left:30px;">{{ subcategory.name }}</p>
         </td>
         <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Quantity</p></td>
-        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Price</p></td>
-        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Zone Adjusted Total</p></td>
+        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Catalogue price</p></td>
+        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
     </tr>
 
     {% for item in subcategory['items'] %}
