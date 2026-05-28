@@ -92,7 +92,7 @@
                 <td class="headerHeight" colspan="3" bgcolor="#FF0000">
                     <p class="headerText font" style="color:white">{{category.id}} <u class="font">{{category.name}}</u></p>
                 </td>
-                <td class="greyBorder" style="color:white" bgcolor="#FF0000" colspan="4">
+                <td class="greyBorder" style="color:white" bgcolor="#FF0000" colspan="2">
                     <div class="flexBox textCenter" style="padding-top: 5pt;">
                         ${{category.totalFormatted}}
                     </div>
@@ -105,9 +105,6 @@
                 </td>
                 <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
                     <p class="flexBox textCenter">Quantity</p>
-                </td>
-                <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
-                    <p class="flexBox textCenter">Price</p>
                 </td>
                 <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
                     <p class="flexBox textCenter">Total</p>
@@ -156,6 +153,10 @@
                                 {% if has_photos %}
                                 <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                                 {% endif %}
+                                <p>
+                                    <b>CATALOG PRICE DESCRIPTION:</b>
+                                    {% if item.catelogId == 'Custom' and item.total == "N/A" %}N/A{% else %}{{ item.price }}{% endif %}
+                                </p>
                             </div>
                         </td>
                         <!--Quantity column -->
@@ -165,11 +166,6 @@
                             {% else %}
                                 <p class="flexBox textCenter">{{item.quantity}}</p>
                             {% endif %}
-                        </td>
-                        <!--Price column -->
-                        <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
-                            <p class="flexBox textCenter">
-                                {% if item.catelogId == 'Custom' and item.total == "N/A" %}N/A{% else %}{{item.price}}{% endif %}</p>
                         </td>
                         <!--Totals column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
