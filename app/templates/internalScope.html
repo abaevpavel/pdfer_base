@@ -16,6 +16,7 @@
         /* глобальные правила как были */
         table, tr, td, th, tbody, thead, tfoot { page-break-inside: avoid !important; }
         .red { color: #FF0000; }
+        .item-pricing-separator { margin: 8pt 0; }
         
         /* Переопределение красного цвета в описании товара (между ITEM и ссылкой) */
         .item-description, .item-description * { color: #000000 !important; }
@@ -88,6 +89,34 @@
 {% endif %}
 {%- endmacro %}
 
+{% macro pricing_separator() -%}
+<p class="item-pricing-separator">________________________________________________________________________</p>
+{%- endmacro %}
+
+{% macro catalog_price_description(it) -%}
+<p class="red"><b>Catalog Price Description:</b> {% if it.catelogId == 'Custom' and it.total == "N/A" %}N/A{% else %}{{ it.price | money }}{% endif %}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
+{%- endmacro %}
+
+{% macro maximum_refund_amount(it) -%}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+<p class="red"><b>Maximum refund amount:</b>
+{% if refund_str and refund_str | upper != 'N/A' %}
+{% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
+{% else %}N/A{% endif %}
+<br/><span style="color: #000000;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+{%- endmacro %}
+
+{% macro unit_pricing_disclaimer() -%}
+<p><i><b style="color: #FF0000;">Unit pricing</b> <span style="color: #000000;">may not be strictly linear and may include bundled pricing formulas or other pricing factors. As a result, individual unit costs may vary and may not equal the total price divided by the quantity.</span></i></p>
+{%- endmacro %}
+
+{% macro item_pricing_footer_internal(it) -%}
+{{ pricing_separator() }}
+{{ catalog_price_description(it) }}
+{{ maximum_refund_amount(it) }}
+{{ unit_pricing_disclaimer() }}
+{%- endmacro %}
+
 
 {# ---------- CUSTOM ITEMS — GROUPED BY CATEGORY/SUBCATEGORY ---------- #}
 <div class="custom-section">
@@ -145,15 +174,7 @@
                     {% endif %}
                     {{ internal_lines(item) }}
                     {{ custom_our_cost(item) }}
-                    <p>
-                        <b>CATALOG PRICE DESCRIPTION:</b>
-                        {% if item.total == "N/A" %}N/A{% else %}{{ item.price | money }}{% endif %}
-                    </p>
-                    <p>
-                        <b>MAX REFUND AMOUNT:</b>
-                        {% set max_refund_amount = item.maxRefundAmount | default('', true) %}
-                        {% if max_refund_amount %}{{ max_refund_amount }}{% else %}N/A{% endif %}
-                    </p>
+                    {{ item_pricing_footer_internal(item) }}
                 </div>
             </td>
             <!-- Quantity -->
@@ -271,15 +292,7 @@
                 <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                 {% endif %}
                 {{ internal_lines(item) }}
-                <p>
-                    <b>CATALOG PRICE DESCRIPTION:</b>
-                    {% if item.catelogId == 'Custom' and item.total == "N/A" %}N/A{% else %}{{ item.price | money }}{% endif %}
-                </p>
-                <p>
-                    <b>MAX REFUND AMOUNT:</b>
-                    {% set max_refund_amount = item.maxRefundAmount | default('', true) %}
-                    {% if max_refund_amount %}{{ max_refund_amount }}{% else %}N/A{% endif %}
-                </p>
+                {{ item_pricing_footer_internal(item) }}
             </div>
         </td>
 

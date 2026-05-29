@@ -1,0 +1,83 @@
+from jinja2 import Template
+import pdfkit
+import datetime
+import os
+from flask import request
+import re
+import json
+import math
+from urllib.parse import urlsplit
+
+ROOT_URL = os.environ.get("ROOT_URL", "http://localhost")
+
+
+def linkify_urls(text):
+    if text is None:
+        return ""
+
+    source = str(text)
+    pattern = re.compile(r'(?<!["\'=])(https?://[^\s<"]+)')
+
+    def _repl(match):
+        url = match.group(1)
+        trailing = ""
+        while url and url[-1] in ".,);:]!?":
+            trailing = url[-1] + trailing
+            url = url[:-1]
+        domain = urlsplit(url).netloc.lower()
+        if domain.startswith("www."):
+            domain = domain[4:]
+        if not domain:
+            domain = "link"
+        link_text = f"{domain} - View Link"
+        return f'<a href="{url}" style="color:#0000EE; text-decoration: underline;">{link_text}</a>{trailing}'
+
+    return pattern.sub(_repl, source)
+
+
+def make_subcontractor_scope():
+    body = request.json
+    with open('./templates/subcontractor.html') as f:
+        jinja_t = Template(f.read())
+    jinja_t.environment.filters["linkify"] = linkify_urls
+
+    sqFt = body['estimatesInfo'][0]['squareFootage']
+    for cat in body['categories']:
+        cat['totalFormatted'] = f"{cat['total'] :,}"
+
+        for subcat in cat['subcategories']:
+            for item in subcat['items']:
+                if item.get('priceHidden', False):
+                    item['price'] = "N/A"
+                    item['total'] = "N/A"
+                addi = item.get("additionalInfo") or ""
+                if addi and "EXP[" in addi and "]EXP" in addi:
+                    expressions = re.findall(r"EXP\[(.*?)\]EXP", addi)
+                    item["additionalInfo"] = addi.replace("EXP[", "").replace("]EXP", "")
+                    for expression in expressions:
+                        result = eval(expression)
+                        item["additionalInfo"] = item["additionalInfo"].replace(expression, str(result))
+                if item.get('longDescription') and "EXP[" in item['longDescription'] and "]EXP" in item['longDescription']:
+                    expressions = re.findall(r'EXP\[(.*?)\]EXP', item['longDescription'])
+                    item['longDescription'] = item['longDescription'].replace("EXP[", "").replace("]EXP", "")
+                    for expression in expressions:
+                        result = eval(expression)
+                        item['longDescription'] = item['longDescription'].replace(expression, str(result))
+
+    rendered = jinja_t.render(data=body)
+    ts = datetime.datetime.now().timestamp()
+    if not os.path.exists('./static'):
+        os.makedirs('./static')
+    pdfkit.from_string(rendered, f"./static/subcontractor_{ts}.pdf")
+
+    response = {
+        'statusCode': 200,
+        'body': {
+            "subcontractor_scope": f"{ROOT_URL}/static/subcontractor_{ts}.pdf",
+            "data": json.dumps(body)
+        }
+    }
+    return response
+
+
+make_subcontractor_scope.methods = ['POST']
