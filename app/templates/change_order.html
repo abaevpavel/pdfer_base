@@ -96,13 +96,8 @@
 <p class="red" style="margin-left: 20pt;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></p>
 {%- endmacro %}
 
-{% macro unit_pricing_disclaimer() -%}
-<p><i><b style="color: #FF0000;">Unit pricing</b> <span style="color: #000000;">may not be strictly linear and may include bundled pricing formulas or other pricing factors. As a result, individual unit costs may vary and may not equal the total price divided by the quantity.</span></i></p>
-{%- endmacro %}
-
 {% macro item_pricing_footer(it) -%}
 {{ pricing_separator() }}
-{{ unit_pricing_disclaimer() }}
 {%- endmacro %}
 
     <h3>
