@@ -97,7 +97,7 @@
 
 {% macro item_pricing_footer(it) -%}
 {{ pricing_separator() }}
-{{ maximum_refund_amount(it) }}
+{% if not it.priceHidden %}{{ maximum_refund_amount(it) }}{% endif %}
 {{ unit_pricing_disclaimer() }}
 {%- endmacro %}
 
