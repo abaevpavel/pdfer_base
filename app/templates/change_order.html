@@ -82,7 +82,25 @@
 
 <body>
 
+{% macro pricing_separator() -%}
+<p class="item-pricing-separator">________________________________________________________________________</p>
+{%- endmacro %}
+
+{% macro maximum_refund_amount(it) -%}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% if refund_str and refund_str | upper != 'N/A' %}
+<p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
+<br/><span style="color: #000000;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+{% endif %}
+{%- endmacro %}
+
 {% macro item_pricing_footer(it) -%}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% set show_refund = not it.priceHidden and refund_str and refund_str | upper != 'N/A' %}
+{% if show_refund %}
+{{ pricing_separator() }}
+{{ maximum_refund_amount(it) }}
+{% endif %}
 {%- endmacro %}
 
     <h3>
