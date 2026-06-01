@@ -94,16 +94,17 @@
 {%- endmacro %}
 
 {% macro catalog_price_description(it) -%}
-<p class="red"><b>Catalog Price Description:</b> {% if it.catelogId == 'Custom' and it.total == "N/A" %}N/A{% else %}{{ it.price | money }}{% endif %}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
+{% if not (it.catelogId == 'Custom' and it.total == "N/A") %}
+<p class="red"><b>Catalog Price Description:</b> {{ it.price | money }}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
+{% endif %}
 {%- endmacro %}
 
 {% macro maximum_refund_amount(it) -%}
 {% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-<p class="red"><b>Maximum refund amount:</b>
 {% if refund_str and refund_str | upper != 'N/A' %}
-{% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
-{% else %}N/A{% endif %}
+<p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
 <br/><span style="color: #000000;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+{% endif %}
 {%- endmacro %}
 
 {% macro item_pricing_footer_internal(it) -%}
