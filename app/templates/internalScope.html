@@ -94,8 +94,9 @@
 {%- endmacro %}
 
 {% macro catalog_price_description(it) -%}
-{% if it.catelogId != 'Custom' %}
-<p class="red"><b>Catalog Price Description:</b> {{ it.price | money }}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
+{% set price_str = it.price | money %}
+{% if price_str and price_str | upper != 'N/A' %}
+<p class="red"><b>Catalog Price Description:</b> {{ price_str }}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
 {% endif %}
 {%- endmacro %}
 
@@ -108,9 +109,10 @@
 {%- endmacro %}
 
 {% macro item_pricing_footer_internal(it) -%}
+{% set price_str = it.price | money %}
 {% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% set show_catalog = price_str and price_str | upper != 'N/A' %}
 {% set show_refund = not it.priceHidden and refund_str and refund_str | upper != 'N/A' %}
-{% set show_catalog = it.catelogId != 'Custom' %}
 {% if show_catalog or show_refund %}
 {{ pricing_separator() }}
 {% if show_catalog %}{{ catalog_price_description(it) }}{% endif %}
