@@ -91,8 +91,12 @@
 {%- endmacro %}
 
 {% macro item_pricing_footer(it) -%}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% set show_refund = not it.priceHidden and refund_str and refund_str | upper != 'N/A' %}
+{% if show_refund %}
 {{ pricing_separator() }}
-{% if not it.priceHidden %}{{ maximum_refund_amount(it) }}{% endif %}
+{{ maximum_refund_amount(it) }}
+{% endif %}
 {%- endmacro %}
 
     <h3>
