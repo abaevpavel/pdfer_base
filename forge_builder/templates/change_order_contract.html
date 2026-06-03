@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+
+        p,u,div {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12pt;
+        }
+
+        .font {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12pt;
+        }
+
+        .paragraphs{
+            padding: 2pt;
+            text-indent: 0pt;
+            line-height: 12pt;
+            text-align: left;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12pt;
+        }
+
+        .table {
+            width: 1450px;
+            border-collapse: collapse;
+        }
+
+        .headerHeight {
+            height: 25pt;
+
+        }
+
+        .greyBorder {
+            border-style: solid;
+            border-width: 1pt;
+            border-color: #A6A6A6;
+        }
+
+        .headerText {
+            padding-top: 5pt;
+            padding-left: 5pt;
+            text-indent: 0pt;
+            text-align: left;
+        }
+
+        .flexBox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .textCenter {
+            text-align: center;
+        }
+
+        .tradeImg {
+            padding: 2px;
+            border-radius: 100px;
+        }
+
+        table,
+        tr,
+        td,
+        th,
+        tbody,
+        thead,
+        tfoot {
+            page-break-inside: avoid !important;
+        }
+
+        .total-cost-line {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .red { color: #FF0000; }
+        .item-pricing-separator { margin: 8pt 0; }
+    </style>
+     <meta name="pdfkit-orientation" content="Landscape">
+     </head>
+
+<body>
+
+{% macro item_pricing_footer(it) -%}
+{%- endmacro %}
+
+    <h3>
+        ATTACHMENT 1: CHANGE ORDER (CONTRACT).
+    </h3>
+    
+    <p><b>UNIT PRICING MAY NOT BE STRICTLY LINEAR AND MAY INCLUDE BUNDLED PRICING FORMULAS OR OTHER PRICING FACTORS. AS A RESULT, INDIVIDUAL UNIT COSTS MAY VARY AND MAY NOT EQUAL THE TOTAL PRICE DIVIDED BY THE QUANTITY.</b></p>
+
+    {% for category in data['categories'] %}
+ 
+        <table class="table" cellspacing="0"><!--Category Header -->
+            <tbody><tr class="greyBorder">
+                <td class="headerHeight" colspan="3" bgcolor="#FF0000">
+                    <p class="headerText font" style="color:white">{{category.id}} <u class="font">{{category.name}}</u></p>
+                </td>
+                <td class="greyBorder" style="color:white" bgcolor="#FF0000" colspan="2">
+                    <div class="flexBox textCenter" style="padding-top: 5pt;">
+                        ${{category.totalFormatted}}
+                    </div>
+                </td>
+            </tr><!--Subcategory Header -->
+        {% for subcategory in category.subcategories %}
+            <tr class="headerHeight">
+                <td class="greyBorder" colspan="3" bgcolor="#D9E1F3">
+                    <p class="headerText font" style="padding-left: 30px;">{{subcategory.name}}</p>
+                </td>
+                <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
+                    <p class="flexBox textCenter">Quantity</p>
+                </td>
+                <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
+                    <p class="flexBox textCenter">Total</p>
+                </td>
+            </tr><!--Item Row -->
+            {% for item in subcategory['items'] %}
+                {% if not item['omitFromPDF']%}
+                    <tr>
+                        <!--Description column -->
+                        <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F1F1F1">
+                            <div class="paragraphs" style="padding-left: 30px;">
+                                {% if item.catelogId == 'Custom' %}
+                                    {% set item_type = (item.customData | default({})).itemType | default('default') %}
+                                    <p><b>{% if item_type == 'credit' %}Custom Credit item:{% elif item_type == 'note' %}Custom Note item:{% else %}Custom item:{% endif %}</b> {{item.name}} </p>
+
+                                {% set addi = item.additionalInfo | default('') | trim %}
+                                {% if addi %}
+                                {{ addi
+                                | e
+                                | linkify
+                                | replace('\r\n','\n')
+                                | replace('\n','<br>')
+                                | replace('<br>-','<br>- ')
+                                | safe
+                                }}
+                                {% endif %}
+
+                                {% else %}
+                                    <p><b>ITEM {{item.catelogId}}.</b> {{item.name}}</p>
+                                {% set addi = item.additionalInfo | default('') | trim %}
+                                {% if addi %}
+                                <p><b>ADDITIONAL NOTE:</b></p>
+                                {{ addi
+                                | e
+                                | linkify
+                                | replace('\r\n','\n')
+                                | replace('\n','<br>')
+                                | replace('<br>-','<br>- ')
+                                | safe
+                                }}
+                                {% endif %}
+
+                                {{item.longDescription | linkify | safe}}
+                                {% endif %}
+                                {% set has_photos = item.photos is defined and item.photos and (item.photos | select | list | length > 0) %}
+                                {% if has_photos %}
+                                <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
+                                {% endif %}
+                                {{ item_pricing_footer(item) }}
+                            </div>
+                        </td>
+                        <!--Quantity column -->
+                        <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
+                            {% if item.catelogId == 'Custom' %}
+                                <p class="flexBox textCenter">1</p>
+                            {% else %}
+                                <p class="flexBox textCenter">{{item.quantity}}</p>
+                            {% endif %}
+                        </td>
+                        <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
+                            <p class="flexBox textCenter">
+                                {% if item.total != "N/A"%}
+                                    ${{item.total}}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                    <!--Item Row -->
+                {% endif %} <!-- Include item in pdf  -->
+
+            {% endfor %} <!-- Items -->
+        {% endfor %} <!-- Subcats--> 
+    </tbody></table>
+    {% endfor %} <!--Cats -->
+
+    <br><br>
+    <h3 class="total-cost-line">Total Cost: {{ data.grandTotalFormatted }}</h3>
+</body></html>

@@ -1,0 +1,708 @@
+{
+  "categories": [
+    {
+      "subcategories": [
+        {
+          "items": [
+            {
+              "zoneMultiplier": "1",
+              "catelogId": "6-1-5",
+              "service": "Complete Basement Finishing",
+              "zoneAdjustedTotal": 500,
+              "id": "69e4ee8953ef695afab69b71",
+              "internalNotes": "",
+              "discountBreakdown": [
+                {
+                  "diffFromZoneAdjusted": 0,
+                  "discountId": "6a0aecbb005b4a62cf782fac",
+                  "totalWith": 500
+                },
+                {
+                  "discountId": "6a0aed8bcb50aabb07744c2b",
+                  "totalWith": 500,
+                  "diffFromZoneAdjusted": 0
+                }
+              ],
+              "name": "Upgrade dryer to Steam dryer (prior permits issuance).",
+              "allDiscountsDiff": 0,
+              "priceNotApplicable": false,
+              "priceHidden": false,
+              "rawTotal": "500",
+              "finalTotal": 500,
+              "longDescription": "<p>Please note that adding this item after project has started and permits were issued will result in a $500 additional fee for permits amendment.</p>\n",
+              "omitFromPDF": false,
+              "customData": {},
+              "category": "6. Laundry",
+              "price": "$500",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377024.973623.png",
+                  "name": "ELECTRICAL"
+                },
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.453223.png",
+                  "name": "PLUMBING"
+                },
+                {
+                  "name": "GASWORKS",
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377028.032616.png"
+                }
+              ],
+              "subCategory": "6-1. Laundry room price",
+              "excludeFromCustomPricingZone": false,
+              "zoneAdjustedDiff": 0,
+              "documents": [],
+              "permanentId": 386,
+              "hasCustomPricing": false,
+              "additionalInfo": "",
+              "maxRefundAmount": 500,
+              "quantity": "1",
+              "photos": [],
+              "internalInstructions": "",
+              "totalWithAllDiscounts": 500,
+              "total": "500",
+              "zoneAdjustedPrice": "$500"
+            },
+            {
+              "service": "Complete Basement Finishing",
+              "rawTotal": "4 590",
+              "id": "62e7ed6d700d4038bfb03d28",
+              "zoneAdjustedDiff": 0,
+              "zoneAdjustedPrice": "$918",
+              "totalWithAllDiscounts": 4590,
+              "priceNotApplicable": false,
+              "hasCustomPricing": false,
+              "omitFromPDF": false,
+              "zoneMultiplier": "1",
+              "zoneAdjustedTotal": 4590,
+              "name": "Utility sink near washer.",
+              "documents": [],
+              "total": "4 590",
+              "catelogId": "6-1-6",
+              "subCategory": "6-1. Laundry room price",
+              "category": "6. Laundry",
+              "priceHidden": false,
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.453223.png",
+                  "name": "PLUMBING"
+                }
+              ],
+              "excludeFromCustomPricingZone": false,
+              "permanentId": 387,
+              "internalInstructions": "",
+              "discountBreakdown": [
+                {
+                  "diffFromZoneAdjusted": 0,
+                  "totalWith": 4590,
+                  "discountId": "6a0aecbb005b4a62cf782fac"
+                },
+                {
+                  "diffFromZoneAdjusted": 0,
+                  "totalWith": 4590,
+                  "discountId": "6a0aed8bcb50aabb07744c2b"
+                }
+              ],
+              "additionalInfo": "add notes",
+              "customData": {},
+              "finalTotal": 4590,
+              "allDiscountsDiff": 0,
+              "longDescription": "<p>Conversion or add new. Sink not included.</p>\n",
+              "price": "$918",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366764.5891469_modern-basement-laundry-room-2.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366764.97458_0bdd85e91b2518b17d50e1696569d38b.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366765.46819_a9fec55cc5497c0e562944954001f2d6.jpg"
+              ],
+              "maxRefundAmount": 4590,
+              "quantity": "5",
+              "internalNotes": ""
+            },
+            {
+              "internalInstructions": "",
+              "rawTotal": "55",
+              "price": "Custom",
+              "longDescription": "",
+              "discountBreakdown": [
+                {
+                  "discountId": "6a0aecbb005b4a62cf782fac",
+                  "diffFromZoneAdjusted": 0,
+                  "totalWith": 55
+                },
+                {
+                  "diffFromZoneAdjusted": 0,
+                  "discountId": "6a0aed8bcb50aabb07744c2b",
+                  "totalWith": 55
+                }
+              ],
+              "finalTotal": 55,
+              "omitFromPDF": false,
+              "maxRefundAmount": 55,
+              "category": "6. Laundry",
+              "hasCustomPricing": true,
+              "priceHidden": false,
+              "permanentId": -1,
+              "zoneAdjustedTotal": 55,
+              "photos": [],
+              "internalNotes": "test default CI internal notes",
+              "additionalInfo": "test default CI add notes",
+              "customData": {
+                "inHouseTeamCost": 11,
+                "recommendedCost": 55,
+                "deliveryAndLogisticsCost": 0,
+                "subcontractorProposalAmount": 12,
+                "materialsAdminCost": 10,
+                "pricingNotes": "test default CI internal notes",
+                "itemType": "default"
+              },
+              "documents": [],
+              "catelogId": "Custom",
+              "zoneAdjustedDiff": 0,
+              "service": "Complete Basement Finishing",
+              "subCategory": "6-1. Laundry room price",
+              "total": "55",
+              "excludeFromCustomPricingZone": false,
+              "totalWithAllDiscounts": 55,
+              "priceNotApplicable": false,
+              "allDiscountsDiff": 0,
+              "id": "6a202be9e9e7cf991cd930ff",
+              "zoneAdjustedPrice": "$1",
+              "trades": [],
+              "zoneMultiplier": "1",
+              "name": "test default CI",
+              "quantity": "55"
+            }
+          ],
+          "name": "6-1. Laundry room price",
+          "total": 5145
+        },
+        {
+          "name": "6-2. Laundry room cabinets and countertops upgrades. ",
+          "total": 1050,
+          "items": [
+            {
+              "hasCustomPricing": false,
+              "rawTotal": "1 050",
+              "photos": [
+                "https://ucarecdn.com/b1f246cd-58e4-40ed-9d57-5b3f48231b1c/",
+                "https://ucarecdn.com/3183320c-a431-4e8e-9c77-73ed627b87a5/"
+              ],
+              "permanentId": 1007,
+              "priceHidden": false,
+              "longDescription": "<p>Custom Height  pantries will result in extra cost of up to $1,500</p>\n",
+              "excludeFromCustomPricingZone": false,
+              "additionalInfo": "",
+              "allDiscountsDiff": 0,
+              "name": "84/90/96 inch Pantry cabinet installation",
+              "zoneMultiplier": "1",
+              "finalTotal": 1050,
+              "catelogId": "6-2-5",
+              "category": "6. Laundry",
+              "total": "1 050",
+              "internalInstructions": "",
+              "quantity": "1",
+              "zoneAdjustedDiff": 0,
+              "totalWithAllDiscounts": 1050,
+              "discountBreakdown": [
+                {
+                  "diffFromZoneAdjusted": 0,
+                  "totalWith": 1050,
+                  "discountId": "6a0aecbb005b4a62cf782fac"
+                },
+                {
+                  "totalWith": 1050,
+                  "diffFromZoneAdjusted": 0,
+                  "discountId": "6a0aed8bcb50aabb07744c2b"
+                }
+              ],
+              "service": "Complete Basement Finishing",
+              "maxRefundAmount": 1050,
+              "priceNotApplicable": false,
+              "customData": {},
+              "documents": [],
+              "zoneAdjustedPrice": "$1 050",
+              "subCategory": "6-2. Laundry room cabinets and countertops upgrades. ",
+              "price": "$1,050",
+              "id": "67d1e2ed6e54bd850d2cedf5",
+              "trades": [],
+              "internalNotes": "",
+              "omitFromPDF": false,
+              "zoneAdjustedTotal": 1050
+            },
+            {
+              "zoneMultiplier": "1",
+              "finalTotal": 0,
+              "category": "6. Laundry",
+              "catelogId": "Custom",
+              "subCategory": "6-2. Laundry room cabinets and countertops upgrades. ",
+              "quantity": "0",
+              "hasCustomPricing": true,
+              "omitFromPDF": false,
+              "additionalInfo": "test note CI add info",
+              "zoneAdjustedTotal": 0,
+              "priceNotApplicable": false,
+              "zoneAdjustedPrice": "$1",
+              "totalWithAllDiscounts": 0,
+              "total": "N/A",
+              "priceHidden": false,
+              "customData": {
+                "inHouseTeamCost": 0,
+                "materialsAdminCost": 0,
+                "recommendedCost": 0,
+                "itemType": "note",
+                "pricingNotes": "test note CI internal notes",
+                "deliveryAndLogisticsCost": 0,
+                "subcontractorProposalAmount": 0
+              },
+              "discountBreakdown": [
+                {
+                  "totalWith": 0,
+                  "discountId": "6a0aecbb005b4a62cf782fac",
+                  "diffFromZoneAdjusted": 0
+                },
+                {
+                  "discountId": "6a0aed8bcb50aabb07744c2b",
+                  "totalWith": 0,
+                  "diffFromZoneAdjusted": 0
+                }
+              ],
+              "rawTotal": "N/A",
+              "excludeFromCustomPricingZone": false,
+              "name": "test note CI",
+              "permanentId": -1,
+              "internalInstructions": "",
+              "price": "Custom",
+              "photos": [],
+              "trades": [],
+              "service": "Complete Basement Finishing",
+              "internalNotes": "test note CI internal notes",
+              "documents": [],
+              "zoneAdjustedDiff": 0,
+              "allDiscountsDiff": 0,
+              "maxRefundAmount": 0,
+              "id": "6a202be9399c2df7ad4b0d89",
+              "longDescription": ""
+            }
+          ]
+        },
+        {
+          "total": 2100,
+          "items": [
+            {
+              "quantity": "1",
+              "allDiscountsDiff": 0,
+              "discountBreakdown": [
+                {
+                  "discountId": "6a0aecbb005b4a62cf782fac",
+                  "diffFromZoneAdjusted": 0,
+                  "totalWith": 1400
+                },
+                {
+                  "totalWith": 1400,
+                  "discountId": "6a0aed8bcb50aabb07744c2b",
+                  "diffFromZoneAdjusted": 0
+                }
+              ],
+              "photos": [
+                "https://ucarecdn.com/5e03004f-8342-477b-b7e6-562c06a77c36/",
+                "https://ucarecdn.com/5534c231-73eb-4034-8ea4-05671b24efdc/"
+              ],
+              "finalTotal": 1400,
+              "internalInstructions": "",
+              "longDescription": "<p>KNOBS AND PULLS TO BE PROVIDED BY HOMEOWNER</p>\n",
+              "priceNotApplicable": false,
+              "subCategory": "6-4. Cabinet and countertop w/sink allowance",
+              "price": "$650/ln.ft. $1,400 minimum",
+              "zoneAdjustedDiff": 0,
+              "id": "67d2db854865f6907ffdaf2a",
+              "service": "Complete Basement Finishing",
+              "omitFromPDF": false,
+              "category": "6. Laundry",
+              "trades": [],
+              "customData": {},
+              "total": "1 400",
+              "rawTotal": "1 400",
+              "totalWithAllDiscounts": 1400,
+              "internalNotes": "",
+              "documents": [],
+              "maxRefundAmount": 1400,
+              "priceHidden": false,
+              "permanentId": 1008,
+              "additionalInfo": "",
+              "zoneMultiplier": "1",
+              "catelogId": "6-4-2",
+              "zoneAdjustedTotal": 1400,
+              "zoneAdjustedPrice": "$1 400",
+              "name": "84/90/96 inches Pantry allowance for A and B series cabinets",
+              "hasCustomPricing": false,
+              "excludeFromCustomPricingZone": true
+            },
+            {
+              "zoneAdjustedPrice": "$700",
+              "total": "700",
+              "documents": [],
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377026.363626.png",
+                  "name": "FINISH CARPENTERS/TRIM AND CABINETS"
+                }
+              ],
+              "hasCustomPricing": false,
+              "customData": {},
+              "discountBreakdown": [
+                {
+                  "totalWith": 700,
+                  "diffFromZoneAdjusted": 0,
+                  "discountId": "6a0aecbb005b4a62cf782fac"
+                },
+                {
+                  "discountId": "6a0aed8bcb50aabb07744c2b",
+                  "totalWith": 700,
+                  "diffFromZoneAdjusted": 0
+                }
+              ],
+              "omitFromPDF": false,
+              "photos": [],
+              "zoneAdjustedTotal": 700,
+              "service": "Complete Basement Finishing",
+              "permanentId": 1022,
+              "internalNotes": "",
+              "catelogId": "6-4-7",
+              "additionalInfo": "",
+              "subCategory": "6-4. Cabinet and countertop w/sink allowance",
+              "longDescription": "<p>Farm sink is not included! Please refer to 9-1-8. Farm sink installation upcharge</p>\n",
+              "zoneAdjustedDiff": 0,
+              "category": "6. Laundry",
+              "rawTotal": "700",
+              "finalTotal": 700,
+              "maxRefundAmount": 700,
+              "allDiscountsDiff": 0,
+              "excludeFromCustomPricingZone": true,
+              "id": "695ec50cf92ffb3de7fd2931",
+              "name": "Sink and sink cut-out",
+              "priceHidden": false,
+              "price": "$700",
+              "quantity": "1",
+              "internalInstructions": "",
+              "totalWithAllDiscounts": 700,
+              "priceNotApplicable": false,
+              "zoneMultiplier": "1"
+            }
+          ],
+          "name": "6-4. Cabinet and countertop w/sink allowance"
+        }
+      ],
+      "total": 8295,
+      "name": "6. Laundry"
+    }
+  ],
+  "items": {
+    "custom": [
+      {
+        "internalInstructions": "",
+        "rawTotal": "55",
+        "price": "Custom",
+        "longDescription": "",
+        "discountBreakdown": [
+          {
+            "discountId": "6a0aecbb005b4a62cf782fac",
+            "diffFromZoneAdjusted": 0,
+            "totalWith": 55
+          },
+          {
+            "diffFromZoneAdjusted": 0,
+            "discountId": "6a0aed8bcb50aabb07744c2b",
+            "totalWith": 55
+          }
+        ],
+        "finalTotal": 55,
+        "omitFromPDF": false,
+        "maxRefundAmount": 55,
+        "category": "6. Laundry",
+        "hasCustomPricing": true,
+        "priceHidden": false,
+        "permanentId": -1,
+        "zoneAdjustedTotal": 55,
+        "photos": [],
+        "internalNotes": "test default CI internal notes",
+        "additionalInfo": "test default CI add notes",
+        "customData": {
+          "inHouseTeamCost": 11,
+          "recommendedCost": 55,
+          "deliveryAndLogisticsCost": 0,
+          "subcontractorProposalAmount": 12,
+          "materialsAdminCost": 10,
+          "pricingNotes": "test default CI internal notes",
+          "itemType": "default"
+        },
+        "documents": [],
+        "catelogId": "Custom",
+        "zoneAdjustedDiff": 0,
+        "service": "Complete Basement Finishing",
+        "subCategory": "6-1. Laundry room price",
+        "total": "55",
+        "excludeFromCustomPricingZone": false,
+        "totalWithAllDiscounts": 55,
+        "priceNotApplicable": false,
+        "allDiscountsDiff": 0,
+        "id": "6a202be9e9e7cf991cd930ff",
+        "zoneAdjustedPrice": "$1",
+        "trades": [],
+        "zoneMultiplier": "1",
+        "name": "test default CI",
+        "quantity": "55"
+      },
+      {
+        "zoneMultiplier": "1",
+        "finalTotal": 0,
+        "category": "6. Laundry",
+        "catelogId": "Custom",
+        "subCategory": "6-2. Laundry room cabinets and countertops upgrades. ",
+        "quantity": "0",
+        "hasCustomPricing": true,
+        "omitFromPDF": false,
+        "additionalInfo": "test note CI add info",
+        "zoneAdjustedTotal": 0,
+        "priceNotApplicable": false,
+        "zoneAdjustedPrice": "$1",
+        "totalWithAllDiscounts": 0,
+        "total": "N/A",
+        "priceHidden": false,
+        "customData": {
+          "inHouseTeamCost": 0,
+          "materialsAdminCost": 0,
+          "recommendedCost": 0,
+          "itemType": "note",
+          "pricingNotes": "test note CI internal notes",
+          "deliveryAndLogisticsCost": 0,
+          "subcontractorProposalAmount": 0
+        },
+        "discountBreakdown": [
+          {
+            "totalWith": 0,
+            "discountId": "6a0aecbb005b4a62cf782fac",
+            "diffFromZoneAdjusted": 0
+          },
+          {
+            "discountId": "6a0aed8bcb50aabb07744c2b",
+            "totalWith": 0,
+            "diffFromZoneAdjusted": 0
+          }
+        ],
+        "rawTotal": "N/A",
+        "excludeFromCustomPricingZone": false,
+        "name": "test note CI",
+        "permanentId": -1,
+        "internalInstructions": "",
+        "price": "Custom",
+        "photos": [],
+        "trades": [],
+        "service": "Complete Basement Finishing",
+        "internalNotes": "test note CI internal notes",
+        "documents": [],
+        "zoneAdjustedDiff": 0,
+        "allDiscountsDiff": 0,
+        "maxRefundAmount": 0,
+        "id": "6a202be9399c2df7ad4b0d89",
+        "longDescription": ""
+      }
+    ],
+    "catalog": [
+      {
+        "zoneMultiplier": "1",
+        "catelogId": "6-1-5",
+        "service": "Complete Basement Finishing",
+        "zoneAdjustedTotal": 500,
+        "id": "69e4ee8953ef695afab69b71",
+        "internalNotes": "",
+        "discountBreakdown": [
+          {
+            "diffFromZoneAdjusted": 0,
+            "discountId": "6a0aecbb005b4a62cf782fac",
+            "totalWith": 500
+          },
+          {
+            "discountId": "6a0aed8bcb50aabb07744c2b",
+            "totalWith": 500,
+            "diffFromZoneAdjusted": 0
+          }
+        ],
+        "name": "Upgrade dryer to Steam dryer (prior permits issuance).",
+        "allDiscountsDiff": 0,
+        "priceNotApplicable": false,
+        "priceHidden": false,
+        "rawTotal": "500",
+        "finalTotal": 500,
+        "longDescription": "<p>Please note that adding this item after project has started and permits were issued will result in a $500 additional fee for permits amendment.</p>\n",
+        "omitFromPDF": false,
+        "customData": {},
+        "category": "6. Laundry",
+        "price": "$500",
+        "trades": [
+          {
+            "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377024.973623.png",
+            "name": "ELECTRICAL"
+          },
+          {
+            "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.453223.png",
+            "name": "PLUMBING"
+          },
+          {
+            "name": "GASWORKS",
+            "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377028.032616.png"
+          }
+        ],
+        "subCategory": "6-1. Laundry room price",
+        "excludeFromCustomPricingZone": false,
+        "zoneAdjustedDiff": 0,
+        "documents": [],
+        "permanentId": 386,
+        "hasCustomPricing": false,
+        "additionalInfo": "",
+        "maxRefundAmount": 500,
+        "quantity": "1",
+        "photos": [],
+        "internalInstructions": "",
+        "totalWithAllDiscounts": 500,
+        "total": "500",
+        "zoneAdjustedPrice": "$500"
+      },
+      {
+        "service": "Complete Basement Finishing",
+        "rawTotal": "4 590",
+        "id": "62e7ed6d700d4038bfb03d28",
+        "zoneAdjustedDiff": 0,
+        "zoneAdjustedPrice": "$918",
+        "totalWithAllDiscounts": 4590,
+        "priceNotApplicable": false,
+        "hasCustomPricing": false,
+        "omitFromPDF": false,
+        "zoneMultiplier": "1",
+        "zoneAdjustedTotal": 4590,
+        "name": "Utility sink near washer.",
+        "documents": [],
+        "total": "4 590",
+        "catelogId": "6-1-6",
+        "subCategory": "6-1. Laundry room price",
+        "category": "6. Laundry",
+        "priceHidden": false,
+        "trades": [
+          {
+            "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.453223.png",
+            "name": "PLUMBING"
+          }
+        ],
+        "excludeFromCustomPricingZone": false,
+        "permanentId": 387,
+        "internalInstructions": "",
+        "discountBreakdown": [
+          {
+            "diffFromZoneAdjusted": 0,
+            "totalWith": 4590,
+            "discountId": "6a0aecbb005b4a62cf782fac"
+          },
+          {
+            "diffFromZoneAdjusted": 0,
+            "totalWith": 4590,
+            "discountId": "6a0aed8bcb50aabb07744c2b"
+          }
+        ],
+        "additionalInfo": "add notes",
+        "customData": {},
+        "finalTotal": 4590,
+        "allDiscountsDiff": 0,
+        "longDescription": "<p>Conversion or add new. Sink not included.</p>\n",
+        "price": "$918",
+        "photos": [
+          "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366764.5891469_modern-basement-laundry-room-2.jpg",
+          "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366764.97458_0bdd85e91b2518b17d50e1696569d38b.jpg",
+          "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366765.46819_a9fec55cc5497c0e562944954001f2d6.jpg"
+        ],
+        "maxRefundAmount": 4590,
+        "quantity": "5",
+        "internalNotes": ""
+      }
+    ]
+  },
+  "clientInfo": [
+    {
+      "clientStreet": "5300 Kilmer Place",
+      "zip": "20781",
+      "externalReferenceNumber": "recAMJtiDgM2eId2O",
+      "clientEmail": "todor.3d@basementremodeling.com",
+      "clientPhone": "6418880132",
+      "clientFirst": "Testing",
+      "clientLast": "Testing",
+      "city": "Hyattsville",
+      "pricingZone": {
+        "id": "68e80f72cd5a1254df8f2a8f",
+        "multiplier": "0,94",
+        "percent": "-6",
+        "name": "Prince George, MD",
+        "isDefault": false
+      },
+      "county": "",
+      "state": "MD"
+    }
+  ],
+  "estimatesInfo": [
+    {
+      "sentForPaymentDate": "",
+      "workAlreadyStarted": false,
+      "totalCostDepositDiscount": 8295,
+      "appVersion": "2.9",
+      "depositDiscountDiscountValidTill": "",
+      "estimate": "C-CO-260603-20550",
+      "zoneAdjustedDiff": 0,
+      "calculatedAt": "2026-06-03T13:29:14.213Z",
+      "estimateDate": "06/03/2026",
+      "zoneAdjustedTotalCost": 8295,
+      "totalCostCashDiscount": 8295,
+      "totalCost": 8295,
+      "totalCostBothDiscounts": 8295,
+      "totalWithAllDiscounts": 8295,
+      "finalTotalCost": 8295,
+      "author": "Pavel Abaev",
+      "rawTotalCost": 8295,
+      "payloadVersion": 1,
+      "houseBuilt": 2,
+      "totalCostAllDiscounts": 8295,
+      "depositDiscount": 0,
+      "voidedDate": "",
+      "squareFootage": 0,
+      "floorplan": "",
+      "cashDiscount": 0,
+      "cashDiscountValidTill": "",
+      "id": "6a202be90249c60e8ea6e798",
+      "appliedDiscounts": [
+        {
+          "diffFromZoneAdjusted": 0,
+          "name": "Quick Start",
+          "validTill": "",
+          "abbreviation": "QS",
+          "value": 0,
+          "totalWith": 8295,
+          "id": "6a0aecbb005b4a62cf782fac"
+        },
+        {
+          "validTill": "",
+          "abbreviation": "QD",
+          "id": "6a0aed8bcb50aabb07744c2b",
+          "diffFromZoneAdjusted": 0,
+          "name": "quick deposit",
+          "value": 0,
+          "totalWith": 8295
+        }
+      ],
+      "pc_email": "pavel.a@achgroupllc.com",
+      "sentToClientDate": "",
+      "allDiscountsDiff": 0,
+      "status": "sentInternally"
+    }
+  ],
+  "appSettings": {
+    "centsOnProposals": false,
+    "centsOnChangeOrders": true,
+    "roundingRule": "up"
+  }
+}

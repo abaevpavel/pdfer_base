@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        p, u, div { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; }
+        .font { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; }
+        .paragraphs { padding: 2pt; text-indent: 0pt; line-height: 12pt; text-align: left; font-family: Arial, Helvetica, sans-serif; font-size: 12pt; }
+        .table { width: 1450px; border-collapse: collapse; }
+        .headerHeight { height: 25pt; }
+        .greyBorder { border-style: solid; border-width: 1pt; border-color: #A6A6A6; }
+        .headerText { padding-top: 5pt; padding-left: 5pt; text-indent: 0pt; text-align: left; }
+        .flexBox { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .textCenter { text-align: center; }
+        .tradeImg { padding: 2px; border-radius: 100px; }
+        /* глобальные правила как были */
+        table, tr, td, th, tbody, thead, tfoot { page-break-inside: avoid !important; }
+        .red { color: #FF0000; }
+        .item-pricing-separator { margin: 8pt 0; }
+        
+        /* Переопределение красного цвета в описании товара (между ITEM и ссылкой) */
+        .item-description, .item-description * { color: #000000 !important; }
+        .item-description .red, .item-description p.red { color: #000000 !important; }
+
+        /* ✅ только для секции кастомов разрешаем нормальный поток */
+        .custom-section table { page-break-inside: auto !important; break-inside: auto !important; }
+        .custom-section thead,
+        .custom-section tbody,
+        .custom-section tfoot { page-break-inside: auto !important; break-inside: auto !important; }
+        .custom-section tr { page-break-inside: avoid !important; break-inside: avoid-page !important; }
+        .custom-section td, .custom-section th { page-break-inside: auto !important; break-inside: auto !important; }
+        .custom-section thead { display: table-header-group; }
+        .custom-section tfoot { display: table-footer-group; }
+
+        /* ✅ заставляем следующую секцию начинаться с НОВОЙ страницы */
+        .next-section {
+            page-break-before: always;   /* для wkhtmltopdf/pdfkit */
+            break-before: page;          /* современный синтаксис */
+            margin-top: 0;               /* чтобы не схлопывались маргины */
+            display: block;
+        }
+    </style>
+    <meta name="pdfkit-orientation" content="Landscape">
+</head>
+<body>
+
+{% macro internal_lines(it) -%}
+{% if it.internalInstructions or it.internalNotes %}
+{% if it.internalInstructions %}
+<p class="red">
+    <b>INTERNAL INSTRUCTIONS:</b><br/>
+    {{ it.internalInstructions 
+    | default('', true)
+    | linkify
+    | replace('\r\n','\n')
+    | replace('\n','<br>')
+    | replace('<br>-','<br>- ')
+    | safe
+    }}
+</p>
+{% endif %}
+{% if it.internalNotes %}
+<p class="red">
+    <b>INTERNAL NOTES:</b><br/>
+    {{ it.internalNotes 
+    | default('', true)
+    | linkify
+    | replace('\r\n','\n')
+    | replace('\n','<br>')
+    | replace('<br>-','<br>- ')
+    | safe
+    }}
+</p>
+{% endif %}
+{% endif %}
+{%- endmacro %}
+
+{# OUR COST — только для таблицы кастом-айтемов; поля из customData. Note items: no cost block. #}
+{% macro custom_our_cost(it) -%}
+{% set cd = it.customData | default({}) %}
+{% if (cd.itemType | default('default')) != 'note' %}
+<p class="red">
+    <b>OUR COST:</b><br/>
+    Subcontractor proposal amount: {{ cd.subcontractorProposalAmount | default(0) | money }}<br/>
+    In house team cost: {{ cd.inHouseTeamCost | default(0) | money }}<br/>
+    Other cost: {{ cd.materialsAdminCost | default(0) | money }}<br/>
+    Recommended cost: {{ cd.recommendedCost | default(0) | money }}
+</p>
+{% endif %}
+{%- endmacro %}
+
+{% macro pricing_separator() -%}
+<p class="item-pricing-separator">________________________________________________________________________</p>
+{%- endmacro %}
+
+{% macro catalog_price_description(it) -%}
+{% if it.catelogId == 'Custom' %}{% set price_str = it.quantity | money %}{% else %}{% set price_str = it.price | money %}{% endif %}
+{% if price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
+<p class="red"><b>Catalog Price Description:</b> {{ price_str }}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
+{% endif %}
+{%- endmacro %}
+
+{% macro maximum_refund_amount(it) -%}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% if refund_str and refund_str | upper != 'N/A' %}
+<p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
+<br/><span style="color: #000000;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+{% endif %}
+{%- endmacro %}
+
+{% macro item_pricing_footer_internal(it) -%}
+{% if it.catelogId == 'Custom' %}{% set price_str = it.quantity | money %}{% else %}{% set price_str = it.price | money %}{% endif %}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% set show_catalog = price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
+{% set show_refund = refund_str and refund_str | upper != 'N/A' and not it.priceHidden %}
+{% if show_catalog or show_refund %}
+{{ pricing_separator() }}
+{% if show_catalog %}{{ catalog_price_description(it) }}{% endif %}
+{% if show_refund %}{{ maximum_refund_amount(it) }}{% endif %}
+{% endif %}
+{%- endmacro %}
+
+
+{# ---------- CUSTOM ITEMS — GROUPED BY CATEGORY/SUBCATEGORY ---------- #}
+<div class="custom-section">
+    {% if custom_items and custom_items|length > 0 %}
+    <h3>CUSTOM ITEMS — GROUPED BY CATEGORY</h3>
+    {% for category in data['categories'] %}
+    {% set ns = namespace(any=false) %}
+    {% for subcategory in category.subcategories %}
+    {% set citems = subcategory['items'] | selectattr('catelogId','equalto','Custom') | list %}
+    {% if citems|length > 0 %}
+    {% if not ns.any %}
+    <table class="table" cellspacing="0">
+        <tbody>
+        <tr class="greyBorder">
+            <td class="headerHeight" colspan="3" bgcolor="#FF0000">
+                <p class="headerText font" style="color:white">{{ category.id }} <u class="font">{{ category.name }}</u></p>
+            </td>
+            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Quantity</p></td>
+            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
+        </tr>
+        {% set ns.any = true %}
+        {% endif %}
+
+        {# Заголовок подкатегории #}
+        <tr class="headerHeight">
+            <td class="greyBorder" colspan="3" bgcolor="#D9E1F3">
+                <p class="headerText font" style="padding-left:30px;">{{ subcategory.name }}</p>
+            </td>
+            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Quantity</p></td>
+            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
+        </tr>
+
+        {# Строки кастом-айтемов #}
+        {% for item in citems %}
+        <tr>
+            <!-- Description -->
+            <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F9F9F9">
+                <div class="paragraphs" style="padding-left:30px;">
+                    {% set item_type = (item.customData | default({})).itemType | default('default') %}
+                    <p><b>{% if item_type == 'credit' %}Custom Credit item:{% elif item_type == 'note' %}Custom Note item:{% else %}Custom item:{% endif %}</b> {{ item.name }} </p>
+
+                    {% set addi = item.additionalInfo | default('') | trim %}
+                    {% if addi and addi != 'None' and addi != 'none' %}
+                    {{ addi
+                    | e
+                    | linkify
+                    | replace('\r\n','\n')
+                    | replace('\n','<br>')
+                    | replace('<br>-','<br>- ')
+                    | safe }}
+                    {% endif %}
+                    {% set has_photos = item.photos is defined and item.photos and (item.photos | select | list | length > 0) %}
+                    {% if has_photos %}
+                    <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
+                    {% endif %}
+                    {{ internal_lines(item) }}
+                    {{ custom_our_cost(item) }}
+                    {{ item_pricing_footer_internal(item) }}
+                </div>
+            </td>
+            <!-- Quantity -->
+            <td class="greyBorder" bgcolor="#F9F9F9" style="width:10%;"><p class="flexBox textCenter">1</p></td>
+            <!-- Total -->
+            <td class="greyBorder" bgcolor="#F9F9F9" style="width:10%;">
+                <p class="flexBox textCenter">
+                    {{ item.total | money }}<br/>
+                    {% if item.priceHidden %}
+                    <span style="color:red; font-size:10pt;">(hidden from customer)</span>
+                    {% endif %}
+                </p>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+        {% if ns.any %}
+        </tbody>
+    </table>
+    <br/>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</div>
+
+{# ---------- ОСНОВНОЙ РАЗДЕЛ ---------- #}
+<h3 class="next-section">INTERNAL SCOPE: FULL PROJECT SCOPE.</h3>
+<h4>BASEMENT TOTAL SQ. FT. = {{ data['estimatesInfo'][0]['squareFootage'] }} SQ. FT.</h4>
+<p><b>ATTENTION! PROPERTY ON SEPTIC? BEDROOMS OR ROOMS WITH CLOSETS ARE NOT POSSIBLE UNLESS WRITTEN CONFIRMATION FROM COUNTY/CITY HEALTH DEPARTMENT IS PROVIDED! THIS INCLUDES REMODELING PROJECTS WITH EXISTING ROOMS!</b></p>
+<p><b>UNIT PRICING MAY NOT BE STRICTLY LINEAR AND MAY INCLUDE BUNDLED PRICING FORMULAS OR OTHER PRICING FACTORS. AS A RESULT, INDIVIDUAL UNIT COSTS MAY VARY AND MAY NOT EQUAL THE TOTAL PRICE DIVIDED BY THE QUANTITY.</b></p>
+
+{% for category in data['categories'] %}
+<table class="table" cellspacing="0">
+    <tbody>
+    <tr class="greyBorder">
+        <td class="headerHeight" colspan="3" bgcolor="#FF0000">
+            <p class="headerText font" style="color:white">{{ category.id }} <u class="font">{{ category.name }}</u></p>
+        </td>
+        <td class="greyBorder" style="color:white" bgcolor="#FF0000" colspan="2">
+            <div class="flexBox textCenter" style="padding-top:5pt;">
+                {{ category.totalFormatted | money }}
+            </div>
+        </td>
+    </tr>
+
+    {% for subcategory in category.subcategories %}
+    <tr class="headerHeight">
+        <td class="greyBorder" colspan="3" bgcolor="#D9E1F3">
+            <p class="headerText font" style="padding-left:30px;">{{ subcategory.name }}</p>
+        </td>
+        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Quantity</p></td>
+        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
+    </tr>
+
+    {% for item in subcategory['items'] %}
+    {% if not item['omitFromPDF'] %}
+    <tr>
+        <!-- Description -->
+        <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F1F1F1">
+            <div class="paragraphs" style="padding-left:30px;">
+                {% if item.catelogId == 'Custom' %}
+                {% set item_type = (item.customData | default({})).itemType | default('default') %}
+                <p><b>{% if item_type == 'credit' %}Custom Credit item:{% elif item_type == 'note' %}Custom Note item:{% else %}Custom item:{% endif %}</b> {{ item.name }}</p>
+
+                {% set addi = item.additionalInfo | default('') | trim %}
+                {% if addi and addi != 'None' and addi != 'none' %}
+                {{ addi
+                | e
+                | linkify
+                | replace('\r\n','\n')
+                | replace('\n','<br>')
+                | replace('<br>-','<br>- ')
+                | safe
+                }}
+                {% endif %}
+
+                {% else %}
+                <p><b>ITEM {{ item.catelogId }}.</b> {{ item.name }}</p>
+                <div class="item-description" style="color: #000000 !important;">
+                {% set addi = item.additionalInfo | default('') | trim %}
+                {% if addi and addi != 'None' and addi != 'none' %}
+                <p><b>ADDITIONAL NOTE:</b></p>
+                {{ addi
+                | e
+                | linkify
+                | replace('\r\n','\n')
+                | replace('\n','<br>')
+                | replace('<br>-','<br>- ')
+                | replace('color: #FF0000', 'color: #000000')
+                | replace('color:#FF0000', 'color:#000000')
+                | replace('color:red', 'color:#000000')
+                | replace('color:red;', 'color:#000000;')
+                | replace('class="red"', 'class="item-description"')
+                | safe
+                }}
+                {% endif %}
+
+                {% set long_desc = item.longDescription | default('') | trim %}
+                {% if long_desc and long_desc != 'None' and long_desc != 'none' %}
+                {{ long_desc 
+                | replace('color: #FF0000', 'color: #000000') 
+                | replace('color:#FF0000', 'color:#000000') 
+                | replace('color:red', 'color:#000000') 
+                | replace('color:red;', 'color:#000000;') 
+                | replace('class="red"', 'class="item-description"')
+                | linkify
+                | replace('style="color: #FF0000', 'style="color: #000000')
+                | replace('style="color:#FF0000', 'style="color:#000000')
+                }}
+                {% endif %}
+                </div>
+                {% endif %}
+                {% set has_photos = item.photos is defined and item.photos and (item.photos | select | list | length > 0) %}
+                {% if has_photos %}
+                <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
+                {% endif %}
+                {{ internal_lines(item) }}
+                {{ item_pricing_footer_internal(item) }}
+            </div>
+        </td>
+
+        <!-- Quantity -->
+        <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
+            {% if item.catelogId == 'Custom' %}
+            <p class="flexBox textCenter">1</p>
+            {% else %}
+            <p class="flexBox textCenter">{{ item.quantity }}</p>
+            {% endif %}
+        </td>
+
+        <!-- Total -->
+        <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
+            <p class="flexBox textCenter">
+                {{ item.total | money }}<br/>
+                {% if item.priceHidden %}
+                <span style="color:red; font-size:10pt;">(hidden from customer)</span>
+                {% endif %}
+            </p>
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+
+</body>
+</html>

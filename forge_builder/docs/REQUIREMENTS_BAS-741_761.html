@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Требования по редизайну темплейтов — BAS-741 + BAS-761</title>
+<style>
+  :root {
+    --blue:#2F5F8F; --blue2:#4A78A6; --bg:#f5f6f8; --card:#fff;
+    --green:#1f8a4c; --red:#c0392b; --amber:#b8860b; --grey:#666;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color:#222; background:var(--bg); margin:0; line-height:1.5;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px 80px; }
+  header.banner {
+    background:var(--blue); color:#fff; padding:26px 20px;
+    margin-bottom:24px;
+  }
+  header.banner .wrap { padding-bottom:0; }
+  header.banner h1 { margin:0; font-size:22px; letter-spacing:.3px; }
+  header.banner p { margin:8px 0 0; opacity:.9; font-size:14px; }
+  h2 {
+    color:var(--blue); border-bottom:2px solid #dde3ea; padding-bottom:6px;
+    margin-top:34px; font-size:18px;
+  }
+  .card { background:var(--card); border:1px solid #e2e6ec; border-radius:10px;
+    padding:14px 18px; margin:14px 0; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; }
+  th, td { border:1px solid #dde3ea; padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef2f7; }
+  ul { margin:8px 0; padding-left:22px; }
+  li { margin:5px 0; }
+  code { background:#eef1f5; padding:1px 5px; border-radius:4px; font-size:90%;
+    font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .badge { display:inline-block; font-size:11px; font-weight:700; padding:1px 7px;
+    border-radius:10px; color:#fff; vertical-align:middle; margin-right:4px; }
+  .b-done { background:var(--green); }
+  .b-todo { background:var(--red); }
+  .b-ask  { background:var(--amber); }
+  .b-open { background:#555; }
+  .b-conf { background:#8e44ad; }
+  .b-cancel { background:#9aa0a6; }
+  .note { font-size:13px; color:var(--grey); }
+  .quote { font-style:italic; color:#444; }
+  .legend span { margin-right:14px; white-space:nowrap; }
+  a { color:var(--blue); }
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap" style="padding-bottom:0">
+    <h1>Требования по редизайну темплейтов — BAS-741 + BAS-761</h1>
+    <p>Консолидированные требования по PDF-темплейтам: proposal / internal / change order / subcontractor</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2>Источники</h2>
+  <table>
+    <tr><th>Задача</th><th>Автор</th><th>Создана</th><th>Статус</th><th>Суть</th></tr>
+    <tr>
+      <td><a href="https://todor3d.atlassian.net/browse/BAS-741">BAS-741</a></td>
+      <td>Pavel Abaev</td><td>2026-05-22</td><td>Ready for Release (High)</td>
+      <td>rework INTERNAL / CLIENT scope — цены и колонки</td>
+    </tr>
+    <tr>
+      <td><a href="https://todor3d.atlassian.net/browse/BAS-761">BAS-761</a></td>
+      <td>Vlad Smahin</td><td>2026-05-28</td><td>Not Pushed yet (Medium)</td>
+      <td>улучшить темплейты + создать сабконтрактор-темплейт + тест</td>
+    </tr>
+  </table>
+  <div class="card note">
+    <b>Правило конфликтов:</b> BAS-761 новее → при расхождениях <b>она главнее</b>.<br>
+    <b>Нотация Jira:</b> в чек-листах <code>-зачёркнутый-</code> текст = сделано/закрыто, не зачёркнутый = открыто.
+    Статусы ниже проставлены по этой интерпретации — проверь, если где-то разойдётся со смыслом.<br>
+    <div class="legend" style="margin-top:8px">
+      <span><span class="badge b-done">DONE</span>сделано</span>
+      <span><span class="badge b-todo">TODO</span>надо доделать в A4</span>
+      <span><span class="badge b-ask">CLARIFY</span>уточнить</span>
+      <span><span class="badge b-open">OPEN</span>не закрыто</span>
+      <span><span class="badge b-conf">CONFLICT</span>конфликт задач</span>
+    </div>
+  </div>
+
+  <h2>1. Колонки и цены</h2>
+  <ul>
+    <li><span class="badge b-done">DONE</span> Убрать столбец <code>Price</code> со всех темплейтов <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> proposal: <code>Zone Adjusted price</code> → переименовать в <b>Total</b> <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> internal: <code>price</code> → <b>Catalogue price</b>; колонка <code>Total</code> → <b>«Client's Price based on Zone»</b> <span class="note">(741) — реализовано (C4)</span></li>
+    <li><span class="badge b-done">DONE</span> <code>total cost</code> и <code>items total</code> — поменялось только значение, логика та же <span class="note">(741)</span></li>
+    <li><span class="badge b-done">РЕШЕНО (C1)</span> Значение в колонке <code>Total</code> = <code>item.total</code> — <b>оставляем как есть, всё правильно</b> <span class="note">(761, 01.06)</span></li>
+  </ul>
+
+  <h2>2. Catalog Price Description</h2>
+  <ul>
+    <li><span class="badge b-done">DONE</span> Инфу с убранного столбца <code>Price</code> переносим в <b>Catalog Price Description</b> <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> <b>Только в Internal scope</b> (в клиентский не выводим) <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> Текст: <span class="quote">«Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.»</span></li>
+    <li><span class="badge b-done">DONE</span> Если значение <b>N/A — не показывать</b> блок <span class="note">(761)</span></li>
+  </ul>
+
+  <h2>3. Maximum refund amount</h2>
+  <ul>
+    <li><span class="badge b-done">DONE</span> Per-item, значение <b>или N/A</b> <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> Показывать в <b>Internal и Client</b> scope <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> Текст: <span class="quote">«Maximum refund amount available after contract signing, based on incentives applied at the time of signing.»</span></li>
+    <li><span class="badge b-done">DONE</span> Со знаком <code>$</code> <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> Если <b>hide price → hide max refund</b> <span class="note">(761) — реализовано (T2)</span></li>
+    <li><span class="badge b-done">DONE</span> Если <b>N/A — не показывать</b> <span class="note">(761)</span></li>
+    <li><span class="badge b-done">DONE</span> <b>Change Order: max refund УБИРАЕМ</b> <span class="note">(741) — реализовано (T1), на internal CO каталожная цена остаётся</span></li>
+  </ul>
+  <div class="card">
+    <span class="badge b-conf">CONFLICT → решён</span>
+    761 — «Maximum refund amount отправлять везде» vs 741 — «на СО убираем».<br>
+    <b>Резолюция:</b> iOS присылает поле в payload <b>везде</b>, но в шаблоне Change Order его <b>не отображаем</b>.
+    Плюс уточнение (C2): max refund показываем, <b>если он есть И цена показывается</b> (никакого принудительного N/A); при <code>priceHidden</code> — refund скрываем.
+  </div>
+
+  <h2>4. Unit pricing note (в хедере)</h2>
+  <ul>
+    <li><span class="badge b-done">DONE</span> Новый абзац на <b>обоих</b> (client + internal), <b>в хедере</b> <span class="note">(741 + 761)</span></li>
+    <li class="quote">«Unit pricing may not be strictly linear and may include bundled pricing formulas or other pricing factors. As a result, individual unit costs may vary and may not equal the total price divided by the quantity.»</li>
+    <li><span class="badge b-cancel">ОТМЕНЕНО</span> Оформление: <s>жирным красным, новый абзац с отступом</s> <span class="note">(741) — требование снято, оставляем как есть</span></li>
+    <li><span class="badge b-done">DONE</span> Описание айтемов — <b>чёрным, без отступа</b> <span class="note">(741)</span></li>
+    <li><span class="badge b-done">DONE</span> Разделительная линия <span class="note">(741) — серая подходит, оставляем</span></li>
+    <li><span class="badge b-done">DONE</span> <b>Change Order: unit pricing оставляем</b> <span class="note">(741)</span></li>
+  </ul>
+
+  <h2>5. Custom items</h2>
+  <ul>
+    <li><span class="badge b-done">РЕШЕНО (C2)</span> Никакого принудительного <b>Max refund = N/A</b> для custom. Правило общее: <b>refund показываем, если он есть И цена показывается</b> (при <code>priceHidden</code> — скрываем). Реализовано вместе с T2.</li>
+    <li><span class="badge b-done">РЕШЕНО (C3)</span> CI <code>Quantity</code> в payload <b>всегда 1</b> — добавлено на стороне iOS (Vlad). На шаблонах ничего менять не надо.</li>
+  </ul>
+
+  <h2>6. Цвет</h2>
+  <ul>
+    <li><span class="badge b-done">DONE</span> Всё оформление — в <b>accent color</b> (фирменный акцент) <span class="note">(741)</span></li>
+  </ul>
+
+  <h2>7. Subcontractor (главное открытое)</h2>
+  <ul>
+    <li><span class="badge b-open">OPEN</span> <b>Создать/изменить эндпоинт для сабконтракторов и протестировать</b> <span class="note">(761, не закрыто)</span>
+      — пересекается с текущей работой в <code>forge_builder/</code> (есть subcontractor-темплейты).</li>
+  </ul>
+
+  <h2>Открытые вопросы — <span style="color:var(--green)">все решены ✓</span></h2>
+  <div class="card">
+    <ol>
+      <li><b>C1.</b> <code>category.total</code> / item <code>total</code> — <span class="badge b-done">РЕШЕНО</span> оставляем как есть (<code>item.total</code>), всё правильно.</li>
+      <li><b>C2.</b> Custom item Max refund = N/A — <span class="badge b-cancel">ОТМЕНЕНО</span> никакого N/A; refund показываем, если он есть И цена показывается (= логика T2).</li>
+      <li><b>C3.</b> CI Quantity всегда 1 — <span class="badge b-done">РЕШЕНО</span> добавлено на стороне iOS (Vlad), шаблоны не трогаем.</li>
+      <li><b>C4.</b> Internal колонка → «Client's Price based on Zone» — <span class="badge b-done">РЕШЕНО</span> метку поставили как написано.</li>
+    </ol>
+  </div>
+
+  <h2>Соответствие текущим A4-темплейтам <span class="note">(forge_builder/templates/*_a4.html)</span></h2>
+  <table>
+    <tr><th>Требование</th><th>Статус в A4</th></tr>
+    <tr><td>Убрать столбец Price</td><td><span class="badge b-done">DONE</span></td></tr>
+    <tr><td>Catalog Price Description только в internal</td><td><span class="badge b-done">DONE</span></td></tr>
+    <tr><td>Max refund скрывать при N/A</td><td><span class="badge b-done">DONE</span></td></tr>
+    <tr><td>Catalog desc скрывать при N/A</td><td><span class="badge b-done">DONE</span></td></tr>
+    <tr><td>Unit pricing жирным красным с отступом</td><td><span class="badge b-cancel">ОТМЕНЕНО</span> требование снято (T3)</td></tr>
+    <tr><td>Разделит. линия</td><td><span class="badge b-done">DONE</span> серая подходит (T4)</td></tr>
+    <tr><td>Max refund <b>убрать на Change Order</b></td><td><span class="badge b-done">DONE</span> (T1)</td></tr>
+    <tr><td>hide price → hide max refund</td><td><span class="badge b-done">DONE</span> (T2)</td></tr>
+    <tr><td>Internal колонка «Client's Price based on Zone»</td><td><span class="badge b-done">DONE</span> (C4)</td></tr>
+    <tr><td>Custom item Max refund N/A</td><td><span class="badge b-cancel">ОТМЕНЕНО</span> показываем если есть и цена есть (C2)</td></tr>
+  </table>
+  <p class="note">Все пункты из требований BAS-741/761 закрыты. Остаётся прод-задача: подключить A4-темплейты к эндпоинтам с генерацией PDF (родной футер wkhtmltopdf) + создать/завести эндпоинт для сабконтракторов (761).</p>
+
+  <p style="margin-top:30px">Связанный документ:
+    <a href="PAYLOAD_NOTES_BAS-741_iOS.html">PAYLOAD_NOTES_BAS-741_iOS.html</a> — новые поля payload от iOS-дева.</p>
+
+</div>
+</body>
+</html>

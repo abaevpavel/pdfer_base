@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 14mm 0 12mm 0;         /* верхний отступ на всех страницах; бока 0; низ 12mm под футер */
+            /* футер-полоса на КАЖДОЙ странице (margin-boxes склеиваются в единую синюю ленту) */
+            @bottom-left   { content: "FULL PROJECT SCOPE"; background: #2F5F8F; color: #FFFFFF; font: bold 8pt Arial, sans-serif; vertical-align: middle; padding-left: 12mm; border-top: 8pt solid #FFFFFF; }
+            @bottom-center { content: " "; background: #2F5F8F; border-top: 8pt solid #FFFFFF; }
+            @bottom-right  { content: "Page " counter(page) " / " counter(pages); background: #2F5F8F; color: #FFFFFF; font: 8pt Arial, sans-serif; vertical-align: middle; padding-right: 12mm; border-top: 8pt solid #FFFFFF; }
+        }
+        /* первая страница: верх без отступа — баннер вплотную к краю.
+           Paged.js не наследует margin-boxes из базового @page в :first,
+           поэтому футер дублируем здесь. */
+        @page :first {
+            margin: 0 0 12mm 0;
+            @bottom-left   { content: "FULL PROJECT SCOPE"; background: #2F5F8F; color: #FFFFFF; font: bold 8pt Arial, sans-serif; vertical-align: middle; padding-left: 12mm; border-top: 8pt solid #FFFFFF; }
+            @bottom-center { content: " "; background: #2F5F8F; border-top: 8pt solid #FFFFFF; }
+            @bottom-right  { content: "Page " counter(page) " / " counter(pages); background: #2F5F8F; color: #FFFFFF; font: 8pt Arial, sans-serif; vertical-align: middle; padding-right: 12mm; border-top: 8pt solid #FFFFFF; }
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333333;
+            font-size: 10pt;
+        }
+
+        /* ---- цветовая палитра ---- */
+        /* банер/футер: #2F5F8F | категория: #4A78A6 | подкатегория: #E4E9F0 | бордеры: #C9C9C9 */
+
+        .page-pad { padding: 6mm 12mm 0 12mm; }   /* горизонт. поля контента; верх — небольшой отступ после баннера */
+
+        /* ===== верхний баннер ===== */
+        .doc-banner {
+            background: #2F5F8F;
+            color: #FFFFFF;
+            padding: 16pt 28pt;
+            font-size: 18pt;
+            font-weight: bold;
+            letter-spacing: 0.5pt;
+        }
+
+        .sqft {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #222222;
+            margin: 16pt 0 10pt 0;
+        }
+
+        .intro { font-size: 9pt; line-height: 13pt; }
+        .intro b { color: #222222; }
+
+        /* ===== таблица ===== */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12pt;
+            table-layout: fixed;        /* жёстко соблюдаем ширины colgroup на всех таблицах */
+        }
+        .table td {
+            border: 0.75pt solid #C9C9C9;
+            vertical-align: top;
+            padding: 6pt 8pt;
+            word-wrap: break-word;       /* длинные слова/URL переносим, чтобы не ломали ширину */
+            overflow-wrap: break-word;
+        }
+
+        /* шапка категории */
+        .cat td {
+            background: #4A78A6;
+            color: #FFFFFF;
+            border-color: #4A78A6;
+            font-weight: bold;
+            font-size: 10.5pt;
+            padding: 7pt 8pt;
+        }
+        .cat-total {
+            text-align: center;
+            font-size: 11pt;
+        }
+
+        /* шапка подкатегории */
+        .subcat td {
+            background: #E4E9F0;
+            color: #333333;
+            font-weight: bold;
+            font-size: 9.5pt;
+        }
+        .col-label {
+            text-align: center;
+            font-weight: normal;
+            color: #555555;
+        }
+
+        /* Фиксируем ширины на самих ячейках — чтобы при разрыве таблицы между
+           страницами фрагмент-продолжение не «терял» colgroup и сохранял 72/14/14. */
+        .table td:first-child { width: 72%; }
+        .table td.num, .table td.col-label { width: 14%; }
+
+        /* строки айтемов */
+        .item-title { font-weight: bold; color: #1a1a1a; font-size: 10pt; margin: 0 0 4pt 0; }
+        .item-desc  { color: #444444; font-size: 9pt; line-height: 13pt; orphans: 3; widows: 3; }
+        .item-desc p { margin: 4pt 0; }
+        .num { text-align: center; color: #555555; }
+
+        .red { color: #C0392B; }
+        .item-pricing-separator { color: #C9C9C9; margin: 6pt 0; }
+        .owner-initials { margin-top: 8pt; font-size: 9pt; }
+        .owner-initials .line { display: inline-block; border-bottom: 0.75pt solid #999; width: 150pt; }
+        ul { margin: 4pt 0 4pt 0; padding-left: 16pt; }
+        li { margin: 2pt 0; }
+
+        /* РАЗРЫВ: item продолжается на следующей странице без маркера */
+        .table, .table tr, .table td { page-break-inside: auto; break-inside: auto; }
+
+        /* keep-группа: [шапка категории +] шапка подкатегории + ПЕРВЫЙ item
+           держатся вместе и не отрываются от низа страницы.
+           Paged.js надёжно поддерживает именно break-inside: avoid.
+           Если группа не влезает — переезжает на новую страницу целиком. */
+        tbody.keep { break-inside: avoid; page-break-inside: avoid; }
+    </style>
+    <meta name="pdfkit-orientation" content="Portrait">
+</head>
+<body>
+
+{% macro pricing_separator() -%}
+<p class="item-pricing-separator">________________________________________________________________________</p>
+{%- endmacro %}
+
+{% macro maximum_refund_amount(it) -%}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% if refund_str and refund_str | upper != 'N/A' %}
+<p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
+<br/><span style="color:#444444;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+{% endif %}
+{%- endmacro %}
+
+{% macro item_pricing_footer(it) -%}
+{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
+{% set show_refund = refund_str and refund_str | upper != 'N/A' and not it.priceHidden %}
+{% if show_refund %}
+{{ pricing_separator() }}
+{{ maximum_refund_amount(it) }}
+{% endif %}
+{%- endmacro %}
+
+    <!-- верхний баннер (страница 1) -->
+    <div class="doc-banner">ATTACHMENT 1: CLIENT SCOPE (PROPOSAL)</div>
+
+    <div class="page-pad">
+        <div class="sqft">PROJECT TOTAL SQ. FT. = {{ data['estimatesInfo'][0]['squareFootage'] }} SQ. FT.</div>
+
+        <p class="intro">
+            <b>ATTENTION! PROPERTY ON SEPTIC? BEDROOMS OR ROOMS WITH CLOSETS ARE NOT POSSIBLE UNLESS WRITTEN CONFIRMATION
+            FROM COUNTY/CITY HEALTH DEPARTMENT IS PROVIDED! THIS INCLUDES REMODELING PROJECTS WITH EXISTING ROOMS!</b>
+        </p>
+        <p class="intro">
+            <b>UNIT PRICING MAY NOT BE STRICTLY LINEAR AND MAY INCLUDE BUNDLED PRICING FORMULAS OR OTHER PRICING FACTORS. AS A RESULT, INDIVIDUAL UNIT COSTS MAY VARY AND MAY NOT EQUAL THE TOTAL PRICE DIVIDED BY THE QUANTITY.</b>
+        </p>
+
+        {% for category in data['categories'] %}
+        <table class="table" cellspacing="0">
+            <colgroup>
+                <col style="width:72%;">
+                <col style="width:14%;">
+                <col style="width:14%;">
+            </colgroup>
+            {% for subcategory in category.subcategories %}
+            <!-- keep-группа: только шапки (категория + подкатегория) держатся вместе, не сиротеют -->
+            <tbody class="keep">
+                {% if loop.first %}
+                <tr class="cat">
+                    <td>{{ category.id }} {{ category.name }}</td>
+                    <td class="cat-total" colspan="2">${{ category.totalFormatted }}</td>
+                </tr>
+                {% endif %}
+                <tr class="subcat">
+                    <td>{{ subcategory.name }}</td>
+                    <td class="col-label">Quantity</td>
+                    <td class="col-label">Total</td>
+                </tr>
+            </tbody>
+            <tbody>
+                {% for item in subcategory['items'] %}
+                {% if not item['omitFromPDF'] %}
+                <tr>
+                    <!-- описание -->
+                    <td>
+                        <div class="item-desc">
+                            {% if item.catelogId == 'Custom' %}
+                                {% set item_type = (item.customData | default({})).itemType | default('default') %}
+                                <p class="item-title">{% if item_type == 'credit' %}Custom Credit item:{% elif item_type == 'note' %}Custom Note item:{% else %}Custom item:{% endif %} {{ item.name }}</p>
+                                {% set addi = item.additionalInfo | default('') | trim %}
+                                {% if addi %}
+                                {{ addi | e | linkify | replace('\r\n','\n') | replace('\n','<br>') | replace('<br>-','<br>- ') | safe }}
+                                {% endif %}
+                            {% else %}
+                                <p class="item-title">ITEM {{ item.catelogId }}. {{ item.name }}</p>
+                                {% set addi = item.additionalInfo | default('') | trim %}
+                                {% if addi %}
+                                <p><b>ADDITIONAL NOTE:</b></p>
+                                {{ addi | e | linkify | replace('\r\n','\n') | replace('\n','<br>') | replace('<br>-','<br>- ') | safe }}
+                                {% endif %}
+                                {{ item.longDescription | linkify | safe }}
+                            {% endif %}
+
+                            {% set has_photos = item.photos is defined and item.photos and (item.photos | select | list | length > 0) %}
+                            {% if has_photos %}
+                            <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}" style="color:#2F5F8F;">Click here for details</a></p>
+                            {% endif %}
+
+                            {{ item_pricing_footer(item) }}
+
+                            <div class="owner-initials"><b>Owner Initials:</b> <span class="line"></span></div>
+                        </div>
+                    </td>
+                    <!-- quantity -->
+                    <td class="num">
+                        {% if item.catelogId == 'Custom' %}1{% else %}{{ item.quantity }}{% endif %}
+                    </td>
+                    <!-- total -->
+                    <td class="num">
+                        {% if item.total != "N/A" %}${{ item.total }}{% else %}N/A{% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %} <!-- items -->
+            </tbody>
+            {% endfor %} <!-- subcats -->
+        </table>
+        {% endfor %} <!-- cats -->
+    </div>
+
+</body>
+</html>
