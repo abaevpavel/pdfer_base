@@ -71,7 +71,7 @@
         }
 
         .red { color: #FF0000; }
-        .item-pricing-separator { margin: 8pt 0; }
+        .item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; margin: 8pt 0; }
     </style>
      <meta name="pdfkit-orientation" content="Landscape">
      </head>
@@ -79,14 +79,14 @@
 <body>
 
 {% macro pricing_separator() -%}
-<p class="item-pricing-separator">________________________________________________________________________</p>
+<p class="item-pricing-separator"></p>
 {%- endmacro %}
 
 {% macro maximum_refund_amount(it) -%}
 {% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
 {% if refund_str and refund_str | upper != 'N/A' %}
 <p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
-<br/><span style="color: #000000;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+<br/><span style="color: #000000;"><i>Maximum refund amount after contract signing, based on incentives applied at the time of signing.</i></span></p>
 {% endif %}
 {%- endmacro %}
 

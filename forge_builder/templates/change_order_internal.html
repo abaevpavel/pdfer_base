@@ -74,7 +74,7 @@
         }
 
         .red { color: #FF0000; }
-        .item-pricing-separator { margin: 8pt 0; }
+        .item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; margin: 8pt 0; }
     </style>
      <meta name="pdfkit-orientation" content="Landscape">
      </head>
@@ -115,8 +115,8 @@
 {# CO internal: каталожная цена показывается, max refund НЕ показываем (741: на СО убираем) #}
 {% macro item_pricing_footer_internal_co(it) -%}
 {% if it.catelogId == 'Custom' %}{% set price_str = it.quantity | money %}{% else %}{% set price_str = it.price | money %}{% endif %}
-{% if price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
-<p class="item-pricing-separator">________________________________________________________________________</p>
+{% if it.catelogId != 'Custom' and price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
+<p class="item-pricing-separator"></p>
 <p class="red"><b>Catalog Price Description:</b> {{ price_str }}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
 {% endif %}
 {%- endmacro %}

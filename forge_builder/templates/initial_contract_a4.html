@@ -45,9 +45,7 @@
         .num { text-align: center; color: #555555; }
 
         .red { color: #C0392B; }
-        .item-pricing-separator { color: #C9C9C9; margin: 6pt 0; }
-        .owner-initials { margin-top: 8pt; font-size: 9pt; }
-        .owner-initials .line { display: inline-block; border-bottom: 0.75pt solid #999; width: 150pt; }
+        .item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; margin: 6pt 0; }
         ul { margin: 4pt 0 4pt 0; padding-left: 16pt; }
         li { margin: 2pt 0; }
 
@@ -62,13 +60,13 @@
 <body>
 
 {% macro pricing_separator() -%}
-<p class="item-pricing-separator">________________________________________________________________________</p>
+<p class="item-pricing-separator"></p>
 {%- endmacro %}
 {% macro maximum_refund_amount(it) -%}
 {% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
 {% if refund_str and refund_str | upper != 'N/A' %}
 <p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
-<br/><span style="color:#444444;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+<br/><span style="color:#444444;"><i>Maximum refund amount after contract signing, based on incentives applied at the time of signing.</i></span></p>
 {% endif %}
 {%- endmacro %}
 {% macro item_pricing_footer(it) -%}
@@ -121,7 +119,6 @@
                             {% set has_photos = item.photos is defined and item.photos and (item.photos | select | list | length > 0) %}
                             {% if has_photos %}<p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}" style="color:#2F5F8F;">Click here for details</a></p>{% endif %}
                             {{ item_pricing_footer(item) }}
-                            <div class="owner-initials"><b>Owner Initials:</b> <span class="line"></span></div>
                         </div>
                     </td>
                     <td class="num">{% if item.catelogId == 'Custom' %}1{% else %}{{ item.quantity }}{% endif %}</td>

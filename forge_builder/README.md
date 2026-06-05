@@ -75,3 +75,29 @@ forge_builder/
 
 `render.py` повторяет препроцессинг прод-роутов: `EXP[...]EXP`, `priceHidden`→N/A,
 `totalFormatted`, markdown `**bold**`, `grandTotalFormatted`, фильтры `linkify` и `money`.
+
+## Выполненные требования (доработки темплейтов)
+
+Чеклист правок по матрице темплейтов. Все пункты выполнены и проверены рендером
+(`initial_*` на `example03.json`, `change_order_*` на `example04_co.json`).
+
+- [x] **Refund-текст: убрать слово «available».**
+  `Maximum refund amount ~~available~~ after contract signing, based on incentives
+  applied at the time of signing.`
+  Охват: 9 темплейтов (initial/CO × client/internal/contract, базовые + a4).
+- [x] **Разделитель цены — в половину ширины колонки.**
+  Вместо строки подчёркиваний на всю ширину — серая линия `border-top: 1px solid
+  #C9C9C9; width: 50%` (markup `<p class="item-pricing-separator">` теперь пустой).
+  Охват: 14 темплейтов с `.item-pricing-separator`.
+- [x] **Catalog Price Description — НЕ показывать для Custom Items.**
+  Гард `it.catelogId != 'Custom'` в `show_catalog` / inline-условии; у custom-позиций
+  не остаётся и осиротевшего разделителя.
+  Охват: 4 internal-темплейта (`initial_internal_scope`, `change_order_internal` + `_a4`).
+- [x] **Owner Initials — убрать хардкод, оставить только из payload.**
+  Удалён вшитый per-item `<div class="owner-initials">` (чёрная линия) и осиротевший
+  CSS `.owner-initials`. Красный `OWNER INITIALS:` из `longDescription` (данные) — остаётся.
+  Охват: 4 a4 (markup: client/contract × initial/CO) + 8 a4 (CSS).
+- [x] **Группировка Custom Items отдельным блоком сверху — добавить в a4-internal.**
+  Блок «CUSTOM ITEMS — GROUPED BY CATEGORY» (был только в старом `initial_internal_scope`)
+  адаптирован под A4 и добавлен в `initial_internal_scope_a4` перед основным разделом.
+  Охват: только `initial_internal_scope_a4`.
