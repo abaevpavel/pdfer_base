@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sales Brief (short) - {{ b.name }}</title>
+<style>
+    @page { size: A4 portrait; margin: 16mm; }
+    * { box-sizing: border-box; }
+    body {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        color: #1f2933; font-size: 12px; line-height: 1.5; margin: 0;
+    }
+    h1 { font-size: 22px; margin: 0 0 2px 0; }
+    .sub { color: #52606d; font-size: 12px; margin-bottom: 4px; }
+    .sub b { color: {{ b.accent }}; }
+
+    /* Уровень доверия Crystal - сразу под тайтлом */
+    .conf {
+        margin: 10px 0 14px 0; padding: 9px 13px;
+        border: 2px solid {{ b.conf_color }}; border-left: 8px solid {{ b.conf_color }};
+        background: {{ b.conf_soft }};
+    }
+    .conf .lvl { font-weight: bold; color: {{ b.conf_color }}; font-size: 15px; }
+    .conf .note { font-size: 11px; color: #5a6573; display: block; margin-top: 3px; }
+
+    .summary { margin: 12px 0; }
+
+    .golden {
+        background: #f5f7fa; border-left: 4px solid {{ b.accent }};
+        padding: 8px 12px; margin: 12px 0; font-weight: bold;
+    }
+
+    .section { margin: 12px 0; }
+    .label {
+        font-weight: bold; text-transform: uppercase; font-size: 11px;
+        letter-spacing: .05em; color: {{ b.accent }}; margin-bottom: 3px;
+    }
+    .label.red { color: #b0341d; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin-bottom: 3px; }
+
+    .bottom {
+        margin-top: 14px; padding: 9px 13px; background: {{ b.accent }};
+        color: #ffffff; font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<h1>Sales Brief - {{ b.name }}</h1>
+<div class="sub">{{ b.archetype }} &middot; DISC <b>{{ b.disc_type }}</b> &middot; MBTI <b>{{ b.mbti }}</b></div>
+
+<!-- Уровень доверия: реальный intensity + ярлык -->
+<div class="conf">
+    <span class="lvl">Crystal confidence: {{ b.confidence }}</span>
+    &nbsp;&mdash;&nbsp; intensity {{ b.intensity }}/100, {{ b.verified_label }}
+    <span class="note">{{ b.confidence_note }}</span>
+</div>
+
+{% if b.summary %}<div class="summary">{{ b.summary }}</div>{% endif %}
+
+{% if b.golden_rule %}<div class="golden">Golden rule: {{ b.golden_rule }}</div>{% endif %}
+
+{% if b.do %}
+<div class="section">
+    <div class="label">Do</div>
+    <ul>{% for x in b.do %}<li>{{ x }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+{% if b.dont %}
+<div class="section">
+    <div class="label red">Don't</div>
+    <ul>{% for x in b.dont %}<li>{{ x }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+{% if b.tone %}
+<div class="section">
+    <div class="label">Tone</div>
+    {{ b.tone }}
+</div>
+{% endif %}
+
+{% if b.bottom_line %}<div class="bottom">Bottom line: {{ b.bottom_line }}</div>{% endif %}
+
+</body>
+</html>
