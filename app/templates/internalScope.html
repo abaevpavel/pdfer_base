@@ -296,6 +296,7 @@
                 <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                 {% endif %}
                 {{ internal_lines(item) }}
+                {% if item.catelogId == 'Custom' %}{{ custom_our_cost(item) }}{% endif %}
                 {{ item_pricing_footer_internal(item) }}
             </div>
         </td>
