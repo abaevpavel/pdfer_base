@@ -59,6 +59,18 @@
 
 <div class="wrap">
 
+  <div class="card">
+    <b>Где что живёт</b> — два слоя темплейтов:
+    <ul>
+      <li><b>Прод</b> — <code>app/templates/</code> + Flask-роуты <code>app/*.py</code>. То, что реально генерит PDF для клиентов/внутри
+        (эндпоинты <code>/proposal</code>, <code>/internal-scope</code>, <code>/change-order</code>, <code>/change-order-internal</code>, <code>/subcontractor-scope</code>).</li>
+      <li><b>Локальная песочница (Forge)</b> — <code>forge_builder/</code>: матрица темплейтов (не-A4 = текущий landscape-стиль, <code>*_a4</code> = будущий A4-редизайн),
+        тестовые <code>payloads/</code> и раннер <code>render.py</code> (Jinja без Flask, превью в браузере/PDF). Здесь темплейты «вылизываются»,
+        затем переносятся в прод. Прод-эндпоинты отсюда не работают.</li>
+    </ul>
+    <span class="note">Поток: правим/проверяем в <code>forge_builder/</code> → переносим готовый темплейт в <code>app/templates/</code> + заводим/правим роут в <code>app/</code>.</span>
+  </div>
+
   <h2>Источники</h2>
   <table>
     <tr><th>Задача</th><th>Автор</th><th>Создана</th><th>Статус</th><th>Суть</th></tr>
@@ -146,6 +158,37 @@
     <li><span class="badge b-open">OPEN</span> <b>Создать/изменить эндпоинт для сабконтракторов и протестировать</b> <span class="note">(761, не закрыто)</span>
       — пересекается с текущей работой в <code>forge_builder/</code> (есть subcontractor-темплейты).</li>
   </ul>
+
+  <h2>8. Последние правки (после A4-ревизии) <span class="note">— из последнего</span></h2>
+  <ul>
+    <li><span class="badge b-done">DONE</span> <b>Разделитель цены:</b> вместо подчёркиваний на всю ширину — <b>серая линия в половину ширины колонки</b>.
+      <span class="note">CSS: <code>.item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; }</code>, контент — пустой <code>&lt;p&gt;</code> без подчёркиваний.</span></li>
+    <li><span class="badge b-done">DONE</span> <b>Catalog Price Description:</b> больше <b>не показывается для Custom Items</b> (для custom — только блок <b>OUR COST</b>).
+      <span class="note">В <code>show_catalog</code> добавлен гард <code>it.catelogId != 'Custom'</code>.</span></li>
+    <li><span class="badge b-done">DONE</span> <b>Refund-текст:</b> убрано слово <b>«available»</b> →
+      <span class="quote">«Maximum refund amount after contract signing, based on incentives applied at the time of signing.»</span></li>
+  </ul>
+  <div class="card">
+    <b>Соответствие этим правкам по документам</b> <span class="note">(прод <code>app/templates/</code> + forge)</span>:
+    <table>
+      <tr><th>Документ</th><th>1. Серая линия 50%</th><th>2. Нет catalog для custom</th><th>3. Refund без «available»</th></tr>
+      <tr><td><code>app/templates/change_order_internal.html</code> <span class="note">(новый)</span></td>
+        <td><span class="badge b-done">OK</span></td><td><span class="badge b-done">OK</span></td><td><span class="note">—  refund на СО не показываем</span></td></tr>
+      <tr><td><code>app/templates/internalScope.html</code></td>
+        <td><span class="badge b-done">OK</span></td><td><span class="badge b-done">OK</span></td><td><span class="badge b-done">OK</span></td></tr>
+      <tr><td><code>app/templates/proposal.html</code></td>
+        <td><span class="badge b-done">OK</span></td><td><span class="note">—  catalog price не выводится (клиентский)</span></td><td><span class="badge b-done">OK</span></td></tr>
+      <tr><td><code>app/templates/change_order.html</code></td>
+        <td><span class="note">—  separator не используется</span></td><td><span class="note">—  клиентский</span></td><td><span class="note">—  refund на СО нет</span></td></tr>
+      <tr><td><code>app/templates/subcontractor.html</code></td>
+        <td><span class="note">—  не используется</span></td><td><span class="note">—</span></td><td><span class="note">—</span></td></tr>
+      <tr><td>forge <code>*_a4.html</code> + не-A4 (кроме change_order_internal до фикса)</td>
+        <td><span class="badge b-done">OK</span></td><td><span class="badge b-done">OK</span></td><td><span class="badge b-done">OK</span></td></tr>
+    </table>
+    <span class="note"><b>Вывод:</b> прод <code>internalScope.html</code> и <code>proposal.html</code> <b>приведены к forge-эталону</b> (2026-06-09).
+    Дополнительно в проде закрыты отставания вне «последних трёх»: <b>C4</b> — заголовок internal-колонки → «Client's Price based on Zone»;
+    <b>T2</b> — <code>hide price → hide max refund</code> (гард <code>not priceHidden</code>) в internal и client. <code>change_order.html</code> правок не требовал.</span>
+  </div>
 
   <h2>Открытые вопросы — <span style="color:var(--green)">все решены ✓</span></h2>
   <div class="card">

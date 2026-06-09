@@ -10,6 +10,7 @@ import proposal
 import checklist
 import internal_scope
 import change_order
+import change_order_internal
 import subcontractor
 
 app = Flask(__name__, static_url_path='/static')
@@ -20,6 +21,7 @@ app.add_url_rule('/proposal', view_func=proposal.make_proposal)
 app.add_url_rule('/checklist', view_func=checklist.make_checklist)
 app.add_url_rule('/internal-scope', view_func=internal_scope.make_internal_scope)
 app.add_url_rule('/change-order', view_func=change_order.make_change_order)
+app.add_url_rule('/change-order-internal', view_func=change_order_internal.make_change_order_internal)
 app.add_url_rule('/subcontractor-scope', view_func=subcontractor.make_subcontractor_scope)
 
 @app.route("/check",methods=['GET'])

@@ -16,7 +16,7 @@
         /* глобальные правила как были */
         table, tr, td, th, tbody, thead, tfoot { page-break-inside: avoid !important; }
         .red { color: #FF0000; }
-        .item-pricing-separator { margin: 8pt 0; }
+        .item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; margin: 8pt 0; }
         
         /* Переопределение красного цвета в описании товара (между ITEM и ссылкой) */
         .item-description, .item-description * { color: #000000 !important; }
@@ -90,7 +90,7 @@
 {%- endmacro %}
 
 {% macro pricing_separator() -%}
-<p class="item-pricing-separator">________________________________________________________________________</p>
+<p class="item-pricing-separator"></p>
 {%- endmacro %}
 
 {% macro catalog_price_description(it) -%}
@@ -104,15 +104,15 @@
 {% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
 {% if refund_str and refund_str | upper != 'N/A' %}
 <p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
-<br/><span style="color: #000000;"><i>Maximum refund amount available after contract signing, based on incentives applied at the time of signing.</i></span></p>
+<br/><span style="color: #000000;"><i>Maximum refund amount after contract signing, based on incentives applied at the time of signing.</i></span></p>
 {% endif %}
 {%- endmacro %}
 
 {% macro item_pricing_footer_internal(it) -%}
 {% if it.catelogId == 'Custom' %}{% set price_str = it.quantity | money %}{% else %}{% set price_str = it.price | money %}{% endif %}
 {% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-{% set show_catalog = price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
-{% set show_refund = refund_str and refund_str | upper != 'N/A' %}
+{% set show_catalog = it.catelogId != 'Custom' and price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
+{% set show_refund = refund_str and refund_str | upper != 'N/A' and not it.priceHidden %}
 {% if show_catalog or show_refund %}
 {{ pricing_separator() }}
 {% if show_catalog %}{{ catalog_price_description(it) }}{% endif %}
@@ -138,7 +138,7 @@
                 <p class="headerText font" style="color:white">{{ category.id }} <u class="font">{{ category.name }}</u></p>
             </td>
             <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Quantity</p></td>
-            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Total cost</p></td>
+            <td class="greyBorder" bgcolor="#FF0000" style="color:white;"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
         </tr>
         {% set ns.any = true %}
         {% endif %}
@@ -149,7 +149,7 @@
                 <p class="headerText font" style="padding-left:30px;">{{ subcategory.name }}</p>
             </td>
             <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Quantity</p></td>
-            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Total cost</p></td>
+            <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
         </tr>
 
         {# Строки кастом-айтемов #}
@@ -230,7 +230,7 @@
             <p class="headerText font" style="padding-left:30px;">{{ subcategory.name }}</p>
         </td>
         <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Quantity</p></td>
-        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Total cost</p></td>
+        <td class="greyBorder" bgcolor="#D9E1F3"><p class="flexBox textCenter">Client's Price based on Zone</p></td>
     </tr>
 
     {% for item in subcategory['items'] %}
