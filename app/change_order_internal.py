@@ -154,6 +154,9 @@ def process_payload(body):
 
 def make_change_order_internal():
     body = request.json
+    # На этот эндпоинт payload приходит обёрнутым в массив ([{...}]) — разворачиваем в объект
+    if isinstance(body, list):
+        body = body[0] if body else {}
 
     env = Environment(loader=FileSystemLoader(TEMPLATES_DIR), autoescape=False)
     env.filters["linkify"] = linkify_urls
