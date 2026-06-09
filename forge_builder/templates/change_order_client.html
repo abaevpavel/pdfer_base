@@ -70,6 +70,10 @@
             page-break-inside: avoid !important;
         }
 
+        .total-cost-line {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
         .red { color: #FF0000; }
         .item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; margin: 8pt 0; }
     </style>
@@ -78,37 +82,12 @@
 
 <body>
 
-{% macro pricing_separator() -%}
-<p class="item-pricing-separator"></p>
-{%- endmacro %}
-
-{% macro maximum_refund_amount(it) -%}
-{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-{% if refund_str and refund_str | upper != 'N/A' %}
-<p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
-<br/><span style="color: #000000;"><i>Maximum refund amount after contract signing, based on incentives applied at the time of signing.</i></span></p>
-{% endif %}
-{%- endmacro %}
-
 {% macro item_pricing_footer(it) -%}
-{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-{% set show_refund = refund_str and refund_str | upper != 'N/A' and not it.priceHidden %}
-{% if show_refund %}
-{{ pricing_separator() }}
-{{ maximum_refund_amount(it) }}
-{% endif %}
 {%- endmacro %}
 
     <h3>
-        ATTACHMENT 1: FULL PROJECT SCOPE.
+        ATTACHMENT 1: SCOPE OF WORK.
     </h3>
-    <h4>
-        BASEMENT TOTAL SQ. FT. = {{data['estimatesInfo'][0]['squareFootage']}} SQ. FT.
-    </h4>
-    <p>
-        <b>ATTENTION! PROPERTY ON SEPTIC? BEDROOMS OR ROOMS WITH CLOSETS ARE NOT POSSIBLE UNLESS WRITTEN CONFIRMATION
-        FROM COUNTY/CITY HEALTH DEPARTMENT IS PROVIDED! THIS INCLUDES REMODELING PROJECTS WITH EXISTING ROOMS!</b>
-    </p>
     
     <p><b>UNIT PRICING MAY NOT BE STRICTLY LINEAR AND MAY INCLUDE BUNDLED PRICING FORMULAS OR OTHER PRICING FACTORS. AS A RESULT, INDIVIDUAL UNIT COSTS MAY VARY AND MAY NOT EQUAL THE TOTAL PRICE DIVIDED BY THE QUANTITY.</b></p>
 
@@ -191,7 +170,6 @@
                                 <p class="flexBox textCenter">{{item.quantity}}</p>
                             {% endif %}
                         </td>
-                        <!--Totals column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
                             <p class="flexBox textCenter">
                                 {% if item.total != "N/A"%}
@@ -199,7 +177,7 @@
                                 {% else %}
                                     N/A
                                 {% endif %}
-                                </p>
+                            </p>
                         </td>
                     </tr>
                     <!--Item Row -->
@@ -209,4 +187,7 @@
         {% endfor %} <!-- Subcats--> 
     </tbody></table>
     {% endfor %} <!--Cats -->
+
+    <br><br>
+    <h3 class="total-cost-line">Total Cost: {{ data.grandTotalFormatted }}</h3>
 </body></html>

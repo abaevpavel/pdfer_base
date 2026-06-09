@@ -1,0 +1,1304 @@
+{
+  "categories": [
+    {
+      "subcategories": [
+        {
+          "name": "1-1. No Permits and Other Admin",
+          "items": [
+            {
+              "priceHidden": true,
+              "name": "NO PERMITS. House Built before 1960",
+              "catelogId": "1-1-1",
+              "priceNotApplicable": false,
+              "internalInstructions": "",
+              "category": "1. Basement Base Price",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366544.503166_Screen+Shot+2022-04-27+at+10_56_43+AM.png",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366545.8798919_Screen+Shot+2022-04-27+at+10_59_30+AM.png",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366547.659947_Screen+Shot+2022-04-27+at+10_58_08+AM.png"
+              ],
+              "price": "$2,650",
+              "service": "Complete Basement Finishing",
+              "total": "2,597",
+              "customData": {},
+              "longDescription": "<p>NON-NEGOTIABLE</p>\n",
+              "permanentId": 36,
+              "zoneMultiplier": "0.98",
+              "zoneAdjustedPrice": "$2,597",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.738409.png",
+                  "name": "IN HOUSE STUFF ONLY"
+                }
+              ],
+              "additionalInfo": "",
+              "omitFromPDF": false,
+              "excludeFromCustomPricingZone": false,
+              "subCategory": "1-1. No Permits and Other Admin",
+              "id": "69bb55442cc2a8255f25aa02",
+              "documents": [],
+              "quantity": "1",
+              "hasCustomPricing": false,
+              "internalNotes": ""
+            }
+          ],
+          "total": 2545
+        },
+        {
+          "name": "1-6. Demolition",
+          "total": 5451,
+          "items": [
+            {
+              "documents": [],
+              "additionalInfo": "",
+              "category": "1. Basement Base Price",
+              "quantity": "550",
+              "trades": [
+                {
+                  "name": "ROUGH CARPENTER/FRAMERS",
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377031.384344.png"
+                }
+              ],
+              "zoneMultiplier": "0.98",
+              "longDescription": "<p><strong>DISCLOSURE:</strong> IT IS OWNER'S RESPONSIBILITY TO INQUIRE AND INFORM CONTRACTOR OF THE FOLLOWING CONDITIONS: ASBESTOS OR LEAD PRESENCE, PLASTER WALLS OR CEILING. <strong>FAILURE TO IDENTIFY THESE CONDITIONS WILL RESULT IN ADDITIONAL COSTS LISTED BELOW.</strong></p>\n<p><strong><span style='color:red'>OWNER INITIALS: ____________</span></strong></p>\n",
+              "customData": {},
+              "subCategory": "1-6. Demolition",
+              "catelogId": "1-6-2",
+              "internalInstructions": "This item includes $1.5/per sq.ft. for pre 1970 homes electrical demolition. Use credit item (together with this item) if house is built after 1970.",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366887.262053_1-4-Demolition.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366887.756851_1-4-Demolition2.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366889.140023_1-11-OldWiringRemoval.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366889.843553_1-11-OldWiringRemoval2.jpg"
+              ],
+              "zoneAdjustedPrice": "$4,802",
+              "priceHidden": true,
+              "permanentId": 39,
+              "price": "$7.25/sq. ft. + $900 initial fee (minimum charge $2,500) ",
+              "total": "5,451.25",
+              "id": "62e7edea700d4038bfb03d73",
+              "name": "Major demolition/removal and haul away of framed walls, drywall ceiling and NON-GLUE DOWN carpet. Electrical wiring demolition. FLOORING REMOVAL OTHER THAN NON-GLUE DOWN CARPET OR FLOATING FLOOR IS NOT INCLUDED.",
+              "service": "Complete Basement Finishing",
+              "excludeFromCustomPricingZone": false,
+              "hasCustomPricing": false,
+              "priceNotApplicable": false,
+              "internalNotes": "",
+              "omitFromPDF": false
+            }
+          ]
+        },
+        {
+          "total": -2801,
+          "name": "1-7. House Specifications",
+          "items": [
+            {
+              "excludeFromCustomPricingZone": false,
+              "name": "Ceiling height 8 feet or less",
+              "hasCustomPricing": false,
+              "catelogId": "1-7-1",
+              "longDescription": "",
+              "quantity": "594",
+              "zoneMultiplier": "0.98",
+              "additionalInfo": "",
+              "customData": {},
+              "internalNotes": "",
+              "permanentId": 31,
+              "category": "1. Basement Base Price",
+              "id": "68a1ed141541652a4e1d3437",
+              "trades": [
+                {
+                  "name": "ROUGH CARPENTER/FRAMERS",
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377031.384344.png"
+                }
+              ],
+              "total": "-1,222.452",
+              "subCategory": "1-7. House Specifications",
+              "internalInstructions": "",
+              "service": "Complete Basement Finishing",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659367018.6792629_1-5-CeilingOver8ft.jpg"
+              ],
+              "priceNotApplicable": false,
+              "zoneAdjustedPrice": "$-2.058",
+              "documents": [],
+              "priceHidden": true,
+              "omitFromPDF": false,
+              "price": "-$2.1/sq. ft."
+            },
+            {
+              "zoneMultiplier": "0.98",
+              "catelogId": "1-7-3",
+              "total": "-1,636.6",
+              "hasCustomPricing": false,
+              "priceNotApplicable": false,
+              "subCategory": "1-7. House Specifications",
+              "excludeFromCustomPricingZone": false,
+              "additionalInfo": "",
+              "service": "Complete Basement Finishing",
+              "internalInstructions": "",
+              "documents": [],
+              "name": "Direct access to the basement from the outside",
+              "internalNotes": "",
+              "longDescription": "",
+              "price": "-$1,670",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.738409.png",
+                  "name": "IN HOUSE STUFF ONLY"
+                }
+              ],
+              "quantity": "1",
+              "category": "1. Basement Base Price",
+              "customData": {},
+              "priceHidden": true,
+              "omitFromPDF": false,
+              "permanentId": 26,
+              "zoneAdjustedPrice": "$-1,636.6",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366939.2024992_Image+from+iOS.jpg"
+              ],
+              "id": "68a1f69e84a90d330b9180e5"
+            }
+          ]
+        },
+        {
+          "name": "1-8. Protection",
+          "items": [
+            {
+              "priceNotApplicable": false,
+              "longDescription": "",
+              "zoneMultiplier": "0.98",
+              "hasCustomPricing": false,
+              "name": "Protect existing STAIRCASE",
+              "id": "62e7eca2700d4038bfb03c91",
+              "internalNotes": "",
+              "priceHidden": true,
+              "zoneAdjustedPrice": "$539",
+              "permanentId": 29,
+              "internalInstructions": "",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366561.44276_81VaeoAJ8eS__AC_SL1500_.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366561.7909272_Stair-Armor-Jobsite-6-scaled.jpg"
+              ],
+              "customData": {},
+              "price": "$550",
+              "trades": [
+                {
+                  "name": "IN HOUSE STUFF ONLY",
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.738409.png"
+                }
+              ],
+              "catelogId": "1-8-3",
+              "excludeFromCustomPricingZone": false,
+              "documents": [],
+              "omitFromPDF": false,
+              "additionalInfo": "",
+              "category": "1. Basement Base Price",
+              "subCategory": "1-8. Protection",
+              "quantity": "1",
+              "service": "Complete Basement Finishing",
+              "total": "539"
+            },
+            {
+              "quantity": "540",
+              "excludeFromCustomPricingZone": false,
+              "zoneMultiplier": "1",
+              "internalInstructions": "",
+              "subCategory": "1-8. Protection",
+              "omitFromPDF": false,
+              "zoneAdjustedPrice": "$1",
+              "catelogId": "Custom",
+              "name": "Protect bathroom tile floor and shower.",
+              "photos": [],
+              "category": "1. Basement Base Price",
+              "hasCustomPricing": true,
+              "permanentId": -1,
+              "internalNotes": "",
+              "documents": [],
+              "service": "Complete Basement Finishing",
+              "longDescription": "",
+              "price": "Custom",
+              "priceHidden": true,
+              "trades": [],
+              "priceNotApplicable": false,
+              "additionalInfo": "",
+              "total": "540",
+              "id": "6a1dc3f24d0d2f3daaeb4442",
+              "customData": {
+                "recommendedCost": 540,
+                "itemType": "default",
+                "materialsAdminCost": 0,
+                "inHouseTeamCost": 540,
+                "pricingNotes": "",
+                "subcontractorProposalAmount": 0
+              }
+            }
+          ],
+          "total": 1068
+        },
+        {
+          "items": [
+            {
+              "priceHidden": true,
+              "trades": [],
+              "hasCustomPricing": false,
+              "permanentId": 1,
+              "photos": [],
+              "zoneAdjustedPrice": "$44,729.258",
+              "service": "Complete Basement Finishing",
+              "price": "N/A",
+              "quantity": "594",
+              "id": "62e7ecc6700d4038bfb03cae",
+              "internalNotes": "",
+              "internalInstructions": "Following items built into the price: \n-Ciling over 8 feet. $2.1 per square foot. \n-Finish under stairs space $790\n-Access upstairs $1670\n- Carpet on the stairs only (combination of LVT and carpeter floor with less than 500 sq.ft. of carpet) $950\n- 100 for wasted door locks and hardware\n3/29/2026 added to base price\n- Stairway flush mount light. Fixture is not included. $230\n- Dedicated line for fridge/freezer/sump pump in the basement. $350\n- Paint existing exterior doors. 2x for double $150",
+              "omitFromPDF": false,
+              "customData": {},
+              "longDescription": "",
+              "category": "1. Basement Base Price",
+              "documents": [],
+              "total": "47,235.412",
+              "priceNotApplicable": false,
+              "additionalInfo": "",
+              "name": "Basement Base Price",
+              "subCategory": "1-9. Basement Base Price",
+              "catelogId": "1-9-1",
+              "zoneMultiplier": "0.98",
+              "excludeFromCustomPricingZone": false
+            },
+            {
+              "zoneAdjustedPrice": "N/A",
+              "hasCustomPricing": false,
+              "priceHidden": false,
+              "customData": {},
+              "priceNotApplicable": true,
+              "total": "N/A",
+              "excludeFromCustomPricingZone": false,
+              "quantity": "N/A",
+              "longDescription": "<p>All basement walls and bulkheads per Owner's request and provided sketches. (2x4 lumber studs with treated sill plates, 16 inches on center). Ceiling bulk heads framed per existing site conditions (framing around all existing plumbing, mechanical and electrical utilities ran below floor joists).  Base price may include one space (room) and one finished closet space per 500 sq. ft. of finished area. </p>\n<p><strong><span style='color:red'>SHELVING IS NOT INCLUDED WITH THE CLOSETS, SINCE EACH OF OUR CLIENTS HAS DIFFERENT PREFERENCES ON THE SHELVING. REFER TO ITEMS 3-13-1. Add closet single wire shelf (up to 6 ft.) THROUGH 3-13-5. Add wire shelving ClosetMaid system into the closet: 7-ft. – 10-ft.</span></strong></p>\n<p><strong><span style='color:red'>OWNER INITIALS: ____________</span></strong></p>\n",
+              "subCategory": "1-9. Basement Base Price",
+              "additionalInfo": "",
+              "name": "Framing and Fire blocking.",
+              "omitFromPDF": false,
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366849.381505_1-7-FireBlocking0.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366850.0261152_1-7-FireBlocking1.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366850.892676_1-7-FireBlocking2.jpg"
+              ],
+              "internalInstructions": "",
+              "permanentId": 2,
+              "price": "N/A",
+              "documents": [],
+              "zoneMultiplier": "0.98",
+              "service": "Complete Basement Finishing",
+              "catelogId": "1-9-2",
+              "category": "1. Basement Base Price",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377031.384344.png",
+                  "name": "ROUGH CARPENTER/FRAMERS"
+                }
+              ],
+              "id": "62e7edc3700d4038bfb03d5a",
+              "internalNotes": ""
+            },
+            {
+              "omitFromPDF": false,
+              "longDescription": "",
+              "category": "1. Basement Base Price",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366863.1600661_DSC_0613.jpg"
+              ],
+              "excludeFromCustomPricingZone": false,
+              "customData": {},
+              "internalNotes": "",
+              "subCategory": "1-9. Basement Base Price",
+              "documents": [],
+              "price": "$1,495/room",
+              "name": "Additional room",
+              "priceHidden": true,
+              "service": "Complete Basement Finishing",
+              "hasCustomPricing": false,
+              "total": "2,930.2",
+              "id": "62e7edcf700d4038bfb03d66",
+              "permanentId": 46,
+              "additionalInfo": "",
+              "priceNotApplicable": false,
+              "zoneAdjustedPrice": "$1,465.1",
+              "catelogId": "1-9-3",
+              "internalInstructions": "",
+              "zoneMultiplier": "0.98",
+              "quantity": "2",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377031.384344.png",
+                  "name": "ROUGH CARPENTER/FRAMERS"
+                }
+              ]
+            },
+            {
+              "service": "Complete Basement Finishing",
+              "zoneMultiplier": "0.98",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659367022.941744_diy-closet-shelves-empty_jpg.webp",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659367023.3672478_a2f983ed6e2ffdda38034418ef242cc3.jpg"
+              ],
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377031.384344.png",
+                  "name": "ROUGH CARPENTER/FRAMERS"
+                }
+              ],
+              "hasCustomPricing": false,
+              "internalInstructions": "",
+              "subCategory": "1-9. Basement Base Price",
+              "excludeFromCustomPricingZone": false,
+              "priceNotApplicable": false,
+              "internalNotes": "",
+              "total": "681.1",
+              "zoneAdjustedPrice": "$681.1",
+              "id": "62e7ee6f700d4038bfb03dc0",
+              "customData": {},
+              "omitFromPDF": false,
+              "priceHidden": true,
+              "longDescription": "",
+              "catelogId": "1-9-4",
+              "quantity": "1",
+              "permanentId": 47,
+              "additionalInfo": "",
+              "documents": [],
+              "name": "Additional closet",
+              "price": "$695/closet",
+              "category": "1. Basement Base Price"
+            },
+            {
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366577.921767_2-2-SwitchesAndOutlets0.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366578.239806_2-2-SwitchesAndOutlets.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366578.547331_2-2-SwitchesAndOutlets1.jpg",
+                "https://ucarecdn.com/54b90e88-8c9b-4eca-bcfe-d1a1d863161d/",
+                "https://ucarecdn.com/635e3c05-d1b7-43fa-a9d3-01ee02f1ce0d/",
+                "https://ucarecdn.com/01387fc4-75d0-4375-8c5c-8b7f0cc80377/",
+                "https://ucarecdn.com/64fa71a4-8829-4896-b2e4-7d00c8731090/",
+                "https://ucarecdn.com/c938f1d6-e17f-4017-a132-ff002c8f204e/",
+                "https://ucarecdn.com/4138b28f-22c0-40b6-9554-ee7a6475e390/",
+                "https://ucarecdn.com/2730457a-07a2-4d55-a420-d06a75be32b7/"
+              ],
+              "documents": [],
+              "longDescription": "<ul>\n<li>IC-Rated 6'' Recessed Lights or Flushmount LED lights for bulkheads/closets etc - location per Owner's request.\nQTY: <strong>EXP[ math.ceil(sqFt / 50) ]EXP</strong></li>\n<li>For additional light refer to Item #(additio)</li>\n<li>Stairway flush mount light. Fixture is not included.</li>\n<li>Dedicated line for fridge/freezer/sump pump in the basement.</li>\n<li>LED light bulbs 2700k</li>\n<li>Cable/low voltage - location per Owner's request. QTY: <strong>EXP[ 1 if sqFt < 1000 else math.ceil(sqFt / 1000) ]EXP</strong></li>\n<li>Toggle (not Decora) switches/outlets per code (3- and 4-way where required) </li>\n<li>Basic plastic or steel toggle (not Decora) switch/outlet plates (white, almond or ivory). PAINTING THE PLATES NOT INCLUDED.</li>\n<li>Basement smoke and Combo (smoke + CO) detectors will be installed per code.</li>\n<li>Mechanical/unfinished area lighting is included:\n<ul>\n<li>Areas under 16 sq. ft. (4'x4') - pull light only (lamp holder with pull) (add switch 20$)</li>\n<li>Areas over 16 sq. ft. - Switch and one utility light (lamp holder) per 100 sq. ft. (Additional. Light - 20$)</li>\n</ul>\n</li>\n</ul>\n<p><strong>After Project completion Owner will need to contact</strong> Owner's cable/internet service provider to connect newly installed low voltage lines to Owner's provider's equipment/lines. Due to some implications that may be caused by interfering with Owner's provider's equipment, Contractor is unable to perform this connection.</p>\n",
+              "quantity": "N/A",
+              "zoneMultiplier": "0.98",
+              "catelogId": "1-9-5",
+              "excludeFromCustomPricingZone": false,
+              "permanentId": 4,
+              "priceHidden": true,
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377024.973623.png",
+                  "name": "ELECTRICAL"
+                }
+              ],
+              "hasCustomPricing": false,
+              "priceNotApplicable": true,
+              "total": "N/A",
+              "customData": {},
+              "additionalInfo": "",
+              "omitFromPDF": false,
+              "price": "N/A",
+              "service": "Complete Basement Finishing",
+              "internalInstructions": "3/29/2026 - now includes:\nStairway flush mount light. Fixture is not included.\nDedicated line for fridge/freezer/sump pump in the basement.",
+              "name": "Electrical Rough-in and Finish. All electrical work to be performed in accordance with state and local codes.",
+              "id": "62e7ecb4700d4038bfb03ca0",
+              "internalNotes": "",
+              "category": "1. Basement Base Price",
+              "zoneAdjustedPrice": "N/A",
+              "subCategory": "1-9. Basement Base Price"
+            },
+            {
+              "excludeFromCustomPricingZone": false,
+              "longDescription": "<p>Install within 5 feet of the main electrical panel.</p>\n",
+              "total": "975.1",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377024.973623.png",
+                  "name": "ELECTRICAL"
+                }
+              ],
+              "service": "Complete Basement Finishing",
+              "additionalInfo": "",
+              "omitFromPDF": false,
+              "customData": {},
+              "quantity": "1",
+              "category": "1. Basement Base Price",
+              "permanentId": 54,
+              "priceHidden": true,
+              "priceNotApplicable": false,
+              "zoneAdjustedPrice": "$975.1",
+              "internalNotes": "",
+              "hasCustomPricing": false,
+              "id": "62e7ee66700d4038bfb03db9",
+              "internalInstructions": "",
+              "documents": [],
+              "price": "$995",
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659367013.792005_sub_panel_1.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659367014.1862621_sub_panel_2.jpg"
+              ],
+              "catelogId": "1-9-7",
+              "name": "Subpanel",
+              "zoneMultiplier": "0.98",
+              "subCategory": "1-9. Basement Base Price"
+            },
+            {
+              "category": "1. Basement Base Price",
+              "service": "Complete Basement Finishing",
+              "additionalInfo": "",
+              "excludeFromCustomPricingZone": false,
+              "customData": {},
+              "photos": [
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366784.991186_2-3-HVAC.jpg",
+                "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/items/initial/1659366784.991186_2-3-HVAC.jpg"
+              ],
+              "priceNotApplicable": true,
+              "internalInstructions": "",
+              "quantity": "N/A",
+              "price": "N/A",
+              "total": "N/A",
+              "omitFromPDF": false,
+              "trades": [
+                {
+                  "name": "HVAC",
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377028.290637.png"
+                }
+              ],
+              "hasCustomPricing": false,
+              "priceHidden": false,
+              "internalNotes": "",
+              "name": "Add Ductwork. One air register per 250 sq. ft. or less.",
+              "zoneMultiplier": "0.98",
+              "subCategory": "1-9. Basement Base Price",
+              "documents": [],
+              "id": "62e7ed82700d4038bfb03d2e",
+              "catelogId": "1-9-10",
+              "zoneAdjustedPrice": "N/A",
+              "longDescription": "<p>Basic white air register and return vents only included.\nPainting vents is extra cost.</p>\n<p>1 Air return for the basement.</p>\n",
+              "permanentId": 5
+            },
+            {
+              "excludeFromCustomPricingZone": false,
+              "longDescription": "<p>Level 4 finish.</p>\n",
+              "name": "Drywall. 1/2\" regular drywall – all walls and ceiling. Level 4 Finish.",
+              "quantity": "N/A",
+              "subCategory": "1-9. Basement Base Price",
+              "internalNotes": "",
+              "customData": {},
+              "catelogId": "1-9-12",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.1166458.png",
+                  "name": "DRYWALL FINISH"
+                }
+              ],
+              "internalInstructions": "",
+              "priceNotApplicable": true,
+              "id": "62e7ee08700d4038bfb03d85",
+              "service": "Complete Basement Finishing",
+              "priceHidden": true,
+              "zoneMultiplier": "0.98",
+              "photos": [],
+              "documents": [],
+              "price": "N/A",
+              "hasCustomPricing": false,
+              "category": "1. Basement Base Price",
+              "zoneAdjustedPrice": "N/A",
+              "total": "N/A",
+              "omitFromPDF": false,
+              "additionalInfo": "",
+              "permanentId": 3
+            },
+            {
+              "hasCustomPricing": false,
+              "additionalInfo": "",
+              "service": "Complete Basement Finishing",
+              "name": "Finish Carpentry - General specs",
+              "quantity": "N/A",
+              "zoneAdjustedPrice": "N/A",
+              "customData": {},
+              "total": "N/A",
+              "internalNotes": "",
+              "subCategory": "1-9. Basement Base Price",
+              "longDescription": "<ul>\n<li>STANDARD Doors QTY: <strong>EXP[ 4 if sqFt &lt; 1000 else math.floor( (sqFt + 125) / 250) ]EXP</strong></li>\n</ul>\n",
+              "priceHidden": true,
+              "catelogId": "1-9-14",
+              "price": "N/A",
+              "omitFromPDF": false,
+              "internalInstructions": "",
+              "excludeFromCustomPricingZone": false,
+              "permanentId": 6,
+              "photos": [],
+              "documents": [],
+              "priceNotApplicable": true,
+              "zoneMultiplier": "0.98",
+              "id": "62e7ec0f700d4038bfb03c1e",
+              "category": "1. Basement Base Price",
+              "trades": []
+            },
+            {
+              "name": "Upgrade Baseboard to 5 ½”, 1x4, or 1x6.",
+              "quantity": "1",
+              "permanentId": 65,
+              "zoneMultiplier": "0.98",
+              "customData": {},
+              "omitFromPDF": false,
+              "service": "Complete Basement Finishing",
+              "hasCustomPricing": false,
+              "catelogId": "1-9-15",
+              "additionalInfo": "1x6 BASEBOARDS",
+              "photos": [],
+              "category": "1. Basement Base Price",
+              "trades": [],
+              "excludeFromCustomPricingZone": false,
+              "internalInstructions": "Please note that it is the Project Consultant's responsibility to confirm and provide the exact baseboard selection approved by the client. ",
+              "longDescription": "<ul>\n<li>STANDARD baseboard up to 5 ½”, 1x4, or 1x6.</li>\n</ul>\n",
+              "documents": [],
+              "subCategory": "1-9. Basement Base Price",
+              "internalNotes": "1x6 BASEBOARDS",
+              "id": "68bf32fcda2566072bcd0643",
+              "price": "N/A",
+              "priceNotApplicable": false,
+              "priceHidden": true,
+              "total": "0",
+              "zoneAdjustedPrice": "$0"
+            },
+            {
+              "catelogId": "1-9-19",
+              "quantity": "2",
+              "total": "1,274",
+              "additionalInfo": "",
+              "internalNotes": "",
+              "internalInstructions": "",
+              "id": "62e7ec9f700d4038bfb03c8e",
+              "photos": [],
+              "service": "Complete Basement Finishing",
+              "hasCustomPricing": false,
+              "subCategory": "1-9. Basement Base Price",
+              "priceHidden": true,
+              "omitFromPDF": false,
+              "documents": [],
+              "category": "1. Basement Base Price",
+              "excludeFromCustomPricingZone": false,
+              "permanentId": 60,
+              "zoneAdjustedPrice": "$637",
+              "price": "$650/door",
+              "longDescription": "",
+              "trades": [],
+              "customData": {},
+              "name": "Additional regular hollow core door",
+              "priceNotApplicable": false,
+              "zoneMultiplier": "0.98"
+            },
+            {
+              "id": "68bf31850f84cd75d5eb7ac9",
+              "service": "Complete Basement Finishing",
+              "hasCustomPricing": false,
+              "permanentId": 65,
+              "photos": [],
+              "documents": [],
+              "longDescription": "<p>STANDARD door/window casing.</p>\n",
+              "trades": [],
+              "total": "0",
+              "priceNotApplicable": false,
+              "catelogId": "1-9-21",
+              "price": "N/A",
+              "customData": {},
+              "excludeFromCustomPricingZone": false,
+              "category": "1. Basement Base Price",
+              "internalNotes": "1x3 CASING",
+              "additionalInfo": "1x3 CASING",
+              "priceHidden": true,
+              "zoneAdjustedPrice": "$0",
+              "internalInstructions": "Please note that it is the Project Consultant's responsibility to confirm and provide the exact baseboard selection approved by the client. ",
+              "name": "Upgrade Door/window casing to 3 ½”, 1x3, or 1x4.",
+              "quantity": "1",
+              "omitFromPDF": false,
+              "subCategory": "1-9. Basement Base Price",
+              "zoneMultiplier": "0.98"
+            },
+            {
+              "hasCustomPricing": false,
+              "documents": [],
+              "quantity": "2",
+              "priceNotApplicable": false,
+              "trades": [],
+              "longDescription": "",
+              "subCategory": "1-9. Basement Base Price",
+              "priceHidden": true,
+              "name": "Upgrade to double Bi-fold door",
+              "catelogId": "1-9-23",
+              "excludeFromCustomPricingZone": false,
+              "internalNotes": "",
+              "customData": {},
+              "price": "$210/door",
+              "internalInstructions": "",
+              "category": "1. Basement Base Price",
+              "permanentId": 61,
+              "total": "411.6",
+              "additionalInfo": "",
+              "id": "62e7ecb1700d4038bfb03c9f",
+              "service": "Complete Basement Finishing",
+              "omitFromPDF": false,
+              "zoneMultiplier": "0.98",
+              "zoneAdjustedPrice": "$205.8",
+              "photos": []
+            },
+            {
+              "quantity": "N/A",
+              "total": "N/A",
+              "documents": [],
+              "additionalInfo": "",
+              "priceNotApplicable": true,
+              "id": "62e7edbc700d4038bfb03d56",
+              "hasCustomPricing": false,
+              "subCategory": "1-9. Basement Base Price",
+              "omitFromPDF": false,
+              "internalInstructions": "Please note that the minimum charge for carpeting the stairs only or small carpet jobs is already included in the base price.",
+              "photos": [],
+              "price": "N/A",
+              "permanentId": 7,
+              "trades": [],
+              "zoneAdjustedPrice": "N/A",
+              "customData": {},
+              "zoneMultiplier": "0.98",
+              "catelogId": "1-9-24",
+              "name": "8lb Padding and Carpet. Can be exchanged for Painted floor or steps.",
+              "priceHidden": true,
+              "category": "1. Basement Base Price",
+              "internalNotes": "",
+              "longDescription": "",
+              "service": "Complete Basement Finishing",
+              "excludeFromCustomPricingZone": false
+            },
+            {
+              "id": "62e7ec30700d4038bfb03c2f",
+              "price": "N/A",
+              "internalInstructions": "3/29/26 includes painting existing exterior basement doors.",
+              "customData": {},
+              "photos": [],
+              "subCategory": "1-9. Basement Base Price",
+              "documents": [],
+              "total": "N/A",
+              "omitFromPDF": false,
+              "longDescription": "<p>Painting details.</p>\n",
+              "zoneAdjustedPrice": "N/A",
+              "additionalInfo": "",
+              "zoneMultiplier": "0.98",
+              "service": "Complete Basement Finishing",
+              "trades": [],
+              "quantity": "N/A",
+              "category": "1. Basement Base Price",
+              "excludeFromCustomPricingZone": false,
+              "priceNotApplicable": true,
+              "internalNotes": "",
+              "catelogId": "1-9-25",
+              "hasCustomPricing": false,
+              "priceHidden": true,
+              "permanentId": 8,
+              "name": "Painting details - General Specs"
+            },
+            {
+              "trades": [],
+              "omitFromPDF": false,
+              "priceHidden": false,
+              "internalNotes": "",
+              "additionalInfo": "",
+              "catelogId": "1-9-29",
+              "internalInstructions": "",
+              "photos": [],
+              "customData": {},
+              "hasCustomPricing": false,
+              "priceNotApplicable": true,
+              "documents": [],
+              "service": "Complete Basement Finishing",
+              "permanentId": 1033,
+              "category": "1. Basement Base Price",
+              "name": "Interior designer help - 4 hours",
+              "subCategory": "1-9. Basement Base Price",
+              "zoneMultiplier": "0.98",
+              "quantity": "N/A",
+              "total": "N/A",
+              "longDescription": "<ul>\n<li>BASEMENT LAYOUT HELP</li>\n</ul>\n",
+              "id": "64bfebcdcfe1a8f764acd042",
+              "price": "N/A",
+              "excludeFromCustomPricingZone": false,
+              "zoneAdjustedPrice": "N/A"
+            },
+            {
+              "priceHidden": false,
+              "quantity": "N/A",
+              "permanentId": 1032,
+              "total": "N/A",
+              "price": "N/A",
+              "service": "Complete Basement Finishing",
+              "hasCustomPricing": false,
+              "priceNotApplicable": true,
+              "id": "65aa9a7dbac7246635cf47c4",
+              "omitFromPDF": false,
+              "zoneMultiplier": "0.98",
+              "additionalInfo": "",
+              "subCategory": "1-9. Basement Base Price",
+              "zoneAdjustedPrice": "N/A",
+              "category": "1. Basement Base Price",
+              "internalNotes": "",
+              "customData": {},
+              "internalInstructions": "Consultation fees for design services conducted outside of regular working hours.",
+              "longDescription": "<p>Design consultations outside of normal business hours will result in a fee of $200.</p>\n",
+              "catelogId": "1-9-30",
+              "excludeFromCustomPricingZone": false,
+              "name": "Consultation fees for design services conducted outside of regular working hours.",
+              "photos": [],
+              "documents": [],
+              "trades": []
+            },
+            {
+              "excludeFromCustomPricingZone": false,
+              "permanentId": 1030,
+              "zoneAdjustedPrice": "N/A",
+              "service": "Complete Basement Finishing",
+              "priceNotApplicable": true,
+              "hasCustomPricing": false,
+              "name": "No credits for base price items",
+              "category": "1. Basement Base Price",
+              "documents": [],
+              "id": "65aa9ac0bac7246635cf47c5",
+              "additionalInfo": "",
+              "internalInstructions": "No credits for base price items.",
+              "quantity": "N/A",
+              "omitFromPDF": false,
+              "priceHidden": false,
+              "price": "N/A",
+              "total": "N/A",
+              "customData": {},
+              "longDescription": "<p>No credits will be issued for unused base price items.</p>\n",
+              "zoneMultiplier": "0.98",
+              "photos": [],
+              "internalNotes": "",
+              "catelogId": "1-9-31",
+              "trades": [],
+              "subCategory": "1-9. Basement Base Price"
+            }
+          ],
+          "name": "1-9. Basement Base Price",
+          "total": 52437
+        },
+        {
+          "name": "1-12. Insulation",
+          "items": [
+            {
+              "service": "Complete Basement Finishing",
+              "subCategory": "1-12. Insulation",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377027.221238.png",
+                  "name": "INSULATION"
+                }
+              ],
+              "additionalInfo": "",
+              "quantity": "594",
+              "customData": {},
+              "priceNotApplicable": false,
+              "internalInstructions": "",
+              "excludeFromCustomPricingZone": false,
+              "zoneMultiplier": "0.98",
+              "longDescription": "",
+              "zoneAdjustedPrice": "$575",
+              "internalNotes": "",
+              "name": "R-13/15 fiberglass Insulation. VIRGINIA OR MARYLAND ONLY!\n",
+              "category": "1. Basement Base Price",
+              "permanentId": 51,
+              "priceHidden": true,
+              "documents": [],
+              "hasCustomPricing": false,
+              "price": "$3/sq. ft. ($575 minimum charge)",
+              "catelogId": "1-12-1",
+              "id": "62e7ee7d700d4038bfb03dcc",
+              "omitFromPDF": false,
+              "photos": [],
+              "total": "1,746.36"
+            }
+          ],
+          "total": 1711
+        },
+        {
+          "name": "1-13. Utility and Access Doors",
+          "items": [
+            {
+              "price": "$650",
+              "priceNotApplicable": false,
+              "subCategory": "1-13. Utility and Access Doors",
+              "id": "67b6439df3fa271059bcd1a8",
+              "priceHidden": true,
+              "zoneMultiplier": "0.98",
+              "zoneAdjustedPrice": "$637",
+              "internalNotes": "",
+              "name": "Single access door with trims",
+              "trades": [],
+              "longDescription": "<p>Single access door with trims</p>\n",
+              "omitFromPDF": false,
+              "quantity": "1",
+              "category": "1. Basement Base Price",
+              "excludeFromCustomPricingZone": false,
+              "photos": [],
+              "documents": [],
+              "catelogId": "1-13-1",
+              "customData": {},
+              "permanentId": 1026,
+              "additionalInfo": "For El Panel",
+              "total": "637",
+              "hasCustomPricing": false,
+              "internalInstructions": "The salesperson must clearly state what the access door is for.",
+              "service": "Complete Basement Finishing"
+            }
+          ],
+          "total": 624
+        }
+      ],
+      "total": 62158,
+      "name": "1. Basement Base Price"
+    },
+    {
+      "name": "2. Electrical Heavy-up, Plumbing and Boiler Heat",
+      "subcategories": [
+        {
+          "name": "2-2. General Plumbing",
+          "items": [
+            {
+              "internalNotes": "Vanya price $3600",
+              "permanentId": -1,
+              "additionalInfo": "Drain Stack: Relocate drain stack to inside new wall; replace the cast iron drain stack with PVC piping up to the point of connection in the ceiling.\nUnderground Cast Iron Drain: Make a trench to replace the cast iron drain with PVC piping in the basement finish areas (DOES NOT INCLUDE UNFINISHED STORAGE ROOMS).",
+              "price": "Custom",
+              "internalInstructions": "",
+              "omitFromPDF": false,
+              "service": "Complete Basement Finishing",
+              "priceNotApplicable": false,
+              "documents": [],
+              "subCategory": "2-2. General Plumbing",
+              "total": "7,200",
+              "zoneAdjustedPrice": "$1",
+              "catelogId": "Custom",
+              "zoneMultiplier": "1",
+              "name": "ADDITIONAL PLUMBING SCOPE:",
+              "hasCustomPricing": true,
+              "longDescription": "",
+              "customData": {
+                "recommendedCost": 7200,
+                "materialsAdminCost": 0,
+                "itemType": "default",
+                "inHouseTeamCost": 0,
+                "pricingNotes": "Vanya price $3600",
+                "subcontractorProposalAmount": 3600
+              },
+              "id": "6a1dc3f25b7f810f7ab9016a",
+              "priceHidden": false,
+              "category": "2. Electrical Heavy-up, Plumbing and Boiler Heat",
+              "quantity": "7200",
+              "photos": [],
+              "trades": [],
+              "excludeFromCustomPricingZone": false
+            }
+          ],
+          "total": 7200
+        }
+      ],
+      "total": 7200
+    },
+    {
+      "name": "3. Basement upgrades",
+      "total": 15372,
+      "subcategories": [
+        {
+          "name": "3-8. HVAC and supplemental heat",
+          "items": [
+            {
+              "total": "11,750.2",
+              "permanentId": 166,
+              "name": "2 zone Heil Ductless mini-split A/C and/or heating system Installation.",
+              "zoneMultiplier": "0.98",
+              "additionalInfo": "FOR MAIN SPACE AND BEDROOM",
+              "internalInstructions": "",
+              "quantity": "1",
+              "id": "62e7ee8a700d4038bfb03dd5",
+              "catelogId": "3-8-5",
+              "hasCustomPricing": false,
+              "subCategory": "3-8. HVAC and supplemental heat",
+              "category": "3. Basement upgrades",
+              "photos": [],
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377028.290637.png",
+                  "name": "HVAC"
+                }
+              ],
+              "customData": {},
+              "priceHidden": false,
+              "excludeFromCustomPricingZone": false,
+              "omitFromPDF": false,
+              "priceNotApplicable": false,
+              "documents": [],
+              "zoneAdjustedPrice": "$11,750.2",
+              "longDescription": "",
+              "price": "$11,990",
+              "service": "Complete Basement Finishing",
+              "internalNotes": ""
+            }
+          ],
+          "total": 11750
+        },
+        {
+          "name": "3-9. Electrical and low voltage",
+          "total": 188,
+          "items": [
+            {
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377024.973623.png",
+                  "name": "ELECTRICAL"
+                }
+              ],
+              "zoneMultiplier": "0.98",
+              "category": "3. Basement upgrades",
+              "zoneAdjustedPrice": "$0.3234",
+              "photos": [],
+              "service": "Complete Basement Finishing",
+              "additionalInfo": "",
+              "omitFromPDF": false,
+              "internalNotes": "",
+              "subCategory": "3-9. Electrical and low voltage",
+              "customData": {},
+              "priceNotApplicable": false,
+              "excludeFromCustomPricingZone": false,
+              "priceHidden": false,
+              "catelogId": "3-9-2",
+              "permanentId": 183,
+              "id": "62e7ec77700d4038bfb03c6c",
+              "internalInstructions": "",
+              "documents": [],
+              "hasCustomPricing": false,
+              "total": "192.1",
+              "name": "Upgrade to DECORA switches and outlets.",
+              "longDescription": "",
+              "price": "$0.33/sq. ft.",
+              "quantity": "594"
+            }
+          ]
+        },
+        {
+          "name": "3-13. Shelving",
+          "items": [
+            {
+              "priceHidden": false,
+              "priceNotApplicable": false,
+              "customData": {},
+              "total": "1,254.4",
+              "zoneMultiplier": "0.98",
+              "additionalInfo": "For guest room closet and laundry linen closet",
+              "documents": [],
+              "photos": [],
+              "omitFromPDF": false,
+              "id": "62e7ecff700d4038bfb03cd7",
+              "name": "Add closet single melamine shelf with hanging rod (up to 6-ft.)",
+              "quantity": "4",
+              "internalInstructions": "",
+              "service": "Complete Basement Finishing",
+              "category": "3. Basement upgrades",
+              "price": "$320",
+              "zoneAdjustedPrice": "$313.6",
+              "subCategory": "3-13. Shelving",
+              "longDescription": "",
+              "hasCustomPricing": false,
+              "permanentId": 227,
+              "excludeFromCustomPricingZone": false,
+              "trades": [
+                {
+                  "name": "FINISH CARPENTERS/HARDWARE AND FINAL",
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377025.7927492.png"
+                }
+              ],
+              "internalNotes": "",
+              "catelogId": "3-13-2"
+            },
+            {
+              "zoneAdjustedPrice": "$490",
+              "trades": [],
+              "service": "Complete Basement Finishing",
+              "photos": [],
+              "documents": [],
+              "catelogId": "3-13-6",
+              "category": "3. Basement upgrades",
+              "subCategory": "3-13. Shelving",
+              "id": "67dda9e6ab61b859322aedfe",
+              "quantity": "5",
+              "name": "Pre-finished floating shelf installation - labor only. Price per ln.ft of shelf.",
+              "additionalInfo": "FOR ABOVE WASHER AND DRYER",
+              "priceNotApplicable": false,
+              "omitFromPDF": false,
+              "total": "490",
+              "priceHidden": false,
+              "permanentId": 1036,
+              "hasCustomPricing": false,
+              "longDescription": "<p>Pre-finished floating shelf installation - labor only.</p>\n",
+              "price": "$99/ln.ft. $490 minimum",
+              "zoneMultiplier": "0.98",
+              "internalNotes": "",
+              "internalInstructions": "",
+              "customData": {},
+              "excludeFromCustomPricingZone": false
+            }
+          ],
+          "total": 1719
+        },
+        {
+          "items": [
+            {
+              "omitFromPDF": false,
+              "zoneAdjustedPrice": "$-931",
+              "quantity": "1",
+              "priceHidden": false,
+              "priceNotApplicable": false,
+              "excludeFromCustomPricingZone": false,
+              "subCategory": "3-18. Flooring",
+              "total": "-931",
+              "id": "694b027263318c89c58db301",
+              "permanentId": 1000000,
+              "hasCustomPricing": false,
+              "service": "Complete Basement Finishing",
+              "catelogId": "3-18-1",
+              "name": "Combined Flooring and Stairs Minimum Charge Credit",
+              "zoneMultiplier": "0.98",
+              "additionalInfo": "",
+              "price": "-$950",
+              "documents": [],
+              "customData": {},
+              "photos": [],
+              "trades": [],
+              "internalInstructions": "This credit may be applied only if flooring conditions are met.",
+              "internalNotes": "",
+              "longDescription": "<p>This credit applies only when conditions are met.</p>\n",
+              "category": "3. Basement upgrades"
+            },
+            {
+              "quantity": "70",
+              "trades": [
+                {
+                  "name": "TILE INSTALLATION",
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377031.701557.png"
+                }
+              ],
+              "id": "62e7edd2700d4038bfb03d68",
+              "longDescription": "<p><strong>2 hours of Interior designer time is included.</strong></p>\n",
+              "total": "1,000",
+              "zoneMultiplier": "0.98",
+              "photos": [],
+              "zoneAdjustedPrice": "$1,000",
+              "priceNotApplicable": false,
+              "service": "Complete Basement Finishing",
+              "name": "Ceramic etc. tile (Upgrade from base price carpet). Labor only. Materials not included.",
+              "catelogId": "3-18-5",
+              "permanentId": 309,
+              "price": "$13/sq. ft. $1,000 minimum",
+              "hasCustomPricing": false,
+              "priceHidden": false,
+              "excludeFromCustomPricingZone": false,
+              "additionalInfo": "FOR LAUNDRY ROOM FLOOR",
+              "internalInstructions": "",
+              "customData": {},
+              "internalNotes": "",
+              "subCategory": "3-18. Flooring",
+              "omitFromPDF": false,
+              "category": "3. Basement upgrades",
+              "documents": []
+            },
+            {
+              "subCategory": "3-18. Flooring",
+              "zoneAdjustedPrice": "$2.94",
+              "zoneMultiplier": "0.98",
+              "documents": [],
+              "hasCustomPricing": false,
+              "price": "$3/sq. ft.",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377030.278636.png",
+                  "name": "LVT /SOLID SURFACE FLOORING"
+                }
+              ],
+              "customData": {},
+              "total": "1,617",
+              "service": "Complete Basement Finishing",
+              "photos": [],
+              "name": "Floor leveling. All included.",
+              "excludeFromCustomPricingZone": false,
+              "id": "62e7ecfe700d4038bfb03cd6",
+              "internalNotes": "",
+              "quantity": "550",
+              "priceHidden": false,
+              "catelogId": "3-18-10",
+              "omitFromPDF": false,
+              "permanentId": 314,
+              "longDescription": "<p>Floor leveling details.</p>\n",
+              "additionalInfo": "",
+              "internalInstructions": "",
+              "priceNotApplicable": false,
+              "category": "3. Basement upgrades"
+            }
+          ],
+          "name": "3-18. Flooring",
+          "total": 1704
+        }
+      ]
+    },
+    {
+      "name": "6. Laundry",
+      "subcategories": [
+        {
+          "total": 4926,
+          "items": [
+            {
+              "excludeFromCustomPricingZone": false,
+              "id": "62e7ec05700d4038bfb03c19",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377024.973623.png",
+                  "name": "ELECTRICAL"
+                },
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.453223.png",
+                  "name": "PLUMBING"
+                }
+              ],
+              "omitFromPDF": false,
+              "longDescription": "<p>New laundry setup. Appliances not included.</p>\n",
+              "permanentId": 385,
+              "customData": {},
+              "internalInstructions": "",
+              "price": "$4,212",
+              "zoneAdjustedPrice": "$4,127.76",
+              "quantity": "1",
+              "priceHidden": false,
+              "zoneMultiplier": "0.98",
+              "priceNotApplicable": false,
+              "service": "Complete Basement Finishing",
+              "catelogId": "6-1-3",
+              "name": "New laundry with washer and electric non-steam dryer",
+              "additionalInfo": "",
+              "total": "4,127.76",
+              "hasCustomPricing": false,
+              "category": "6. Laundry",
+              "subCategory": "6-1. Laundry room price",
+              "documents": [],
+              "internalNotes": "",
+              "photos": []
+            },
+            {
+              "zoneAdjustedPrice": "$899.64",
+              "total": "899.64",
+              "longDescription": "<p>Conversion or add new. Sink not included.</p>\n",
+              "priceHidden": false,
+              "excludeFromCustomPricingZone": false,
+              "additionalInfo": "",
+              "id": "62e7ed6d700d4038bfb03d28",
+              "catelogId": "6-1-6",
+              "subCategory": "6-1. Laundry room price",
+              "trades": [
+                {
+                  "image": "https://basementremodeling-com-estimation-tool.s3.amazonaws.com/trades/1661377029.453223.png",
+                  "name": "PLUMBING"
+                }
+              ],
+              "quantity": "1",
+              "photos": [],
+              "priceNotApplicable": false,
+              "internalNotes": "",
+              "price": "$918",
+              "permanentId": 387,
+              "documents": [],
+              "omitFromPDF": false,
+              "service": "Complete Basement Finishing",
+              "zoneMultiplier": "0.98",
+              "name": "Utility sink near washer.",
+              "category": "6. Laundry",
+              "hasCustomPricing": false,
+              "customData": {},
+              "internalInstructions": ""
+            }
+          ],
+          "name": "6-1. Laundry room price"
+        }
+      ],
+      "total": 5027
+    }
+  ],
+  "appSettings": {
+    "centsOnProposals": false,
+    "centsOnChangeOrders": true,
+    "roundingRule": "up"
+  },
+  "clientInfo": [
+    {
+      "clientPhone": "5714888408",
+      "county": "District of Columbia",
+      "clientStreet": "4306 37th St Mw",
+      "pricingZone": {
+        "multiplier": "0.98",
+        "percent": "-2",
+        "isDefault": false,
+        "id": "68e47c803b0d1ff81c4dde81",
+        "name": "Washington, DC"
+      },
+      "zip": "20008",
+      "city": "Washington",
+      "externalReferenceNumber": "recuSaNMxChJyt0o1",
+      "clientEmail": "danielm.douglass@gmail.com",
+      "clientLast": "Douglass",
+      "state": "DC",
+      "clientFirst": "Daniel"
+    }
+  ],
+  "estimatesInfo": [
+    {
+      "floorplan": "https://ucarecdn.com/9745aba4-1b0a-4565-a0f3-1bbd7c2d7f51/",
+      "totalCostDepositDiscount": 87908,
+      "pc_email": "eric.c@basementremodeling.com",
+      "appliedDiscounts": [
+        {
+          "abbreviation": "QS",
+          "name": "Quick Start",
+          "value": 2,
+          "validTill": "10/01/2026",
+          "totalWith": 88525,
+          "id": "6a0aecbb005b4a62cf782fac"
+        },
+        {
+          "id": "6a0aed8bcb50aabb07744c2b",
+          "name": "quick deposit",
+          "abbreviation": "QD",
+          "value": 3,
+          "validTill": "06/15/2026",
+          "totalWith": 87908
+        }
+      ],
+      "totalCost": 89760,
+      "estimateDate": "06/01/2026",
+      "totalCostCashDiscount": 88525,
+      "totalCostBothDiscounts": 86674,
+      "author": "Eric Campbell",
+      "appVersion": "2.9",
+      "cashDiscountValidTill": "10/01/2026",
+      "depositDiscountDiscountValidTill": "06/15/2026",
+      "squareFootage": 594,
+      "totalCostAllDiscounts": 86674,
+      "depositDiscount": 3,
+      "estimate": "1",
+      "cashDiscount": 2,
+      "id": "6a1dc3f2a73f0e9972886723",
+      "houseBuilt": 1930
+    }
+  ]
+}

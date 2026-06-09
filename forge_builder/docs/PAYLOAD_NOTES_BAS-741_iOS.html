@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payload-заметки iOS-дева — BAS-741</title>
+<style>
+  :root { --blue:#2F5F8F; --bg:#f5f6f8; --card:#fff; --grey:#666; }
+  * { box-sizing:border-box; }
+  body { font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; color:#222; background:var(--bg); margin:0; line-height:1.5; }
+  .wrap { max-width:920px; margin:0 auto; padding:0 20px 80px; }
+  header.banner { background:var(--blue); color:#fff; padding:26px 20px; margin-bottom:24px; }
+  header.banner h1 { margin:0; font-size:22px; }
+  header.banner p { margin:8px 0 0; opacity:.9; font-size:14px; }
+  h2 { color:var(--blue); border-bottom:2px solid #dde3ea; padding-bottom:6px; margin-top:34px; font-size:18px; }
+  .card { background:var(--card); border:1px solid #e2e6ec; border-radius:10px; padding:14px 18px; margin:14px 0; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; }
+  th, td { border:1px solid #dde3ea; padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef2f7; }
+  ul { margin:8px 0; padding-left:22px; } li { margin:5px 0; }
+  code { background:#eef1f5; padding:1px 5px; border-radius:4px; font-size:90%; font-family:"SF Mono",Menlo,Consolas,monospace; }
+  .note { font-size:13px; color:var(--grey); }
+  .warn { background:#fff6e5; border:1px solid #f0d8a0; border-radius:8px; padding:10px 14px; font-size:13px; }
+  a { color:var(--blue); }
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap" style="padding-bottom:0">
+    <h1>Payload-заметки iOS-дева — BAS-741</h1>
+    <p>Новые/изменённые поля payload. Reference на будущее: что мы сможем использовать в темплейтах.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="card note">
+    Источник: блок <b>NOTES</b> в <a href="https://todor3d.atlassian.net/browse/BAS-741">BAS-741</a> (от iOS-дева).
+    Зашипано на <code>develop</code> + <code>hotfix/v1.43.2</code>.
+    Бэкенд-миграция: <code>docs/specs/BAS-748-payload-changes.md</code> (в репозитории iOS/бэкенда).
+    <code>payloadVersion = 1</code>.
+  </div>
+
+  <h2>⚠️ Изменение смысла существующих полей</h2>
+  <div class="warn">
+    Важно: смысл уже существующих полей <b>поменялся</b> — старая логика темплейтов, опирающаяся на них, может «поехать».
+  </div>
+  <ul>
+    <li><code>estimate.totalCost</code> → теперь <b>raw catalog</b> (без зоны, без дисконта).
+        Прежний смысл переехал в <code>zoneAdjustedTotalCost</code>.</li>
+    <li><code>item.total</code> → теперь <b>zone-insensitive</b> (raw, без зоны).</li>
+    <li>Legacy <code>totalCostCashDiscount</code> / <code>totalCostDepositDiscount</code> /
+        <code>totalCostBothDiscounts</code> / <code>totalCostAllDiscounts</code> — <b>не трогали</b>, работают как раньше.</li>
+  </ul>
+
+  <h2>Новые поля — на уровне estimate</h2>
+  <table>
+    <tr><th>Поле</th><th>Назначение</th></tr>
+    <tr><td><code>zoneAdjustedTotalCost</code>, <code>zoneAdjustedDiff</code></td><td>Итог с учётом зоны + разница от raw</td></tr>
+    <tr><td><code>totalWithAllDiscounts</code>, <code>allDiscountsDiff</code>, <code>finalTotalCost</code></td><td>Итог со всеми дисконтами, разница и финальная цена</td></tr>
+    <tr><td><code>appliedDiscounts[].diffFromZoneAdjusted</code></td><td>Каждая запись дисконта расширена разницей от zone-adjusted</td></tr>
+    <tr><td><code>payloadVersion</code>, <code>calculatedAt</code></td><td>Версия payload (=1) и ISO8601-время расчёта</td></tr>
+  </table>
+
+  <h2>Новые поля — на уровне item</h2>
+  <table>
+    <tr><th>Поле</th><th>Назначение</th></tr>
+    <tr><td><code>zoneAdjustedTotal</code>, <code>zoneAdjustedDiff</code></td><td>Итог по айтему с учётом зоны + разница</td></tr>
+    <tr><td><code>totalWithAllDiscounts</code>, <code>allDiscountsDiff</code>, <code>finalTotal</code></td><td>Со всеми дисконтами, разница, финал</td></tr>
+    <tr><td><code>discountBreakdown[]</code></td><td>По записи на каждый применённый дисконт: <code>totalWith</code> (изолированно) + <code>diffFromZoneAdjusted</code></td></tr>
+    <tr><td><code>maxRefundAmount</code></td><td>Только для proposal; на change orders <b>опускается</b></td></tr>
+  </table>
+
+  <h2>Что это даёт в будущем</h2>
+  <ul>
+    <li>Можно показывать цепочку цен: <b>raw catalog → zone-adjusted → final с дисконтами</b>.</li>
+    <li>Детальная <b>разбивка по каждому дисконту</b> (<code>discountBreakdown[]</code>) — например, отдельной строкой/блоком.</li>
+    <li><b>Версионирование payload</b> (<code>payloadVersion</code>) — можно ветвить логику темплейта по версии для обратной совместимости.</li>
+    <li><code>calculatedAt</code> — печатать дату расчёта на документе.</li>
+  </ul>
+
+  <p style="margin-top:30px">Связанный документ:
+    <a href="REQUIREMENTS_BAS-741_761.html">REQUIREMENTS_BAS-741_761.html</a> — консолидированные требования.</p>
+
+</div>
+</body>
+</html>

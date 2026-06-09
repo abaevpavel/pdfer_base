@@ -28,7 +28,6 @@
 
         .headerHeight {
             height: 25pt;
-
         }
 
         .greyBorder {
@@ -71,58 +70,26 @@
         }
 
         .red { color: #FF0000; }
-        .item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; margin: 8pt 0; }
     </style>
      <meta name="pdfkit-orientation" content="Landscape">
      </head>
 
 <body>
 
-{% macro pricing_separator() -%}
-<p class="item-pricing-separator"></p>
-{%- endmacro %}
-
-{% macro maximum_refund_amount(it) -%}
-{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-{% if refund_str and refund_str | upper != 'N/A' %}
-<p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
-<br/><span style="color: #000000;"><i>Maximum refund amount after contract signing, based on incentives applied at the time of signing.</i></span></p>
-{% endif %}
-{%- endmacro %}
-
-{% macro item_pricing_footer(it) -%}
-{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-{% set show_refund = refund_str and refund_str | upper != 'N/A' and not it.priceHidden %}
-{% if show_refund %}
-{{ pricing_separator() }}
-{{ maximum_refund_amount(it) }}
-{% endif %}
-{%- endmacro %}
-
     <h3>
-        ATTACHMENT 1: FULL PROJECT SCOPE.
+        ATTACHMENT 1: SUBCONTRACTOR CHANGE ORDER SCOPE.
     </h3>
-    <h4>
-        BASEMENT TOTAL SQ. FT. = {{data['estimatesInfo'][0]['squareFootage']}} SQ. FT.
-    </h4>
     <p>
         <b>ATTENTION! PROPERTY ON SEPTIC? BEDROOMS OR ROOMS WITH CLOSETS ARE NOT POSSIBLE UNLESS WRITTEN CONFIRMATION
         FROM COUNTY/CITY HEALTH DEPARTMENT IS PROVIDED! THIS INCLUDES REMODELING PROJECTS WITH EXISTING ROOMS!</b>
     </p>
-    
-    <p><b>UNIT PRICING MAY NOT BE STRICTLY LINEAR AND MAY INCLUDE BUNDLED PRICING FORMULAS OR OTHER PRICING FACTORS. AS A RESULT, INDIVIDUAL UNIT COSTS MAY VARY AND MAY NOT EQUAL THE TOTAL PRICE DIVIDED BY THE QUANTITY.</b></p>
 
     {% for category in data['categories'] %}
- 
+
         <table class="table" cellspacing="0"><!--Category Header -->
             <tbody><tr class="greyBorder">
-                <td class="headerHeight" colspan="3" bgcolor="#FF0000">
+                <td class="headerHeight" colspan="4" bgcolor="#FF0000">
                     <p class="headerText font" style="color:white">{{category.id}} <u class="font">{{category.name}}</u></p>
-                </td>
-                <td class="greyBorder" style="color:white" bgcolor="#FF0000" colspan="2">
-                    <div class="flexBox textCenter" style="padding-top: 5pt;">
-                        ${{category.totalFormatted}}
-                    </div>
                 </td>
             </tr><!--Subcategory Header -->
         {% for subcategory in category.subcategories %}
@@ -133,15 +100,12 @@
                 <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
                     <p class="flexBox textCenter">Quantity</p>
                 </td>
-                <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
-                    <p class="flexBox textCenter">Total</p>
-                </td>
             </tr><!--Item Row -->
             {% for item in subcategory['items'] %}
-                {% if not item['omitFromPDF']%}
+                {% if not item['omitFromPDF'] %}
                     <tr>
                         <!--Description column -->
-                        <td class="greyBorder" style="width:70%;" colspan="3" bgcolor="#F1F1F1">
+                        <td class="greyBorder" style="width:80%;" colspan="3" bgcolor="#F1F1F1">
                             <div class="paragraphs" style="padding-left: 30px;">
                                 {% if item.catelogId == 'Custom' %}
                                     {% set item_type = (item.customData | default({})).itemType | default('default') %}
@@ -180,33 +144,22 @@
                                 {% if has_photos %}
                                 <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                                 {% endif %}
-                                {{ item_pricing_footer(item) }}
                             </div>
                         </td>
                         <!--Quantity column -->
-                        <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
+                        <td class="greyBorder" bgcolor="#F1F1F1" style="width:20%;">
                             {% if item.catelogId == 'Custom' %}
-                                <p class="flexBox textCenter">1</p>
+                                <p class="flexBox textCenter">{% if item.total == "N/A" %}N/A{% else %}1{% endif %}</p>
                             {% else %}
                                 <p class="flexBox textCenter">{{item.quantity}}</p>
                             {% endif %}
                         </td>
-                        <!--Totals column -->
-                        <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
-                            <p class="flexBox textCenter">
-                                {% if item.total != "N/A"%}
-                                    ${{item.total}}
-                                {% else %}
-                                    N/A
-                                {% endif %}
-                                </p>
-                        </td>
                     </tr>
                     <!--Item Row -->
-                {% endif %} <!-- Include item in pdf  -->
+                {% endif %} <!-- Include item in pdf -->
 
             {% endfor %} <!-- Items -->
-        {% endfor %} <!-- Subcats--> 
+        {% endfor %} <!-- Subcats -->
     </tbody></table>
     {% endfor %} <!--Cats -->
 </body></html>

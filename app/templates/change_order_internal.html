@@ -28,7 +28,6 @@
 
         .headerHeight {
             height: 25pt;
-
         }
 
         .greyBorder {
@@ -70,6 +69,10 @@
             page-break-inside: avoid !important;
         }
 
+        .total-cost-line {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
         .red { color: #FF0000; }
         .item-pricing-separator { border-top: 1px solid #C9C9C9; width: 50%; margin: 8pt 0; }
     </style>
@@ -78,42 +81,80 @@
 
 <body>
 
+{% macro internal_lines(it) -%}
+{% if it.internalInstructions or it.internalNotes %}
+{% if it.internalInstructions %}
+<p class="red">
+    <b>INTERNAL INSTRUCTIONS:</b><br/>
+    {{ it.internalInstructions
+    | default('', true)
+    | linkify
+    | replace('\r\n','\n')
+    | replace('\n','<br>')
+    | replace('<br>-','<br>- ')
+    | safe
+    }}
+</p>
+{% endif %}
+{% if it.internalNotes %}
+<p class="red">
+    <b>INTERNAL NOTES:</b><br/>
+    {{ it.internalNotes
+    | default('', true)
+    | linkify
+    | replace('\r\n','\n')
+    | replace('\n','<br>')
+    | replace('<br>-','<br>- ')
+    | safe
+    }}
+</p>
+{% endif %}
+{% endif %}
+{%- endmacro %}
+
+{# OUR COST — только для кастом-айтемов; поля из customData. Note items: no cost block. #}
+{% macro custom_our_cost(it) -%}
+{% set cd = it.customData | default({}) %}
+{% if (cd.itemType | default('default')) != 'note' %}
+<p class="red">
+    <b>OUR COST:</b><br/>
+    Subcontractor proposal amount: {{ cd.subcontractorProposalAmount | default(0) | money }}<br/>
+    In house team cost: {{ cd.inHouseTeamCost | default(0) | money }}<br/>
+    Other cost: {{ cd.materialsAdminCost | default(0) | money }}<br/>
+    Recommended cost: {{ cd.recommendedCost | default(0) | money }}
+</p>
+{% endif %}
+{%- endmacro %}
+
 {% macro pricing_separator() -%}
 <p class="item-pricing-separator"></p>
 {%- endmacro %}
 
-{% macro maximum_refund_amount(it) -%}
-{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-{% if refund_str and refund_str | upper != 'N/A' %}
-<p class="red"><b>Maximum refund amount:</b> {% if refund_str[0:1] == '$' %}{{ refund_str }}{% else %}${{ refund_str }}{% endif %}
-<br/><span style="color: #000000;"><i>Maximum refund amount after contract signing, based on incentives applied at the time of signing.</i></span></p>
+{% macro catalog_price_description(it) -%}
+{% if it.catelogId == 'Custom' %}{% set price_str = it.quantity | money %}{% else %}{% set price_str = it.price | money %}{% endif %}
+{% if price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
+<p class="red"><b>Catalog Price Description:</b> {{ price_str }}<br/><span style="color: #000000;"><i>Catalog price shown for reference only and not visible to the customer; reflects pricing before zone adjustments and discounts.</i></span></p>
 {% endif %}
 {%- endmacro %}
 
-{% macro item_pricing_footer(it) -%}
-{% set refund_str = it.maxRefundAmount | default('', true) | string | trim %}
-{% set show_refund = refund_str and refund_str | upper != 'N/A' and not it.priceHidden %}
-{% if show_refund %}
+{# CO internal: каталожная цена только для каталожных айтемов (для custom — OUR COST); max refund НЕ показываем (741: на СО убираем) #}
+{% macro item_pricing_footer_internal_co(it) -%}
+{% if it.catelogId == 'Custom' %}{% set price_str = it.quantity | money %}{% else %}{% set price_str = it.price | money %}{% endif %}
+{% set show_catalog = it.catelogId != 'Custom' and price_str and price_str | upper != 'N/A' and price_str | upper != 'CUSTOM' %}
+{% if show_catalog %}
 {{ pricing_separator() }}
-{{ maximum_refund_amount(it) }}
+{{ catalog_price_description(it) }}
 {% endif %}
 {%- endmacro %}
 
     <h3>
-        ATTACHMENT 1: FULL PROJECT SCOPE.
+        ATTACHMENT 1: INTERNAL CHANGE ORDER SCOPE.
     </h3>
-    <h4>
-        BASEMENT TOTAL SQ. FT. = {{data['estimatesInfo'][0]['squareFootage']}} SQ. FT.
-    </h4>
-    <p>
-        <b>ATTENTION! PROPERTY ON SEPTIC? BEDROOMS OR ROOMS WITH CLOSETS ARE NOT POSSIBLE UNLESS WRITTEN CONFIRMATION
-        FROM COUNTY/CITY HEALTH DEPARTMENT IS PROVIDED! THIS INCLUDES REMODELING PROJECTS WITH EXISTING ROOMS!</b>
-    </p>
-    
+
     <p><b>UNIT PRICING MAY NOT BE STRICTLY LINEAR AND MAY INCLUDE BUNDLED PRICING FORMULAS OR OTHER PRICING FACTORS. AS A RESULT, INDIVIDUAL UNIT COSTS MAY VARY AND MAY NOT EQUAL THE TOTAL PRICE DIVIDED BY THE QUANTITY.</b></p>
 
     {% for category in data['categories'] %}
- 
+
         <table class="table" cellspacing="0"><!--Category Header -->
             <tbody><tr class="greyBorder">
                 <td class="headerHeight" colspan="3" bgcolor="#FF0000">
@@ -121,7 +162,7 @@
                 </td>
                 <td class="greyBorder" style="color:white" bgcolor="#FF0000" colspan="2">
                     <div class="flexBox textCenter" style="padding-top: 5pt;">
-                        ${{category.totalFormatted}}
+                        {{ category.totalFormatted | money }}
                     </div>
                 </td>
             </tr><!--Subcategory Header -->
@@ -134,7 +175,7 @@
                     <p class="flexBox textCenter">Quantity</p>
                 </td>
                 <td colspan="1" class="greyBorder" bgcolor="#D9E1F3">
-                    <p class="flexBox textCenter">Total</p>
+                    <p class="flexBox textCenter">Client's Price based on Zone</p>
                 </td>
             </tr><!--Item Row -->
             {% for item in subcategory['items'] %}
@@ -148,7 +189,7 @@
                                     <p><b>{% if item_type == 'credit' %}Custom Credit item:{% elif item_type == 'note' %}Custom Note item:{% else %}Custom item:{% endif %}</b> {{item.name}} </p>
 
                                 {% set addi = item.additionalInfo | default('') | trim %}
-                                {% if addi %}
+                                {% if addi and addi != 'None' and addi != 'none' %}
                                 {{ addi
                                 | e
                                 | linkify
@@ -162,7 +203,7 @@
                                 {% else %}
                                     <p><b>ITEM {{item.catelogId}}.</b> {{item.name}}</p>
                                 {% set addi = item.additionalInfo | default('') | trim %}
-                                {% if addi %}
+                                {% if addi and addi != 'None' and addi != 'none' %}
                                 <p><b>ADDITIONAL NOTE:</b></p>
                                 {{ addi
                                 | e
@@ -180,7 +221,9 @@
                                 {% if has_photos %}
                                 <p><a href="https://info.basementremodeling.com/guide_details/{{ item.id }}">Click here for images</a></p>
                                 {% endif %}
-                                {{ item_pricing_footer(item) }}
+                                {{ internal_lines(item) }}
+                                {% if item.catelogId == 'Custom' %}{{ custom_our_cost(item) }}{% endif %}
+                                {{ item_pricing_footer_internal_co(item) }}
                             </div>
                         </td>
                         <!--Quantity column -->
@@ -194,19 +237,21 @@
                         <!--Totals column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
                             <p class="flexBox textCenter">
-                                {% if item.total != "N/A"%}
-                                    ${{item.total}}
-                                {% else %}
-                                    N/A
+                                {{ item.total | money }}<br/>
+                                {% if item.priceHidden %}
+                                <span style="color:red; font-size:10pt;">(hidden from customer)</span>
                                 {% endif %}
-                                </p>
+                            </p>
                         </td>
                     </tr>
                     <!--Item Row -->
                 {% endif %} <!-- Include item in pdf  -->
 
             {% endfor %} <!-- Items -->
-        {% endfor %} <!-- Subcats--> 
+        {% endfor %} <!-- Subcats-->
     </tbody></table>
     {% endfor %} <!--Cats -->
+
+    <br><br>
+    <h3 class="total-cost-line">Total Cost: {{ data.grandTotalFormatted }}</h3>
 </body></html>
