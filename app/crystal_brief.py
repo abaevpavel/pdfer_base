@@ -142,17 +142,16 @@ def make_crystal_brief():
         os.makedirs('./static')
     ts = datetime.datetime.now().timestamp()
 
-    full_path = f"./static/crystal_brief_{ts}.pdf"
-    short_path = f"./static/crystal_brief_short_{ts}.pdf"
+    # Один двухстраничный PDF: стр.1 — короткий вариант, стр.2+ — полный
+    # (один A4-шаблон с page-break, общий стиль — без отдельного short-PDF).
+    brief_path = f"./static/crystal_brief_{ts}.pdf"
     opts = {"enable-local-file-access": None}
-    pdfkit.from_string(_render('sales_brief.html', b), full_path, options=opts)
-    pdfkit.from_string(_render('sales_brief_short.html', b), short_path, options=opts)
+    pdfkit.from_string(_render('sales_brief_2page.html', b), brief_path, options=opts)
 
     return {
         'statusCode': 200,
         'body': {
             "brief": f"{ROOT_URL}/static/crystal_brief_{ts}.pdf",
-            "brief_short": f"{ROOT_URL}/static/crystal_brief_short_{ts}.pdf",
             "data": json.dumps(b),
         }
     }

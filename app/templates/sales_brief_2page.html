@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sales Brief - {{ b.name }}</title>
+<style>
+    @page { size: A4 portrait; margin: 12mm; }
+    * { box-sizing: border-box; }
+    body {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        color: #1f2933; font-size: 10.5px; line-height: 1.45; margin: 0;
+    }
+    table { border-collapse: collapse; width: 100%; }
+    .two { table-layout: fixed; }
+    .two > tbody > tr > td { vertical-align: top; padding: 0 7px; }
+    .two > tbody > tr > td:first-child { padding-left: 0; }
+    .two > tbody > tr > td:last-child { padding-right: 0; }
+
+    .accent { color: {{ b.accent }}; }
+
+    .pagebreak { page-break-before: always; }
+    .page-label {
+        font-size: 9px; text-transform: uppercase; letter-spacing: .08em;
+        color: #9aa5b1; font-weight: bold; margin: 2px 0 0 0;
+    }
+
+    .head h1 { margin: 0 0 2px 0; font-size: 20px; }
+    .head .rule { border-bottom: 3px solid {{ b.accent }}; height: 0; margin: 6px 0 0 0; }
+    .tags { font-size: 11px; color: #52606d; padding-bottom: 8px; }
+    .tags b { color: {{ b.accent }}; }
+    .fam { color: #7b8794; font-size: 10px; }
+
+    /* Уровень доверия Crystal - первый и самый заметный блок под тайтлом */
+    .conf {
+        margin: 10px 0 12px 0;
+        border: 2px solid {{ b.conf_color }}; border-left: 8px solid {{ b.conf_color }};
+        background: {{ b.conf_soft }};
+    }
+    .conf td { padding: 8px 12px; vertical-align: middle; }
+    .conf .cb-label {
+        font-size: 9px; text-transform: uppercase; letter-spacing: .06em;
+        color: #52606d; font-weight: bold; width: 70px; line-height: 1.2;
+    }
+    .conf .cb-level { font-size: 22px; font-weight: bold; color: {{ b.conf_color }}; width: 90px; }
+    .conf .cb-int { font-size: 10px; color: #52606d; font-weight: bold; width: 80px; }
+    .conf .cb-meta { font-size: 9.5px; color: #5a6573; }
+
+    .overview { margin: 6px 0 0 0; font-style: italic; color: #3e4c59; }
+    .summary { margin: 8px 0; font-size: 11px; line-height: 1.5; color: #2c3742; }
+
+    .golden {
+        background: #f5f7fa; border-left: 4px solid {{ b.accent }};
+        padding: 8px 12px; margin: 12px 0; font-size: 11.5px; font-weight: bold;
+    }
+    .golden .k { color: {{ b.accent }}; }
+
+    h2 {
+        font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+        margin: 14px 0 5px 0; padding-bottom: 2px; border-bottom: 1px solid #e4e7eb;
+        color: {{ b.accent }};
+    }
+    h2.green { color: #1f7a3d; border-color: #bfe3cb; }
+    h2.red { color: #b0341d; border-color: #f1c6bd; }
+    ul { margin: 0; padding-left: 16px; }
+    li { margin-bottom: 3px; }
+
+    /* Шкалы DISC / behavioral_traits */
+    .bars td { padding: 1px 0; font-size: 9.5px; vertical-align: middle; }
+    .bars .lbl { width: 92px; color: #52606d; white-space: nowrap; }
+    .bars .val { width: 26px; text-align: right; color: #3e4c59; }
+    .track { background: #edf0f3; height: 8px; width: 100%; }
+    .fill { background: {{ b.accent }}; height: 8px; }
+
+    .pills { margin-bottom: 5px; }
+    .pills span {
+        display: inline-block; background: {{ b.accent_soft }}; color: {{ b.accent }};
+        border: 1px solid {{ b.accent }}; border-radius: 9px;
+        padding: 1px 8px; margin: 0 4px 4px 0; font-size: 9.5px; font-weight: bold;
+    }
+
+    .bottom {
+        margin-top: 12px; padding: 8px 12px; background: {{ b.accent }};
+        color: #ffffff; font-size: 11px; font-weight: bold;
+    }
+    .foot {
+        margin-top: 14px; padding-top: 6px; border-top: 1px solid #e4e7eb;
+        font-size: 9px; color: #9aa5b1;
+    }
+    .more {
+        margin-top: 14px; padding: 8px 12px;
+        border: 1px dashed {{ b.accent }}; border-radius: 4px;
+        background: {{ b.accent_soft }}; color: {{ b.accent }};
+        font-size: 10.5px; font-weight: bold; text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<!-- ===================== СТРАНИЦА 1 — КОРОТКИЙ ВАРИАНТ ===================== -->
+<div class="head">
+    <h1>Sales Brief - {{ b.name }}</h1>
+    <div class="rule"></div>
+    <div class="tags">
+        DISC <b>{{ b.disc_type }}</b>
+        {% if b.family %}<span class="fam">({{ b.family }})</span>{% endif %}
+        &nbsp;&middot;&nbsp; Archetype <b>{{ b.archetype }}</b>
+        &nbsp;&middot;&nbsp; MBTI <b>{{ b.mbti }}</b>
+    </div>
+</div>
+
+<div class="page-label">Short summary &middot; quick read before the call</div>
+
+<table class="conf">
+    <tr>
+        <td class="cb-label">Crystal confidence</td>
+        <td class="cb-level">{{ b.confidence }}</td>
+        <td class="cb-int">intensity {{ b.intensity }}</td>
+        <td class="cb-meta">{{ b.confidence_note }}</td>
+    </tr>
+</table>
+
+{% if b.summary %}<p class="summary">{{ b.summary }}</p>{% endif %}
+
+{% if b.golden_rule %}
+<div class="golden"><span class="k">GOLDEN RULE:</span> {{ b.golden_rule }}</div>
+{% endif %}
+
+<table class="two">
+<tr>
+    <td>
+        <h2 class="green">Do</h2>
+        <ul>{% for x in b.do %}<li>{{ x }}</li>{% endfor %}</ul>
+    </td>
+    <td>
+        <h2 class="red">Don't</h2>
+        <ul>{% for x in b.dont %}<li>{{ x }}</li>{% endfor %}</ul>
+    </td>
+</tr>
+</table>
+
+{% if b.tone %}<h2>Tone</h2><p style="margin:0">{{ b.tone }}</p>{% endif %}
+
+{% if b.bottom_line %}<div class="bottom">Bottom line: {{ b.bottom_line }}</div>{% endif %}
+
+<div class="more">For the full breakdown &mdash; DISC snapshot, how to close, watch-outs, motivators and strengths &mdash; see the pages below &darr;</div>
+
+<!-- ===================== СТРАНИЦА 2 — ПОЛНЫЙ ВАРИАНТ ===================== -->
+<div class="pagebreak"></div>
+
+<div class="head">
+    <h1>Sales Brief - {{ b.name }}</h1>
+    <div class="rule"></div>
+    <div class="tags">
+        DISC <b>{{ b.disc_type }}</b>
+        {% if b.family %}<span class="fam">({{ b.family }})</span>{% endif %}
+        &nbsp;&middot;&nbsp; Archetype <b>{{ b.archetype }}</b>
+        &nbsp;&middot;&nbsp; MBTI <b>{{ b.mbti }}</b>
+    </div>
+</div>
+
+<div class="page-label">Full brief &middot; deep read</div>
+
+{% if b.overview %}<p class="overview">"{{ b.overview }}"</p>{% endif %}
+{% if b.summary %}<p class="summary">{{ b.summary }}</p>{% endif %}
+
+{% if b.golden_rule %}
+<div class="golden"><span class="k">GOLDEN RULE:</span> {{ b.golden_rule }}</div>
+{% endif %}
+
+<!-- Снимок: DISC % слева, qualities + traits справа -->
+<table class="two">
+<tr>
+    <td>
+        <table class="bars">
+            {% for k in ['d','i','s','c'] %}
+            {% set v = b.disc_percentages.get(k, 0) %}
+            <tr>
+                <td class="lbl">{{ {'d':'Dominance','i':'Influence','s':'Steadiness','c':'Conscientious'}[k] }}</td>
+                <td><div class="track"><div class="fill" style="width: {{ v }}%"></div></div></td>
+                <td class="val">{{ v }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </td>
+    <td>
+        {% if b.qualities %}
+        <div class="pills">{% for q in b.qualities %}<span>{{ q }}</span>{% endfor %}</div>
+        {% endif %}
+        {% if b.behavioral_traits %}
+        <table class="bars">
+            {% for name, val in b.behavioral_traits.items() %}
+            <tr>
+                <td class="lbl">{{ name }}</td>
+                <td><div class="track"><div class="fill" style="width: {{ val }}%"></div></div></td>
+                <td class="val">{{ val }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </td>
+</tr>
+</table>
+
+<!-- Do / Don't -->
+<table class="two">
+<tr>
+    <td>
+        <h2 class="green">Do</h2>
+        <ul>{% for x in b.do %}<li>{{ x }}</li>{% endfor %}</ul>
+    </td>
+    <td>
+        <h2 class="red">Don't</h2>
+        <ul>{% for x in b.dont %}<li>{{ x }}</li>{% endfor %}</ul>
+    </td>
+</tr>
+</table>
+
+<!-- How to close / Watch-outs -->
+{% if b.how_to_close or b.watch_outs %}
+<table class="two">
+<tr>
+    <td>
+        {% if b.how_to_close %}
+        <h2>How to close</h2>
+        <ul>{% for x in b.how_to_close %}<li>{{ x }}</li>{% endfor %}</ul>
+        {% endif %}
+    </td>
+    <td>
+        {% if b.watch_outs %}
+        <h2>Watch-outs</h2>
+        <ul>{% for x in b.watch_outs %}<li>{{ x }}</li>{% endfor %}</ul>
+        {% endif %}
+    </td>
+</tr>
+</table>
+{% endif %}
+
+<!-- Motivated by / Strengths -->
+{% if b.motivation or b.strengths %}
+<table class="two">
+<tr>
+    <td>
+        {% if b.motivation %}
+        <h2>Motivated by</h2>
+        <ul>{% for x in b.motivation %}<li>{{ x }}</li>{% endfor %}</ul>
+        {% endif %}
+    </td>
+    <td>
+        {% if b.strengths %}
+        <h2>Strengths</h2>
+        <ul>{% for x in b.strengths %}<li>{{ x }}</li>{% endfor %}</ul>
+        {% endif %}
+    </td>
+</tr>
+</table>
+{% endif %}
+
+{% if b.tone %}<h2>Tone</h2><p style="margin:0">{{ b.tone }}</p>{% endif %}
+
+{% if b.bottom_line %}<div class="bottom">Bottom line: {{ b.bottom_line }}</div>{% endif %}
+
+<div class="foot">
+    Generated from Crystal Knows{% if not b.verified %} (predicted profile - not a taken test){% endif %}.
+    {% if b.url %}{{ b.url }}{% endif %}
+</div>
+
+</body>
+</html>
