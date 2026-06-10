@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge — логика темплейтов и items</title><style>
+:root { --fg:#1a1a1a; --muted:#666; --line:#e2e2e2; --accent:#1a4f8b; --bg:#fff; --code:#f5f5f7; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color:var(--fg); background:#fafafa; line-height:1.55; margin:0; padding:0; }
+.wrap { max-width: 1080px; margin: 0 auto; background:var(--bg); padding:48px 56px 96px; box-shadow:0 0 0 1px var(--line); }
+h1 { font-size:30px; border-bottom:3px solid var(--accent); padding-bottom:10px; margin-top:0; }
+h2 { font-size:23px; margin-top:42px; border-bottom:1px solid var(--line); padding-bottom:6px; color:var(--accent); }
+h3 { font-size:18px; margin-top:30px; }
+h4 { font-size:15px; margin-top:22px; color:#333; }
+p, li { font-size:15px; }
+code { background:var(--code); padding:2px 6px; border-radius:4px; font-size:13px; font-family:"SF Mono", Menlo, Consolas, monospace; }
+pre { background:var(--code); padding:14px 16px; border-radius:8px; overflow:auto; border:1px solid var(--line); }
+pre code { background:none; padding:0; }
+blockquote { margin:14px 0; padding:10px 16px; border-left:4px solid var(--accent); background:#f3f7fc; color:#333; border-radius:0 6px 6px 0; }
+blockquote p { margin:6px 0; font-size:14px; }
+table { border-collapse:collapse; width:100%; margin:18px 0; font-size:13.5px; }
+th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+th { background:#eef3f9; font-weight:600; }
+tr:nth-child(even) td { background:#fafbfc; }
+.yes { color:#1a9e4b; font-weight:700; }
+.no  { color:#c23b3b; font-weight:700; }
+hr { border:none; border-top:1px solid var(--line); margin:34px 0; }
+a { color:var(--accent); }
+ul, ol { padding-left:24px; }
+strong { color:#111; }
+</style></head>
+<body><div class="wrap"><h1 id="forge-document-builder-items">Forge Document Builder — логика темплейтов и отображения items</h1>
+<p>Документ для разработчика. Описывает, <strong>как устроены все темплейты</strong> Forge и
+<strong>по каким условиям рендерятся items</strong> в каждом из них.</p>
+<blockquote>
+<p>Источник истины — <strong>базовые</strong> темплейты в <code>forge_builder/templates/</code> (НЕ <code>*_a4</code>).
+<code>*_a4</code> — это редизайн под A4/синюю палитру, генерится из них же
+(<code>_build_a4_variants.py</code>); логика отображения items идентична базовым, отличается
+только вёрстка/пагинация. Поэтому ниже всё описано по базовым файлам.</p>
+</blockquote>
+<hr>
+<h2 id="1">1. Матрица темплейтов</h2>
+<p>Две сущности (Initial proposal / Change order) × четыре аудитории
+(Client / Internal / Subcontractor / Contract) = <strong>8 темплейтов</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Аудитория</th>
+<th>Initial</th>
+<th>Change order</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Client</strong></td>
+<td><code>initial_client_scope.html</code></td>
+<td><code>change_order_client.html</code></td>
+</tr>
+<tr>
+<td><strong>Internal</strong></td>
+<td><code>initial_internal_scope.html</code></td>
+<td><code>change_order_internal.html</code></td>
+</tr>
+<tr>
+<td><strong>Subcontractor</strong></td>
+<td><code>initial_subcontractor_scope.html</code></td>
+<td><code>change_order_subcontractor.html</code></td>
+</tr>
+<tr>
+<td><strong>Contract</strong></td>
+<td><code>initial_contract.html</code></td>
+<td><code>change_order_contract.html</code></td>
+</tr>
+</tbody>
+</table>
+<p>По <strong>структуре таблицы</strong> уникальных видов фактически три (это, вероятно, и есть
+«6 типов» из ТЗ, если считать сущности отдельно):</p>
+<ol>
+<li><strong>Client / Contract</strong> — одинаковая таблица: 3 колонки (Description / Quantity / Total).
+   Различаются только заголовком и доп.страницами contract (cover/terms/signatures —
+   пока плейсхолдеры, к items отношения не имеют).</li>
+<li><strong>Internal</strong> — те же 3 колонки + внутренние блоки (INTERNAL INSTRUCTIONS / NOTES,
+   OUR COST, Catalog Price Description) + у <code>initial</code> отдельный сгруппированный блок custom-items.</li>
+<li><strong>Subcontractor</strong> — 2 колонки (Description / Quantity), <strong>без цен</strong>.</li>
+</ol>
+<hr>
+<h2 id="2">2. Общий конвейер данных (одинаков для всех)</h2>
+<p>Препроцессинг — <code>render.py::process_payload()</code> (повторяет прод-роуты). Применяется
+к payload <strong>до</strong> рендера и трогает каждый item:</p>
+<table>
+<thead>
+<tr>
+<th>Шаг</th>
+<th>Что делает</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>priceHidden == true</code></td>
+<td>проставляет <code>item.price = "N/A"</code>, <code>item.total = "N/A"</code></td>
+</tr>
+<tr>
+<td><code>EXP[...]EXP</code></td>
+<td>вычисляет python-выражение (в скоупе <code>sqFt</code>, <code>math</code>) внутри <code>additionalInfo</code> / <code>longDescription</code> / <code>internalInstructions</code> / <code>internalNotes</code></td>
+</tr>
+<tr>
+<td><code>**текст**</code></td>
+<td>→ <code>&lt;b&gt;текст&lt;/b&gt;</code> (markdown-bold), только в <code>internalInstructions</code> / <code>internalNotes</code></td>
+</tr>
+<tr>
+<td><code>category.totalFormatted</code></td>
+<td><code>f"{total:,}"</code> — сумма категории с разделителями тысяч</td>
+</tr>
+<tr>
+<td><code>grandTotalFormatted</code></td>
+<td><code>${...}</code> — общий итог (из <code>estimatesInfo[0].totalCost</code> либо сумма категорий)</td>
+</tr>
+</tbody>
+</table>
+<p>Jinja-фильтры:
+- <code>linkify</code> — голые URL → <code>&lt;a&gt;домен - View Link&lt;/a&gt;</code>.
+- <code>money</code> — число/строку → <code>$1,234.56</code>. Используется только в <strong>internal</strong> и
+  <strong>change_order</strong> темплейтах; client/subcontractor/contract <code>initial</code> выводят цену
+  сырым <code>${{ item.total }}</code>.</p>
+<p><code>custom_items</code> передаётся в шаблон отдельным списком — это все items с
+<code>catelogId == 'Custom'</code> по всему дереву (нужно только <code>initial_internal_scope</code>).</p>
+<hr>
+<h2 id="3-item">3. Обход дерева и базовые условия для item (во ВСЕХ темплейтах)</h2>
+<p>Цикл везде одинаков: <code>data.categories → category.subcategories → subcategory.items</code>.</p>
+<pre><code class="language-jinja">{% for item in subcategory['items'] %}
+  {% if not item['omitFromPDF'] %}   ← айтем с omitFromPDF=true НЕ рендерится нигде
+    ...
+  {% endif %}
+{% endfor %}
+</code></pre>
+<p><strong>Определение типа item:</strong>
+- Каталожный: <code>catelogId != 'Custom'</code>.
+- Кастомный: <code>catelogId == 'Custom'</code> (+ <code>hasCustomPricing</code>, есть <code>customData</code>).</p>
+<p><strong>Подтип кастома</strong> — <code>customData.itemType</code> (<code>default</code> если нет):
+| itemType | Заголовок строки |
+|---|---|
+| <code>credit</code> | <code>Custom Credit item:</code> |
+| <code>note</code> | <code>Custom Note item:</code> |
+| прочее/<code>default</code> | <code>Custom item:</code> |</p>
+<p>Каталожный item всегда: <code>ITEM {catelogId}. {name}</code>.</p>
+<p><strong>Тело описания (порядок вывода внутри ячейки Description):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Каталожный item</th>
+<th>Кастомный item</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Заголовок</td>
+<td><code>ITEM {catelogId}. {name}</code></td>
+<td><code>Custom[/Credit/Note] item: {name}</code></td>
+</tr>
+<tr>
+<td><code>additionalInfo</code></td>
+<td>под подзаголовком <strong>ADDITIONAL NOTE:</strong>, через <code>linkify</code> + переносы строк</td>
+<td>сразу текст (без подзаголовка), <code>linkify</code> + переносы</td>
+</tr>
+<tr>
+<td><code>longDescription</code></td>
+<td><strong>выводится</strong> (<code>linkify</code>)</td>
+<td><strong>НЕ выводится</strong> (у custom только <code>additionalInfo</code>)</td>
+</tr>
+<tr>
+<td><code>photos</code> (непустой)</td>
+<td>ссылка <code>Click here for images</code> → <code>info.basementremodeling.com/guide_details/{id}</code></td>
+<td>то же</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Перенос строк: <code>\r\n</code>/<code>\n</code> → <code>&lt;br&gt;</code>, а <code>&lt;br&gt;-</code> → <code>&lt;br&gt;-</code> (буллеты).</p>
+</blockquote>
+<p><strong>Колонка Quantity:</strong>
+- Каталожный → <code>item.quantity</code>.
+- Кастомный → <code>1</code> (в subcontractor: <code>N/A</code>, если <code>item.total == "N/A"</code>, иначе <code>1</code>).</p>
+<hr>
+<h2 id="4">4. Что уникально для каждой аудитории</h2>
+<h3 id="41-client-initial_client_scope-change_order_client">4.1 Client (<code>initial_client_scope</code>, <code>change_order_client</code>)</h3>
+<ul>
+<li><strong>3 колонки:</strong> Description (70%) / Quantity (10%) / Total (10%).</li>
+<li>Шапка категории: <code>{id} {name}</code> + <code>${{ category.totalFormatted }}</code>.</li>
+<li>Заголовок подкатегории + headers <code>Quantity</code> и <code>Total</code>.</li>
+<li>Колонка Total: <code>${{ item.total }}</code>, либо <code>N/A</code> если <code>item.total == "N/A"</code> (т.е. priceHidden).</li>
+<li><strong>Pricing footer под описанием:</strong></li>
+<li><code>initial</code>: разделитель (<code>item-pricing-separator</code>, серая линия 50%) +
+    <strong>Maximum refund amount</strong> — показывается, только если <code>maxRefundAmount</code> задан,
+    <code>!= "N/A"</code> и <strong>не</strong> <code>priceHidden</code>.</li>
+<li><code>change_order</code>: footer-макрос <strong>пустой</strong> → на CO refund НЕ показывается.</li>
+<li><code>initial</code>: заголовок <code>ATTACHMENT 1: FULL PROJECT SCOPE.</code> + sqft + ATTENTION(septic) + unit-pricing disclaimer. <strong>Нет</strong> строки общего итога снизу (итоги по категориям).</li>
+<li><code>change_order</code>: заголовок <code>ATTACHMENT 1: SCOPE OF WORK.</code> + только unit-pricing disclaimer. Снизу — <code>Total Cost: {{ grandTotalFormatted }}</code>.</li>
+</ul>
+<h3 id="42-contract-initial_contract-change_order_contract">4.2 Contract (<code>initial_contract</code>, <code>change_order_contract</code>)</h3>
+<p>Таблица и логика items <strong>идентичны Client</strong> (тот же footer: refund на initial,
+пусто на CO). Отличия — только обвязка:
+- Заголовки: <code>ATTACHMENT 1: CLIENT SCOPE (CONTRACT).</code> / <code>ATTACHMENT 1: CHANGE ORDER (CONTRACT).</code>
+- По плану — доп. плейсхолдер-страницы (cover / terms / signatures), помеченные
+  <code>[ PLACEHOLDER ]</code>; на рендер items не влияют.</p>
+<h3 id="43-internal-initial_internal_scope-change_order_internal">4.3 Internal (<code>initial_internal_scope</code>, <code>change_order_internal</code>)</h3>
+<p>3 колонки, как у client, но <strong>третья колонка названа <code>Client's Price based on Zone</code></strong>,
+суммы через <code>| money</code>. Плюс внутренние блоки (рендерятся красным <code>.red</code>):</p>
+<ul>
+<li><strong>INTERNAL INSTRUCTIONS / INTERNAL NOTES</strong> (<code>internal_lines</code>) — выводятся, если в
+  item заданы <code>internalInstructions</code> / <code>internalNotes</code>. Markdown <code>**bold**</code> уже
+  превращён в <code>&lt;b&gt;</code> препроцессингом.</li>
+<li><strong>OUR COST</strong> (<code>custom_our_cost</code>) — только для <strong>кастомных</strong> items и только если
+  <code>itemType != 'note'</code>. Поля из <code>customData</code>: <code>subcontractorProposalAmount</code>,
+  <code>inHouseTeamCost</code>, <code>materialsAdminCost</code> (→ «Other cost»), <code>recommendedCost</code>.</li>
+<li><strong>Catalog Price Description</strong> (<code>catalog_price_description</code>) — только для
+  <strong>каталожных</strong> items (для custom НЕ показывается, осиротевшего разделителя тоже
+  не остаётся). Цена: каталожный → <code>item.price | money</code>, скрывается если <code>N/A</code>/<code>Custom</code>.</li>
+<li>Колонка Total: <code>item.total | money</code>; если <code>priceHidden</code> — под ценой красным
+  <code>(hidden from customer)</code>.</li>
+<li>У каталожных items красный цвет в <code>longDescription</code>/<code>additionalInfo</code>
+  принудительно перекрашивается в чёрный (класс <code>.item-description</code>), чтобы красным
+  оставались <strong>только</strong> внутренние блоки. У кастомных такой замены нет.</li>
+</ul>
+<p>Различия двух internal-темплейтов:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>initial_internal_scope</code></th>
+<th><code>change_order_internal</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Заголовок</td>
+<td><code>INTERNAL SCOPE: FULL PROJECT SCOPE.</code></td>
+<td><code>ATTACHMENT 1: INTERNAL CHANGE ORDER SCOPE.</code></td>
+</tr>
+<tr>
+<td>Блок «CUSTOM ITEMS — GROUPED BY CATEGORY» сверху</td>
+<td><strong>есть</strong> (см. ниже)</td>
+<td>нет</td>
+</tr>
+<tr>
+<td>OUR COST для custom</td>
+<td>только в верхнем сгруппированном блоке</td>
+<td><strong>inline</strong> в основной таблице</td>
+</tr>
+<tr>
+<td>Catalog Price Description</td>
+<td>для каталожных в основной таблице</td>
+<td>для каталожных в основной таблице</td>
+</tr>
+<tr>
+<td>Maximum refund amount</td>
+<td>показывается (initial-правила)</td>
+<td><strong>НЕ показывается</strong> (на CO убран, BAS-741)</td>
+</tr>
+<tr>
+<td>Итог снизу</td>
+<td>нет</td>
+<td><code>Total Cost: {{ grandTotalFormatted }}</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Сгруппированный блок custom (только <code>initial_internal_scope</code>):</strong> перед основным
+разделом выводится <code>CUSTOM ITEMS — GROUPED BY CATEGORY</code> — те же custom-items,
+сгруппированные по категории/подкатегории, с колонкой <code>Client's Price based on Zone</code>,
+блоками INTERNAL и <strong>OUR COST</strong>. Основной раздел затем начинается с новой страницы
+(<code>.next-section</code>, <code>page-break-before: always</code>). То есть OUR COST для кастомов в
+<code>initial</code> живёт в этом верхнем блоке, а в основной таблице у кастома OUR COST нет.</p>
+<h3 id="44-subcontractor-initial_subcontractor_scope-change_order_subcontractor">4.4 Subcontractor (<code>initial_subcontractor_scope</code>, <code>change_order_subcontractor</code>)</h3>
+<ul>
+<li><strong>2 колонки:</strong> Description (80%) / Quantity (20%). <strong>Цен нет вообще</strong> — нет колонки
+  Total, нет сумм категорий (<code>colspan=4</code>, шапка только с названием), нет grand total.</li>
+<li>Никаких pricing-footer'ов, INTERNAL-блоков, OUR COST, refund.</li>
+<li>Quantity для кастома: <code>N/A</code>, если <code>item.total == "N/A"</code>, иначе <code>1</code>.</li>
+<li>Заголовки: <code>ATTACHMENT 1: SUBCONTRACTOR SCOPE.</code> / <code>... SUBCONTRACTOR CHANGE ORDER SCOPE.</code></li>
+<li>Шапка: ATTENTION(septic) есть; <strong>unit-pricing disclaimer отсутствует</strong>.</li>
+</ul>
+<hr>
+<h2 id="5">5. Сводная матрица условий</h2>
+<table>
+<thead>
+<tr>
+<th>Признак</th>
+<th style="text-align: center;">Client init</th>
+<th style="text-align: center;">Client CO</th>
+<th style="text-align: center;">Contract init</th>
+<th style="text-align: center;">Contract CO</th>
+<th style="text-align: center;">Internal init</th>
+<th style="text-align: center;">Internal CO</th>
+<th style="text-align: center;">Subcontr init</th>
+<th style="text-align: center;">Subcontr CO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Колонок</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr>
+<td>Колонка Total / цена</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span> (Zone)</td>
+<td style="text-align: center;"><span class="yes">✅</span> (Zone)</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td>Сумма категории</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td>Grand total снизу</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td><code>omitFromPDF</code> скрывает item</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+</tr>
+<tr>
+<td><code>longDescription</code> (каталог)</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+</tr>
+<tr>
+<td><code>longDescription</code> (custom)</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td>Maximum refund amount</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td>Catalog Price Description (каталог)</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td>OUR COST (custom, ≠note)</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span>¹</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td>INTERNAL INSTRUCTIONS/NOTES</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td><code>(hidden from customer)</code> при priceHidden</td>
+<td style="text-align: center;"><span class="no">❌</span>²</td>
+<td style="text-align: center;"><span class="no">❌</span>²</td>
+<td style="text-align: center;"><span class="no">❌</span>²</td>
+<td style="text-align: center;"><span class="no">❌</span>²</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td><code>money</code>-форматирование</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span>³</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span>³</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Блок custom сверху</td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+</tbody>
+</table>
+<p>¹ только в верхнем сгруппированном блоке custom-items.
+² client/contract выводят цену как <code>N/A</code> (priceHidden уже превратил total в <code>"N/A"</code>), отдельной пометки нет.
+³ grand total форматируется через <code>grandTotalFormatted</code>; цены items в client/contract <code>initial</code> — сырым <code>${{ item.total }}</code>.</p>
+<hr>
+<h2 id="6">6. Где смотреть в коде</h2>
+<ul>
+<li>Препроцессинг и фильтры: <code>forge_builder/render.py</code> (<code>process_payload</code>, <code>money</code>, <code>linkify_urls</code>).</li>
+<li>Темплейты: <code>forge_builder/templates/&lt;name&gt;.html</code> (макросы — в начале <code>&lt;body&gt;</code>).</li>
+<li>Прод-аналоги (та же логика): <code>app/proposal.py</code>, <code>app/change_order.py</code>,
+  <code>app/internal_scope.py</code>, <code>app/subcontractor.py</code> + <code>app/templates/</code>.</li>
+<li>Модель payload: <code>basement/CLAUDE.md</code> → «Key data model».</li>
+</ul>
+<hr>
+<h2 id="7">7. Все условия отображения — человеческим языком</h2>
+<p>Полный список правил, по которым шаблон решает, что показывать. Сформулировано
+словами (не кодом) — как спецификация для реализации в JS. В скобках указано,
+в каких темплейтах правило действует.</p>
+<h3 id="70">7.0 Статичные блоки шапки документа</h3>
+<p>Это фиксированный текст в начале документа (от items не зависит). Присутствие
+различается по темплейтам — таблица ниже.</p>
+<ul>
+<li><strong>Заголовок документа (h3)</strong> — свой у каждого темплейта:</li>
+<li>client init: «ATTACHMENT 1: FULL PROJECT SCOPE.»</li>
+<li>internal init: «INTERNAL SCOPE: FULL PROJECT SCOPE.»</li>
+<li>subcontractor init: «ATTACHMENT 1: SUBCONTRACTOR SCOPE.»</li>
+<li>contract init: «ATTACHMENT 1: CLIENT SCOPE (CONTRACT).»</li>
+<li>client CO: «ATTACHMENT 1: SCOPE OF WORK.»</li>
+<li>internal CO: «ATTACHMENT 1: INTERNAL CHANGE ORDER SCOPE.»</li>
+<li>subcontractor CO: «ATTACHMENT 1: SUBCONTRACTOR CHANGE ORDER SCOPE.»</li>
+<li>contract CO: «ATTACHMENT 1: CHANGE ORDER (CONTRACT).»</li>
+<li><strong>SQ. FT. заголовок (h4)</strong> — «BASEMENT TOTAL SQ. FT. = {squareFootage} SQ. FT.»
+  (у subcontractor init текст «PROJECT TOTAL SQ. FT. = …»). Значение — из
+  <code>estimatesInfo[0].squareFootage</code>.</li>
+<li><strong>ATTENTION (septic)</strong> — фикс. предупреждение: <em>«ATTENTION! PROPERTY ON SEPTIC?
+  BEDROOMS OR ROOMS WITH CLOSETS ARE NOT POSSIBLE UNLESS WRITTEN CONFIRMATION FROM
+  COUNTY/CITY HEALTH DEPARTMENT IS PROVIDED! THIS INCLUDES REMODELING PROJECTS WITH
+  EXISTING ROOMS!»</em></li>
+<li><strong>UNIT PRICING</strong> — фикс. дисклеймер: <em>«UNIT PRICING MAY NOT BE STRICTLY LINEAR AND
+  MAY INCLUDE BUNDLED PRICING FORMULAS OR OTHER PRICING FACTORS. AS A RESULT,
+  INDIVIDUAL UNIT COSTS MAY VARY AND MAY NOT EQUAL THE TOTAL PRICE DIVIDED BY THE
+  QUANTITY.»</em></li>
+</ul>
+<p>Где какие блоки показываются:</p>
+<table>
+<thead>
+<tr>
+<th>Блок</th>
+<th style="text-align: center;">client init</th>
+<th style="text-align: center;">client CO</th>
+<th style="text-align: center;">contract init</th>
+<th style="text-align: center;">contract CO</th>
+<th style="text-align: center;">internal init</th>
+<th style="text-align: center;">internal CO</th>
+<th style="text-align: center;">subcontr init</th>
+<th style="text-align: center;">subcontr CO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Заголовок (h3)</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+</tr>
+<tr>
+<td>SQ. FT. (h4)</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+<tr>
+<td>ATTENTION (septic)</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+</tr>
+<tr>
+<td>UNIT PRICING</td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="yes">✅</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+<td style="text-align: center;"><span class="no">❌</span></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Закономерность в целом: <strong>change order</strong> не выводит SQ. FT. и (кроме subcontractor)
+ATTENTION; <strong>subcontractor</strong> не выводит UNIT PRICING. Но есть исключения, поэтому
+ориентируйся на таблицу, а не на правило.</p>
+</blockquote>
+<h3 id="71-items">7.1 Какие items вообще показываем (все темплейты)</h3>
+<ul>
+<li>Идём по дереву: категории → подкатегории → items.</li>
+<li>Если у item стоит флаг <strong><code>omitFromPDF</code></strong> — этот item полностью пропускаем,
+  не выводим его строку вообще.</li>
+</ul>
+<h3 id="72-item">7.2 Заголовок строки item (все темплейты)</h3>
+<ul>
+<li>Если item <strong>каталожный</strong> (<code>catelogId</code> ≠ <code>"Custom"</code>) — заголовок:
+  <strong>«ITEM {catelogId}. {название}»</strong>.</li>
+<li>Если item <strong>кастомный</strong> (<code>catelogId</code> = <code>"Custom"</code>) — смотрим <code>customData.itemType</code>:</li>
+<li><code>credit</code> → <strong>«Custom Credit item: {название}»</strong></li>
+<li><code>note</code> → <strong>«Custom Note item: {название}»</strong></li>
+<li>любое другое или поле отсутствует → <strong>«Custom item: {название}»</strong></li>
+</ul>
+<h3 id="73-additionalinfo">7.3 Доп. примечание <code>additionalInfo</code> (все темплейты)</h3>
+<ul>
+<li>Показываем, только если поле непустое (после обрезки пробелов). В internal-темплейтах
+  дополнительно считаем пустыми буквальные строки <code>"None"</code> и <code>"none"</code> (их не показываем).</li>
+<li>Для <strong>каталожного</strong> item перед текстом печатаем подзаголовок <strong>«ADDITIONAL NOTE:»</strong>.</li>
+<li>Для <strong>кастомного</strong> item подзаголовка нет — сразу текст.</li>
+<li>В тексте ссылки превращаются в кликабельные, а переносы строк сохраняются
+  (каждая новая строка — с новой строки, элементы списка с «- » выравниваются).</li>
+</ul>
+<h3 id="74-longdescription">7.4 Подробное описание <code>longDescription</code></h3>
+<ul>
+<li>Показываем <strong>только у каталожных</strong> items. У кастомных <code>longDescription</code>
+  <strong>не показываем нигде</strong> (у кастома из текста — только <code>additionalInfo</code>).</li>
+<li>В <strong>internal</strong>-темплейтах у каталожного item красный цвет внутри описания
+  принудительно перекрашивается в чёрный (чтобы красным остались только внутренние
+  блоки — см. 7.11–7.12). В остальных темплейтах описание выводится как есть.</li>
+</ul>
+<h3 id="75">7.5 Фотографии</h3>
+<ul>
+<li>Если у item есть непустой список <code>photos</code> (хотя бы одно непустое значение) —
+  показываем ссылку <strong>«Click here for images»</strong>, ведущую на
+  <code>info.basementremodeling.com/guide_details/{id}</code>.</li>
+</ul>
+<h3 id="76-quantity">7.6 Колонка «Quantity»</h3>
+<ul>
+<li>Каталожный item → показываем <code>quantity</code> из payload.</li>
+<li>Кастомный item → показываем <strong>«1»</strong>.</li>
+<li>Исключение для <strong>subcontractor</strong> (init и CO): кастомный item → <strong>«N/A»</strong>, если его
+  <code>total</code> равен <code>"N/A"</code>, иначе <strong>«1»</strong>.</li>
+</ul>
+<h3 id="77-total">7.7 Колонка «Total» / цена</h3>
+<ul>
+<li><strong>Client / Contract</strong> (init и CO): если <code>total</code> ≠ <code>"N/A"</code> → показываем <strong>«${total}»</strong>;
+  если <code>"N/A"</code> → показываем <strong>«N/A»</strong>.<blockquote>
+<p><code>total</code> становится <code>"N/A"</code> автоматически, когда у item включён флаг <code>priceHidden</code>.</p>
+</blockquote>
+</li>
+<li><strong>Internal</strong> (init и CO): показываем отформатированную сумму <code>total</code>. Дополнительно,
+  если у item включён <code>priceHidden</code> — под ценой красным мелким шрифтом приписка
+  <strong>«(hidden from customer)»</strong>.</li>
+<li><strong>Subcontractor</strong>: колонки Total нет вообще.</li>
+</ul>
+<h3 id="78-maximum-refund-amount">7.8 «Maximum refund amount» (под описанием)</h3>
+<p>Сам блок: показываем, если поле <code>maxRefundAmount</code> непустое и не равно <code>"N/A"</code>.
+Значение выводим с «$» впереди (если его ещё нет). Текст: <em>«Maximum refund amount
+after contract signing, based on incentives applied at the time of signing.»</em></p>
+<p>Где показываем:
+- <strong>Client init / Contract init</strong> — показываем, если <code>maxRefundAmount</code> задан, не <code>"N/A"</code>
+  <strong>и</strong> у item НЕ включён <code>priceHidden</code>. Перед блоком — серая линия-разделитель.
+- <strong>Client CO / Contract CO</strong> — <strong>не показываем</strong> (на change order refund убран).
+- <strong>Internal init</strong> — показываем по тем же условиям, что и client init (см. 7.10).
+- <strong>Internal CO</strong> — <strong>не показываем</strong> (убран на CO, BAS-741).
+- <strong>Subcontractor</strong> — не показываем.</p>
+<h3 id="79-catalog-price-description-internal-">7.9 «Catalog Price Description» (только internal-темплейты)</h3>
+<ul>
+<li>Берём цену: у каталожного — <code>price</code>, у кастомного — <code>quantity</code> (так в шаблоне).</li>
+<li>Показываем блок, <strong>только если item каталожный</strong> (для кастомных не показываем)
+  и цена непустая, не <code>"N/A"</code> и не <code>"CUSTOM"</code>.</li>
+<li>Текст-сноска: <em>«Catalog price shown for reference only and not visible to the
+  customer; reflects pricing before zone adjustments and discounts.»</em></li>
+</ul>
+<h3 id="710-internal">7.10 Порядок блоков под описанием в internal</h3>
+<ul>
+<li><strong>Internal init</strong>: сначала решаем, показывать ли Catalog Price Description (правило 7.9)
+  и показывать ли Maximum refund amount (правило 7.8 для client init). Если показываем
+  хотя бы один из них — рисуем серую линию-разделитель, затем сам(и) блок(и):
+  сначала Catalog Price, потом Maximum refund.</li>
+<li><strong>Internal CO</strong>: то же, но <strong>только Catalog Price Description</strong> — refund на CO не выводится.</li>
+</ul>
+<h3 id="711-our-cost-internal-items">7.11 «OUR COST» (только internal, только для кастомных items)</h3>
+<ul>
+<li>Показываем только у <strong>кастомных</strong> items и только если <code>customData.itemType</code> <strong>≠ <code>note</code></strong>
+  (у note-кастомов блока цены нет).</li>
+<li>Содержимое (из <code>customData</code>):</li>
+<li>Subcontractor proposal amount → <code>subcontractorProposalAmount</code></li>
+<li>In house team cost → <code>inHouseTeamCost</code></li>
+<li>Other cost → <code>materialsAdminCost</code></li>
+<li>Recommended cost → <code>recommendedCost</code></li>
+<li>(отсутствующие поля считаем за 0)</li>
+<li><strong>Где именно показываем:</strong></li>
+<li><strong>Internal init</strong> — OUR COST для кастомов показываем <strong>только в верхнем
+    сгруппированном блоке</strong> (см. 7.13). В основной таблице у кастома OUR COST <strong>нет</strong>.</li>
+<li><strong>Internal CO</strong> — OUR COST показываем <strong>прямо в основной таблице</strong> у каждого
+    кастомного item.</li>
+</ul>
+<h3 id="712-internal-instructions-internal-notes-internal">7.12 «INTERNAL INSTRUCTIONS» / «INTERNAL NOTES» (только internal)</h3>
+<ul>
+<li>Если у item задано <code>internalInstructions</code> — показываем блок <strong>«INTERNAL INSTRUCTIONS:»</strong>
+  с этим текстом.</li>
+<li>Если задано <code>internalNotes</code> — показываем блок <strong>«INTERNAL NOTES:»</strong>.</li>
+<li>Если оба пустые — не показываем ничего.</li>
+<li>Жирный markdown (<code>**текст**</code>) в этих полях уже преобразован в жирный текст на этапе
+  подготовки данных.</li>
+</ul>
+<h3 id="713-custom-items-grouped-by-category-initial_internal_scope">7.13 Верхний блок «CUSTOM ITEMS — GROUPED BY CATEGORY» (только <code>initial_internal_scope</code>)</h3>
+<ul>
+<li>Показываем блок целиком, только если в проекте есть хотя бы один кастомный item.</li>
+<li>Внутри: проходим по категориям и подкатегориям и берём <strong>только кастомные</strong> items
+  (<code>catelogId = "Custom"</code>). Подкатегории без кастомов пропускаем; шапку категории
+  печатаем один раз — перед её первым кастомом.</li>
+<li>Для каждого кастома показываем: заголовок → <code>additionalInfo</code> → фото →
+  INTERNAL INSTRUCTIONS/NOTES → <strong>OUR COST</strong> → (Catalog Price / refund по правилам 7.9–7.10).
+  Quantity = «1»; Total = отформатированная сумма (+ «(hidden from customer)» при <code>priceHidden</code>).</li>
+<li>После этого блока <strong>основной раздел начинается с новой страницы</strong>.</li>
+</ul>
+<h3 id="713a">7.13a Сводка: что показывается по ТИПУ айтема</h3>
+<p>Логика различает 5 типов (по <code>catelogId</code> и <code>customData.itemType</code>). Таблица — что
+выводится для каждого типа (отдельно помечено, если только в internal).</p>
+<table>
+<thead>
+<tr>
+<th>Что выводим</th>
+<th>Каталожный (<code>catelogId</code>≠Custom)</th>
+<th>Custom <code>default</code></th>
+<th>Custom <code>credit</code></th>
+<th>Custom <code>note</code></th>
+<th>Custom <code>materials</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Заголовок строки</td>
+<td>«ITEM {catelogId}. {name}»</td>
+<td>«Custom item: {name}»</td>
+<td>«Custom Credit item: {name}»</td>
+<td>«Custom Note item: {name}»</td>
+<td>«Custom item: {name}» ¹</td>
+</tr>
+<tr>
+<td><code>additionalInfo</code></td>
+<td>да, под подзаголовком «ADDITIONAL NOTE:»</td>
+<td>да, сразу текстом (без подзаголовка)</td>
+<td>да, сразу текстом</td>
+<td>да, сразу текстом</td>
+<td>да, сразу текстом</td>
+</tr>
+<tr>
+<td><code>longDescription</code></td>
+<td><strong>да</strong></td>
+<td><strong>нет</strong></td>
+<td><strong>нет</strong></td>
+<td><strong>нет</strong></td>
+<td><strong>нет</strong></td>
+</tr>
+<tr>
+<td>Фото-ссылка</td>
+<td>если есть <code>photos</code></td>
+<td>если есть</td>
+<td>если есть</td>
+<td>если есть</td>
+<td>если есть</td>
+</tr>
+<tr>
+<td>Колонка Quantity</td>
+<td><code>quantity</code></td>
+<td>«1» ²</td>
+<td>«1» ²</td>
+<td>«1» ²</td>
+<td>«1» ²</td>
+</tr>
+<tr>
+<td>Колонка Total/цена</td>
+<td>да (где колонка есть)</td>
+<td>да</td>
+<td>да</td>
+<td>да</td>
+<td>да</td>
+</tr>
+<tr>
+<td><strong>OUR COST</strong> (internal)</td>
+<td><strong>нет</strong> (только у custom)</td>
+<td><strong>да</strong></td>
+<td><strong>да</strong></td>
+<td><strong>НЕТ</strong> ³</td>
+<td><strong>да</strong></td>
+</tr>
+<tr>
+<td><strong>Catalog Price Description</strong> (internal)</td>
+<td><strong>да</strong> (если цена валидна)</td>
+<td>нет ⁴</td>
+<td>нет ⁴</td>
+<td>нет ⁴</td>
+<td>нет ⁴</td>
+</tr>
+<tr>
+<td>INTERNAL INSTR./NOTES (internal)</td>
+<td>если заданы</td>
+<td>если заданы</td>
+<td>если заданы</td>
+<td>если заданы</td>
+<td>если заданы</td>
+</tr>
+<tr>
+<td>Maximum refund (где применимо)</td>
+<td>если <code>maxRefundAmount</code> валиден</td>
+<td>если валиден</td>
+<td>если валиден</td>
+<td>если валиден</td>
+<td>если валиден</td>
+</tr>
+</tbody>
+</table>
+<p>¹ <code>materials</code> логикой <strong>не различается</strong> — попадает в общую ветку «Custom item:» (открытый вопрос 8.5).
+² subcontractor: «N/A», если <code>total == "N/A"</code>, иначе «1».
+³ <strong>note-кастом — единственный тип, у которого OUR COST не показываем</strong> (правило <code>itemType != 'note'</code>, см. 7.11).
+⁴ у кастомов Catalog Price Description не показывается (блок только для каталожных, см. 7.9); при этом для кастома в качестве «цены» берётся <code>quantity</code> — но условие <code>catelogId != Custom</code> всё равно его отсекает.</p>
+<blockquote>
+<p>Где OUR COST физически появляется: internal init — только в верхнем сгруппированном
+блоке custom; internal CO — inline в основной таблице. В client/contract/subcontractor
+OUR COST не выводится ни для какого типа.</p>
+</blockquote>
+<h3 id="714">7.14 Сумма категории и общий итог</h3>
+<ul>
+<li><strong>Сумма в шапке категории:</strong></li>
+<li>Client / Contract (init и CO) — показываем <code>${totalFormatted}</code>.</li>
+<li>Internal (init и CO) — показываем отформатированную сумму категории.</li>
+<li>Subcontractor — суммы категории в шапке <strong>нет</strong> (только название категории).</li>
+<li><strong>Общий итог «Total Cost» внизу документа:</strong></li>
+<li>Показываем в <strong>change order</strong> (client, internal, contract).</li>
+<li><strong>Не показываем</strong> во всех <code>initial_*</code> и в обоих subcontractor.</li>
+</ul>
+<hr>
+<h2 id="8-payload">8. Глоссарий — поля payload, участвующие в условиях</h2>
+<p>Здесь все переменные из payload, от которых зависит отображение (см. раздел 7).
+Описания нужно подтвердить/уточнить там, где помечено <strong>(?)</strong>. Значения и наличие
+проверены по тестовому <code>payloads/example03.json</code> (20 items, есть кастомы всех типов).</p>
+<h3 id="81-item-categorysubcategoriesitems">8.1 Уровень item (<code>category.subcategories[].items[]</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Тип (в example03)</th>
+<th>Где влияет (раздел)</th>
+<th>Что это / описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>catelogId</code></td>
+<td>строка (<code>"1-9-1"</code>, либо <code>"Custom"</code>)</td>
+<td>7.2, 7.4, 7.6, 7.7, 7.9, 7.11</td>
+<td>ID позиции в каталоге. Спец-значение <strong><code>"Custom"</code></strong> = кастомная (ручная) позиция. У каталожных подставляется в заголовок «ITEM {catelogId}.».</td>
+</tr>
+<tr>
+<td><code>omitFromPDF</code></td>
+<td>bool (<code>false</code>)</td>
+<td>7.1</td>
+<td>Флаг «не выводить эту позицию в документ». <code>true</code> → item полностью скрыт.</td>
+</tr>
+<tr>
+<td><code>priceHidden</code></td>
+<td>bool (<code>true</code>)</td>
+<td>7.7, 7.8</td>
+<td>«Цена скрыта от клиента». При <code>true</code> <code>price</code>/<code>total</code> → <code>"N/A"</code>; в client цена = N/A, в internal — приписка «(hidden from customer)»; отключает Maximum refund.</td>
+</tr>
+<tr>
+<td><code>priceNotApplicable</code></td>
+<td>bool (<code>false</code>)</td>
+<td>—</td>
+<td>Присутствует в payload, но в условиях <strong>этих</strong> темплейтов сейчас не используется. <strong>(?) НАДО УТОЧНИТЬ</strong> — назначение поля и влияет ли оно где-то ещё.</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>строка (<code>"1"</code>)</td>
+<td>7.6, 7.9</td>
+<td>Количество. Выводится в колонке Quantity у каталожных. <strong>⚠️ Известный баг приложения:</strong> в internal у <em>кастомных</em> <code>quantity</code> подставляется как «цена» в Catalog Price Description. Это баг на стороне приложения — работаем с ним вынужденно (поведение сохраняем как есть).</td>
+</tr>
+<tr>
+<td><code>price</code></td>
+<td>строка (<code>"N/A"</code> / число)</td>
+<td>7.9</td>
+<td>Каталожная цена за единицу (до зон/скидок). Используется в Catalog Price Description (только internal, только каталожные).</td>
+</tr>
+<tr>
+<td><code>total</code></td>
+<td>строка (<code>"42 903,574"</code>)</td>
+<td>7.6, 7.7</td>
+<td>Итоговая стоимость позиции. Выводится в колонке Total; <code>"N/A"</code> при <code>priceHidden</code>. Приходит уже как строка — это формат денег США, используем его как есть (не переформатируем).</td>
+</tr>
+<tr>
+<td><code>maxRefundAmount</code></td>
+<td>число (<code>36660</code>)</td>
+<td>7.8</td>
+<td>Максимальная сумма возврата (по incentives на момент подписания). Блок Maximum refund amount. Не показываем, если пусто/<code>"N/A"</code>/при <code>priceHidden</code>/на change order.</td>
+</tr>
+<tr>
+<td><code>additionalInfo</code></td>
+<td>строка (часто <code>""</code>)</td>
+<td>7.3</td>
+<td>Доп. примечание к позиции (клиентское). У каталожных — под «ADDITIONAL NOTE:», у кастомных — сразу текстом.</td>
+</tr>
+<tr>
+<td><code>longDescription</code></td>
+<td>строка/HTML (часто <code>""</code>)</td>
+<td>7.4</td>
+<td>Подробное клиентское описание. Показывается <strong>только у каталожных</strong>.</td>
+</tr>
+<tr>
+<td><code>internalNotes</code></td>
+<td>строка</td>
+<td>7.12</td>
+<td>Внутренняя заметка (не для клиента). Блок «INTERNAL NOTES» только в internal.</td>
+</tr>
+<tr>
+<td><code>internalInstructions</code></td>
+<td>строка</td>
+<td>7.12</td>
+<td>Внутренняя инструкция бригаде. Блок «INTERNAL INSTRUCTIONS» только в internal. Поддерживает <code>**жирный**</code>.</td>
+</tr>
+<tr>
+<td><code>photos</code></td>
+<td>массив (часто <code>[]</code>)</td>
+<td>7.5</td>
+<td>Список фото. Если непустой — ссылка «Click here for images».</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>строка (ObjectId)</td>
+<td>7.5</td>
+<td>ID позиции; подставляется в URL ссылки на фото (<code>guide_details/{id}</code>).</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>строка</td>
+<td>7.2</td>
+<td>Название позиции (в заголовок строки).</td>
+</tr>
+<tr>
+<td><code>customData</code></td>
+<td>объект (<code>{}</code> у каталожных)</td>
+<td>7.2, 7.11</td>
+<td>Данные кастомной позиции (см. 8.2). У каталожных пустой.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-itemcustomdata-items">8.2 Уровень <code>item.customData</code> (только у кастомных items)</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значения в example03</th>
+<th>Где влияет</th>
+<th>Что это / описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>itemType</code></td>
+<td><code>default</code>, <code>credit</code>, <code>note</code>, <strong><code>materials</code></strong></td>
+<td>7.2, 7.11</td>
+<td>Подтип кастома. Шаблон <strong>явно</strong> различает <code>credit</code> («Custom Credit item:») и <code>note</code> («Custom Note item:», без OUR COST); всё остальное (<strong>включая <code>materials</code> и <code>default</code></strong>) → «Custom item:». <strong>(?)</strong> должен ли <code>materials</code> отображаться иначе?</td>
+</tr>
+<tr>
+<td><code>subcontractorProposalAmount</code></td>
+<td>число</td>
+<td>7.11</td>
+<td>OUR COST → «Subcontractor proposal amount». Сумма по предложению субподрядчика.</td>
+</tr>
+<tr>
+<td><code>inHouseTeamCost</code></td>
+<td>число</td>
+<td>7.11</td>
+<td>OUR COST → «In house team cost». Стоимость работ своей бригады.</td>
+</tr>
+<tr>
+<td><code>materialsAdminCost</code></td>
+<td>число</td>
+<td>7.11</td>
+<td>OUR COST → выводится как «<strong>Other cost</strong>». <strong>(?)</strong> название поля про материалы/админ, а в выводе «Other cost» — это намеренно?</td>
+</tr>
+<tr>
+<td><code>recommendedCost</code></td>
+<td>число</td>
+<td>7.11</td>
+<td>OUR COST → «Recommended cost». Рекомендованная цена позиции.</td>
+</tr>
+<tr>
+<td><code>deliveryAndLogisticsCost</code></td>
+<td>число</td>
+<td>—</td>
+<td>Есть в payload, но в условиях этих темплейтов <strong>не используется</strong>. <strong>(?)</strong> нужно ли выводить в OUR COST?</td>
+</tr>
+<tr>
+<td><code>pricingNotes</code></td>
+<td>строка</td>
+<td>—</td>
+<td>Есть в payload, но в условиях этих темплейтов <strong>не используется</strong>. <strong>(?)</strong> для чего и куда выводить?</td>
+</tr>
+</tbody>
+</table>
+<h3 id="83-category-subcategory">8.3 Уровень category / subcategory</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Где влияет</th>
+<th>Что это / описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>category.id</code></td>
+<td>7.2 (шапка), 7.13</td>
+<td>ID/номер категории — в шапку категории перед названием.</td>
+</tr>
+<tr>
+<td><code>category.name</code></td>
+<td>шапка категории</td>
+<td>Название категории.</td>
+</tr>
+<tr>
+<td><code>category.total</code></td>
+<td>7.14</td>
+<td>Сумма по категории. Из неё считается отображаемое значение (см. <code>totalFormatted</code>).</td>
+</tr>
+<tr>
+<td><code>category.subcategories[]</code></td>
+<td>обход (7.1)</td>
+<td>Список подкатегорий.</td>
+</tr>
+<tr>
+<td><code>subcategory.name</code></td>
+<td>шапка подкатегории</td>
+<td>Название подкатегории.</td>
+</tr>
+<tr>
+<td><code>subcategory.items[]</code></td>
+<td>обход (7.1)</td>
+<td>Список позиций.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="84-data">8.4 Уровень корня (<code>data</code>) и производные значения</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Где влияет</th>
+<th>Что это / описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>estimatesInfo[0].squareFootage</code></td>
+<td>шапка документа</td>
+<td>Площадь проекта (кв. футы). Выводится в шапке (кроме change order и где шапки нет). Также доступна как <code>sqFt</code> в формулах <code>EXP[...]</code>.</td>
+</tr>
+<tr>
+<td><code>estimatesInfo[0].totalCost</code></td>
+<td>7.14</td>
+<td>Общая стоимость сметы — основной источник для общего итога.</td>
+</tr>
+<tr>
+<td><code>category.totalFormatted</code></td>
+<td>7.14</td>
+<td><strong>Производное</strong> (считается перед рендером): <code>total</code> категории с разделителями тысяч. Выводится в шапке категории.</td>
+</tr>
+<tr>
+<td><code>grandTotalFormatted</code></td>
+<td>7.14</td>
+<td><strong>Производное</strong>: общий итог <code>${...}</code> (из <code>totalCost</code>, иначе сумма категорий). Строка «Total Cost» внизу change order.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Производные <code>totalFormatted</code> и <code>grandTotalFormatted</code> в payload <strong>не приходят</strong> — их
+вычисляет препроцессинг (<code>render.py</code> / прод-роуты). На стороне JS их нужно будет
+посчитать самостоятельно из <code>total</code> / <code>totalCost</code>.</p>
+</blockquote>
+<h3 id="85">8.5 Открытые вопросы (ждут уточнения)</h3>
+<ol>
+<li><strong><code>priceNotApplicable</code></strong> — назначение поля; влияет ли где-то, кроме этих темплейтов.</li>
+<li><strong><code>customData.itemType = "materials"</code></strong> — должен ли отображаться иначе, чем обычный «Custom item:».</li>
+<li><strong><code>materialsAdminCost</code> → «Other cost»</strong> — намеренно ли поле «materials/admin» выводится в OUR COST под подписью «Other cost».</li>
+<li><strong><code>customData.deliveryAndLogisticsCost</code></strong> — нужно ли выводить (например, в OUR COST) и где.</li>
+<li><strong><code>customData.pricingNotes</code></strong> — назначение и куда выводить.</li>
+<li><strong>Material item (<code>itemType = "materials"</code>) — как должно меняться отображение?</strong>
+   Сейчас он не отличается от обычного «Custom item:» (тот же заголовок, тот же
+   набор блоков, OUR COST показывается как у default). Нужно уточнить: должен ли
+   у material-айтема быть свой заголовок/подпись, особый набор полей в OUR COST
+   (например <code>materialsAdminCost</code> / <code>deliveryAndLogisticsCost</code>), скрываться ли
+   какие-то блоки — то есть <strong>чем именно material item должен отличаться</strong> в выводе.</li>
+</ol>
+<blockquote>
+<p>Решённые ранее: <code>quantity</code> у кастомных в Catalog Price Description — известный баг
+приложения, поведение сохраняем; <code>total</code> — приходит строкой в формате денег США,
+используем как есть.</p>
+</blockquote></div></body></html>
