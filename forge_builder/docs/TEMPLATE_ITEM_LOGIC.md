@@ -41,7 +41,7 @@
 
 | Шаг | Что делает |
 |---|---|
-| `priceHidden == true` | проставляет `item.price = "N/A"`, `item.total = "N/A"` |
+| `priceHidden == true` | проставляет `item.price = "N/A"`, `item.total = "N/A"` — **только для non-CO темплейтов**. На **Change Order цену НЕ скрываем** (`hide_prices=False`): ни client, ни internal, `total`/`price` остаются реальными |
 | `EXP[...]EXP` | вычисляет python-выражение (в скоупе `sqFt`, `math`) внутри `additionalInfo` / `longDescription` / `internalInstructions` / `internalNotes` |
 | `**текст**` | → `<b>текст</b>` (markdown-bold), только в `internalInstructions` / `internalNotes` |
 | `category.totalFormatted` | `f"{total:,}"` — сумма категории с разделителями тысяч |
@@ -188,13 +188,14 @@ Jinja-фильтры:
 | Catalog Price Description (каталог) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
 | OUR COST (custom, ≠note) | ❌ | ❌ | ❌ | ❌ | ✅¹ | ✅ | ❌ | ❌ |
 | INTERNAL INSTRUCTIONS/NOTES | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
-| `(hidden from customer)` при priceHidden | ❌² | ❌² | ❌² | ❌² | ✅ | ✅ | — | — |
+| `(hidden from customer)` при priceHidden | ❌² | ❌² | ❌² | ❌² | ✅ | ❌⁴ | — | — |
 | `money`-форматирование | ❌ | ✅³ | ❌ | ✅³ | ✅ | ✅ | — | — |
 | Блок custom сверху | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
 
 ¹ только в верхнем сгруппированном блоке custom-items.
 ² client/contract выводят цену как `N/A` (priceHidden уже превратил total в `"N/A"`), отдельной пометки нет.
 ³ grand total форматируется через `grandTotalFormatted`; цены items в client/contract `initial` — сырым `${{ item.total }}`.
+⁴ на **internal CO** пометки «(hidden from customer)» нет: цену на СО не скрываем, `priceHidden` не блэнкает `total`, и приписка убрана (клиент цену на СО видит).
 
 ---
 
@@ -303,10 +304,17 @@ Jinja-фильтры:
 - **Client / Contract** (init и CO): если `total` ≠ `"N/A"` → показываем **«${total}»**;
   если `"N/A"` → показываем **«N/A»**.
   > `total` становится `"N/A"` автоматически, когда у item включён флаг `priceHidden`.
-- **Internal** (init и CO): показываем отформатированную сумму `total`. Дополнительно,
+- **Internal init**: показываем отформатированную сумму `total`. Дополнительно,
   если у item включён `priceHidden` — под ценой красным мелким шрифтом приписка
   **«(hidden from customer)»**.
+- **Internal CO**: показываем **реальную** сумму `total` (на СО цену не скрываем).
+  Приписки «(hidden from customer)» **нет** — на change order клиент цену видит,
+  так что пометка была бы вводящей в заблуждение.
 - **Subcontractor**: колонки Total нет вообще.
+
+> **Правило цены на Change Order:** в СО прайс **не скрываем никогда** — ни client,
+> ни internal (`priceHidden` в контексте СО игнорируется, `total`/`price` остаются
+> реальными). Единственное исключение — **subcontractor**, где колонки цены нет by design.
 
 ### 7.8 «Maximum refund amount» (под описанием)
 
@@ -425,7 +433,7 @@ after contract signing, based on incentives applied at the time of signing.»*
 |---|---|---|---|
 | `catelogId` | строка (`"1-9-1"`, либо `"Custom"`) | 7.2, 7.4, 7.6, 7.7, 7.9, 7.11 | ID позиции в каталоге. Спец-значение **`"Custom"`** = кастомная (ручная) позиция. У каталожных подставляется в заголовок «ITEM {catelogId}.». |
 | `omitFromPDF` | bool (`false`) | 7.1 | Флаг «не выводить эту позицию в документ». `true` → item полностью скрыт. |
-| `priceHidden` | bool (`true`) | 7.7, 7.8 | «Цена скрыта от клиента». При `true` `price`/`total` → `"N/A"`; в client цена = N/A, в internal — приписка «(hidden from customer)»; отключает Maximum refund. |
+| `priceHidden` | bool (`true`) | 7.7, 7.8 | «Цена скрыта от клиента». **Действует только на non-CO темплейтах:** при `true` `price`/`total` → `"N/A"` (client → N/A, internal init → приписка «(hidden from customer)»), плюс отключает Maximum refund. **На Change Order игнорируется** — цену не скрываем ни client, ни internal (`hide_prices=False`), приписки на internal CO нет. |
 | `priceNotApplicable` | bool (`false`) | — | Присутствует в payload, но в условиях **этих** темплейтов сейчас не используется. **(?) НАДО УТОЧНИТЬ** — назначение поля и влияет ли оно где-то ещё. |
 | `quantity` | строка (`"1"`) | 7.6, 7.9 | Количество. Выводится в колонке Quantity у каталожных. **⚠️ Известный баг приложения:** в internal у *кастомных* `quantity` подставляется как «цена» в Catalog Price Description. Это баг на стороне приложения — работаем с ним вынужденно (поведение сохраняем как есть). |
 | `price` | строка (`"N/A"` / число) | 7.9 | Каталожная цена за единицу (до зон/скидок). Используется в Catalog Price Description (только internal, только каталожные). |

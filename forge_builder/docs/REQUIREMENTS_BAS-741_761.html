@@ -105,6 +105,12 @@
     <li><span class="badge b-done">DONE</span> internal: <code>price</code> → <b>Catalogue price</b>; колонка <code>Total</code> → <b>«Client's Price based on Zone»</b> <span class="note">(741) — реализовано (C4)</span></li>
     <li><span class="badge b-done">DONE</span> <code>total cost</code> и <code>items total</code> — поменялось только значение, логика та же <span class="note">(741)</span></li>
     <li><span class="badge b-done">РЕШЕНО (C1)</span> Значение в колонке <code>Total</code> = <code>item.total</code> — <b>оставляем как есть, всё правильно</b> <span class="note">(761, 01.06)</span></li>
+    <li><span class="badge b-done">РЕШЕНО (C5)</span> <b>[2026-07-03]</b> <b>Change Order: прайс НЕ скрываем никогда</b> — ни client, ни internal.
+      <code>priceHidden</code> на СО игнорируется, <code>total</code>/<code>price</code> остаются реальными.
+      Единственное исключение — <b>subcontractor</b> (там колонки цены нет by design).
+      На <b>internal CO</b> приписка <code>(hidden from customer)</code> убрана (на СО клиент цену видит).
+      <span class="note">Обновление от 2026-07-03. Ранее правила в требованиях не было; internal CO по факту скрывал цену (<code>total→N/A</code>) — это противоречие устранено.
+      Фикс: <code>change_order_internal.py</code> больше не блэнкает <code>total→N/A</code>; forge <code>render.py</code> — <code>hide_prices=False</code> для <code>change_order*</code>.</span></li>
   </ul>
 
   <h2>2. Catalog Price Description</h2>
