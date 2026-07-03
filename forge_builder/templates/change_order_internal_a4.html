@@ -166,7 +166,7 @@ Recommended cost: {{ cd.recommendedCost | default(0) | money }}</p>
                         </div>
                     </td>
                     <td class="num">{% if item.catelogId == 'Custom' %}1{% else %}{{ item.quantity }}{% endif %}</td>
-                    <td class="num">{{ item.total | money }}{% if item.priceHidden %}<br/><span style="color:#C0392B; font-size:8pt;">(hidden)</span>{% endif %}</td>
+                    <td class="num">{{ item.total | money }}</td>
                 </tr>
                 {% endif %}
                 {% endfor %}

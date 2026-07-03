@@ -16,11 +16,11 @@ markdown **bold**, grandTotalFormatted + Jinja-фильтры linkify и money.
 
 Примеры:
     python render.py change_order_internal
-    python render.py initial_contract example02.json
-    python render.py --all example01.json
+    python render.py change_order_client example04_co.json
+    python render.py --all example03.json
 
 <template> — имя файла из ./templates с .html или без.
-[payload]  — имя файла из ./payloads (по умолчанию example01.json).
+[payload]  — имя файла из ./payloads (по умолчанию example03.json).
 """
 import sys
 import os
@@ -42,7 +42,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 PAYLOADS_DIR = os.path.join(BASE_DIR, "payloads")
 OUT_DIR = os.path.join(BASE_DIR, "out")
 
-DEFAULT_PAYLOAD = "example01.json"
+DEFAULT_PAYLOAD = "example03.json"
 
 # Headless-браузер для флага --pdf (Chrome/Chromium бьёт на страницы и режет
 # высокие строки так же, как прод-движок wkhtmltopdf — в отличие от Paged.js).
@@ -183,7 +183,9 @@ def _grand_total_value(body):
     return total
 
 
-def process_payload(body):
+def process_payload(body, hide_prices=True):
+    # hide_prices=False для Change Order: на СО цену НЕ скрываем (ни client, ни internal),
+    # поэтому total/price не блэнкаем в "N/A". Исключение — subcontractor, где колонки цены нет.
     """Суперсет препроцессинга всех прод-роутов. Безвреден для любого темплейта."""
     sqFt = 0
     infos = body.get("estimatesInfo") or []
@@ -214,7 +216,7 @@ def process_payload(body):
         cat["totalFormatted"] = f"{cat.get('total', 0):,}"
 
     for item in _walk_items(body.get("categories", [])):
-        if item.get("priceHidden", False):
+        if hide_prices and item.get("priceHidden", False):
             item["price"] = "N/A"
             item["total"] = "N/A"
 
@@ -338,7 +340,8 @@ def main():
             base = f.read()
         for t in list_templates():
             print(f"\n[{t}] payload={payload}")
-            body = process_payload(json.loads(base))  # свежая копия на каждый темплейт
+            body = process_payload(json.loads(base),  # свежая копия на каждый темплейт
+                                   hide_prices="change_order" not in t)
             render_one(t, body, paged=paged, pdf=pdf)
         return
 
@@ -346,7 +349,7 @@ def main():
     payload = args[1] if len(args) > 1 else DEFAULT_PAYLOAD
     with open(os.path.join(PAYLOADS_DIR, payload), encoding="utf-8") as f:
         body = json.load(f)
-    body = process_payload(body)
+    body = process_payload(body, hide_prices="change_order" not in template_name)
     print(f"[{template_name}] payload={payload}")
     render_one(template_name, body, paged=paged, pdf=pdf)
 

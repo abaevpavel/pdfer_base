@@ -128,9 +128,9 @@ def process_payload(body):
         cat["totalFormatted"] = f"{cat.get('total', 0):,}"
 
     for item in _walk_items(body.get("categories", [])):
-        if item.get("priceHidden", False):
-            item["price"] = "N/A"
-            item["total"] = "N/A"
+        # ВАЖНО: на Change Order цену НЕ скрываем — ни для client, ни для internal
+        # (правило: priceHidden в СО ничего не прячет; исключение только subcontractor,
+        #  где колонки цены нет вообще). Поэтому здесь total/price НЕ блэнкаем в "N/A".
 
         addi = item.get("additionalInfo") or ""
         if addi:

@@ -237,10 +237,7 @@
                         <!--Totals column -->
                         <td class="greyBorder" bgcolor="#F1F1F1" style="width:10%;">
                             <p class="flexBox textCenter">
-                                {{ item.total | money }}<br/>
-                                {% if item.priceHidden %}
-                                <span style="color:red; font-size:10pt;">(hidden from customer)</span>
-                                {% endif %}
+                                {{ item.total | money }}
                             </p>
                         </td>
                     </tr>
